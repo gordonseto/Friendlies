@@ -7,4 +7,8 @@ target 'Friendlies' do
 
   # Pods for Friendlies
   pod 'Firebase'
+  pod 'Firebase/Auth'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'FBSDKShareKit'
 end

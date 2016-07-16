@@ -18,8 +18,20 @@ class feedVC: UIViewController {
         if let user = FIRAuth.auth()?.currentUser {
             print(user.displayName)
             print(user.photoURL)
+            print(user.uid)
         }
     }
 
 
+}
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }

@@ -12,4 +12,5 @@ target 'Friendlies' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
+  pod 'GeoFire', :git => 'https://github.com/firebase/geofire-objc.git'
 end

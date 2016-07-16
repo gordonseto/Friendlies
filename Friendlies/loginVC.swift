@@ -47,7 +47,7 @@ class loginVC: UIViewController {
                             let firebase = FIRDatabase.database().reference()
                             firebase.child("users").child(user.uid).child("facebookId").setValue(result.token.userID)
                             firebase.child("users").child(user.uid).child("displayName").setValue(user.displayName!)
-                            self.performSegueWithIdentifier("feedVC", sender: result)
+                            self.dismissViewControllerAnimated(true, completion: nil)
                         } else {
                             print("error with FIR authorization")
                         }

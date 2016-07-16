@@ -98,6 +98,8 @@ class profileVC: UIViewController {
     
 
     @IBAction func onMessagePressed(sender: AnyObject) {
+        let lvc = generateLoginVC()
+        self.presentViewController(lvc, animated: true, completion: nil)
     }
     @IBAction func onAddPressed(sender: AnyObject) {
     }

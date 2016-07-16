@@ -102,7 +102,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleAspectFit" misplaced="YES" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="MSw-zC-qWV">
-                                        <rect key="frame" x="175" y="0.0" width="250" height="7200390"/>
+                                        <rect key="frame" x="175" y="0.0" width="250" height="720000000402"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="APN-Re-2xk" customClass="profilePhoto" customModule="Friendlies" customModuleProvider="target">
                                                 <rect key="frame" x="65" y="0.0" width="120" height="120"/>
@@ -113,24 +113,30 @@
                                                 </constraints>
                                             </imageView>
                                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NGL-Jg-51h">
-                                                <rect key="frame" x="0.0" y="140" width="250" height="7200000"/>
+                                                <rect key="frame" x="0.0" y="140" width="250" height="720000000012"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0y-kn-BIs">
-                                                        <rect key="frame" x="0.0" y="0.0" width="250" height="3600000"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2bl-1l-0m8">
+                                                        <rect key="frame" x="0.0" y="0.0" width="250" height="360000000000"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
-                                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6aN-RU-i4z">
-                                                        <rect key="frame" x="0.0" y="3600000" width="250" height="3600000"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0y-kn-BIs">
+                                                        <rect key="frame" x="0.0" y="360000000000" width="250" height="360000000000"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="AVAILABLE 5 HRS AGO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6aN-RU-i4z">
+                                                        <rect key="frame" x="0.0" y="720000000000" width="250" height="12"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="10"/>
                                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="center" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="O1R-HY-aEF">
-                                                <rect key="frame" x="13" y="7200160" width="225" height="230"/>
+                                                <rect key="frame" x="13" y="720000000172" width="225" height="230"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="T1L-kE-iww">
                                                         <rect key="frame" x="87" y="0.0" width="50" height="35"/>
@@ -258,8 +264,8 @@
                         <outlet property="addButton" destination="pQ9-Ef-VIP" id="fxV-5E-mpO"/>
                         <outlet property="blockButton" destination="Riu-Ty-Uby" id="aTk-FV-ZI7"/>
                         <outlet property="characterStackView" destination="T1L-kE-iww" id="u2V-99-Hee"/>
-                        <outlet property="displayName" destination="d0y-kn-BIs" id="GgB-d2-z3F"/>
-                        <outlet property="gamerTag" destination="6aN-RU-i4z" id="SiO-9a-KXn"/>
+                        <outlet property="displayName" destination="2bl-1l-0m8" id="iMx-Ly-hbA"/>
+                        <outlet property="gamerTag" destination="d0y-kn-BIs" id="IDw-Rb-XGT"/>
                         <outlet property="messageButton" destination="4a5-2q-SnS" id="6EF-uh-dbM"/>
                         <outlet property="scrollView" destination="Ta8-tL-lbJ" id="Wiz-YR-Ceq"/>
                         <outlet property="settingsButton" destination="AFQ-EQ-syc" id="sau-xG-5Ob"/>
@@ -777,7 +783,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dko-6d-glE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2329" y="2063"/>
+            <point key="canvasLocation" x="2729" y="1315"/>
         </scene>
     </scenes>
     <resources>

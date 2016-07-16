@@ -39,7 +39,7 @@ class profileVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.navigationController?.navigationBarHidden = true
         self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
         
@@ -49,6 +49,8 @@ class profileVC: UIViewController {
         self.scrollView.addSubview(refreshControl)
         self.scrollView.scrollEnabled = true
         self.scrollView.alwaysBounceVertical = true
+        
+        scrollView.delaysContentTouches = false
         
         if let user = user {
             initializeViewWithUser()
@@ -96,14 +98,12 @@ class profileVC: UIViewController {
     
 
     @IBAction func onMessagePressed(sender: AnyObject) {
-        print("hi")
     }
     @IBAction func onAddPressed(sender: AnyObject) {
-        print("wat")
     }
     @IBAction func onBlockPressed(sender: AnyObject) {
-        print("yo")
     }
+    
     @IBAction func onSettingsPressed(sender: AnyObject) {
         if user != nil {
             performSegueWithIdentifier("editProfileVC", sender: nil)

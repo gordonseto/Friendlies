@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
-        UITabBar.appearance().backgroundColor = UIColor.darkGrayColor()
+        
+        UITabBar.appearance().backgroundColor = UIColor.blackColor()
         
         FIRApp.configure()
         

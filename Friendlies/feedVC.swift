@@ -1,3 +1,4 @@
+
 //
 //  feedVC.swift
 //  Friendlies
@@ -13,7 +14,12 @@ class feedVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        let tbc = self.tabBarController
+        tbc?.tabBar.barStyle = UIBarStyle.BlackOpaque
+        tbc?.tabBar.selectedImageTintColor = UIColor.whiteColor()
+        
+        
         // Do any additional setup after loading the view.
         if let user = FIRAuth.auth()?.currentUser {
             print(user.displayName)

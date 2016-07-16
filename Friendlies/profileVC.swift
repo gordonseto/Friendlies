@@ -83,8 +83,8 @@ class profileVC: UIViewController {
                 for character in characters {
                     let imageView = UIImageView()
                     imageView.image = UIImage(named: character)
-                    imageView.heightAnchor.constraintEqualToConstant(30).active = true
-                    imageView.widthAnchor.constraintEqualToConstant(30).active = true
+                    imageView.heightAnchor.constraintEqualToConstant(25).active = true
+                    imageView.widthAnchor.constraintEqualToConstant(25).active = true
                     self.characterStackView.addArrangedSubview(imageView)
                 }
             }
@@ -98,8 +98,6 @@ class profileVC: UIViewController {
     
 
     @IBAction func onMessagePressed(sender: AnyObject) {
-        let lvc = generateLoginVC()
-        self.presentViewController(lvc, animated: true, completion: nil)
     }
     @IBAction func onAddPressed(sender: AnyObject) {
     }

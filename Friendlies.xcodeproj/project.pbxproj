@@ -117,6 +117,7 @@
 		8E629CEB1D39539A001E8EC3 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				8E9648FB1D3AC9CF0048B3B3 /* BroadcastCell.swift */,
 				8E629CEC1D3953B9001E8EC3 /* friendliesButton.swift */,
 				8E629CF51D3969F2001E8EC3 /* profilePhoto.swift */,
 				8E756A501D39C22E00B8A0EB /* friendliesTextField.swift */,
@@ -129,7 +130,6 @@
 			children = (
 				8E629CFA1D397ED7001E8EC3 /* User.swift */,
 				8E9648F81D3ABDE90048B3B3 /* Broadcast.swift */,
-				8E9648FB1D3AC9CF0048B3B3 /* BroadcastCell.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";

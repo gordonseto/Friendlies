@@ -38,6 +38,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     var loadingLabel: UILabel!
     
     var downloadedImages = [String: UIImage]()
+    var pendingDownloads = [Int: String]()
+    var uidsBeingDownloaded = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -225,10 +227,24 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         let cell = tableView.dequeueReusableCellWithIdentifier("BroadcastCell", forIndexPath: indexPath) as! BroadcastCell
         let broadcast = broadcasts[indexPath.row]
         if self.downloadedImages[broadcast.user.uid] == nil {
-            print("downloading \(broadcast.user.displayName)")
-            self.downloadedImages[broadcast.user.uid] = UIImage(named: "default_character")
-            broadcast.user.getUserProfilePhoto() {
-                self.downloadedImages[broadcast.user.uid] = broadcast.user.profilePhoto
+            if uidsBeingDownloaded.contains(broadcast.user.uid) {
+                pendingDownloads[indexPath.row] = broadcast.user.uid
+            } else {
+                print("downloading \(broadcast.user.displayName)")
+                uidsBeingDownloaded.append(broadcast.user.uid)
+                pendingDownloads[indexPath.row] = broadcast.user.uid
+                broadcast.user.getUserProfilePhoto() {
+                    self.downloadedImages[broadcast.user.uid] = broadcast.user.profilePhoto
+                    for (index, uid) in self.pendingDownloads {
+                        if uid == broadcast.user.uid {
+                            let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
+                        }
+                    }
+                    if let index = self.uidsBeingDownloaded.indexOf(broadcast.user.uid) {
+                        self.uidsBeingDownloaded.removeAtIndex(index)
+                    }
+                }
             }
         } else {
             broadcast.user.profilePhoto = downloadedImages[broadcast.user.uid]

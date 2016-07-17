@@ -15,10 +15,11 @@ class Broadcast {
     private var _key: String!
     private var _authorUid: String!
     private var _author: User!
-    private var _broadcastDesc: String!
-    private var _hasSetup: Bool!
     private var _geolocation: CLLocation!
     private var _time: NSTimeInterval!
+    
+    var hasSetup: Bool = false
+    var broadcastDesc: String = ""
     
     var firebase: FIRDatabaseReference!
     
@@ -34,14 +35,6 @@ class Broadcast {
         return _author
     }
     
-    var broadcastDesc: String {
-        return _broadcastDesc
-    }
-    
-    var hasSetup: Bool {
-        return _hasSetup
-    }
-    
     var geolocation: CLLocation {
         return _geolocation
     }
@@ -53,8 +46,8 @@ class Broadcast {
     init(key: String, authorUid: String, broadcastDesc: String, hasSetup: Bool, geolocation: CLLocation, time: NSTimeInterval) {
         _key = key
         _authorUid = authorUid
-        _broadcastDesc = broadcastDesc
-        _hasSetup = hasSetup
+        self.broadcastDesc = broadcastDesc
+        self.hasSetup = hasSetup
         _geolocation = geolocation
         _time = time
     }

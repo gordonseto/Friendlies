@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import GeoFire
 
-class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource {
+class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, BroadcastCellDelegate {
 
     @IBOutlet weak var hexagonButton: UIButton!
     
@@ -164,7 +164,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func sortBroadcasts(){
-        broadcasts.sort({$0.time > $1.time})
+        broadcasts.sortInPlace {(broadcast1:Broadcast, broadcast2:Broadcast) -> Bool in
+            broadcast1.time > broadcast2.time
+        }
         print(broadcasts)
         self.refreshControl.endRefreshing()
         tableView.reloadData()
@@ -192,7 +194,11 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BroadcastCell", forIndexPath: indexPath) as! BroadcastCell
         let broadcast = broadcasts[indexPath.row]
+        cell.delegate = self
         cell.configureCell(broadcast)
+        if let currentloc = currentLocation {
+            cell.findDistanceFrom(currentloc)
+        }
         return cell
     }
     
@@ -210,6 +216,10 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     
     func refreshView(sender: AnyObject){
         hasLoadedBroadcasts = false
+    }
+    
+    func onTextViewEditing(textView: UITextView) {
+        tableView.setContentOffset(CGPointMake(0, textView.center.y-60), animated: true)
     }
 }
 

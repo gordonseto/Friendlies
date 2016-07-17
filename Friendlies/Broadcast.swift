@@ -20,6 +20,7 @@ class Broadcast {
     
     var hasSetup: Bool = false
     var broadcastDesc: String = ""
+    var user: User!
     
     var firebase: FIRDatabaseReference!
     
@@ -52,7 +53,13 @@ class Broadcast {
         _time = time
     }
     
-    func sendBroadcast(){
-        firebase = FIRDatabase.database().reference()
+    func getUser(completion: ()->()){
+        if let authoruid = _authorUid {
+            user = User(uid: authoruid)
+            user.downloadUserInfo() {
+                completion()
+            }
+        }
     }
+    
 }

@@ -18,6 +18,7 @@ class User {
     private var _displayName: String!
     private var _gamerTag: String!
     private var _characters: [String]!
+    private var _lastAvailable: NSTimeInterval!
     
     var uid: String {
         return _uid
@@ -35,6 +36,10 @@ class User {
         return _characters
     }
     
+    var lastAvailable: NSTimeInterval! {
+        return _lastAvailable
+    }
+    
     init(uid: String) {
         _uid = uid
     }
@@ -42,12 +47,17 @@ class User {
     func downloadUserInfo(completion: () -> ()) {
         let firebase = FIRDatabase.database().reference()
         firebase.child("users").child(_uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
-            self._displayName = snapshot.value!["displayName"] as? String
-            self._gamerTag = snapshot.value!["gamerTag"] as? String
-            self._characters = snapshot.value!["characters"] as? [String]
-            self.facebookId = snapshot.value!["facebookId"] as? String
+            self._displayName = snapshot.value!["displayName"] as? String ?? ""
+            self._gamerTag = snapshot.value!["gamerTag"] as? String ?? ""
+            self._characters = snapshot.value!["characters"] as? [String] ?? []
+            self.facebookId = snapshot.value!["facebookId"] as? String ?? ""
+            self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? nil
+            print("downloaded \(self._displayName)")
             completion()
-        })
+        }) { (error) in
+            print("error retreiving user")
+            completion()
+        }
     }
     
     func getUserProfilePhoto(completion: () -> ()) {

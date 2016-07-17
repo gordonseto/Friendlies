@@ -19,7 +19,7 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var displayName: UILabel!
     @IBOutlet weak var gamerTag: UILabel!
     @IBOutlet weak var userPhoto: profilePhoto!
-    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var characterStackView: UIStackView!
     @IBOutlet weak var broadcastDesc: UITextView!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
@@ -40,57 +40,33 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
     }
     
     func configureCell(broadcast: Broadcast) {
+        if let author = broadcast.user {
         self.broadcast = broadcast
+
+            broadcastDesc.delegate = self
         
-        broadcastDesc.delegate = self
+            displayName.text = broadcast.user.displayName
+            gamerTag.text = broadcast.user.gamerTag
+            broadcastDesc.text = broadcast.broadcastDesc
+            timeLabel.text = "\(getBroadcastTime(broadcast.time).0)\(getBroadcastTime(broadcast.time).1)"
+            userPhoto.image = broadcast.user.profilePhoto
+            
+            arrangeStackViewCharacters(author, characterStackView: self.characterStackView, height: 20)
         
-        setupSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5)
-        
-        broadcastDesc.text = broadcast.broadcastDesc
-        timeLabel.text = getBroadcastTime(broadcast.time)
-        
-        if broadcast.hasSetup {
-            setupLabel.textColor = UIColor(red: 38.0/255.0, green: 255.0/255.0, blue: 60.0/255.0, alpha: 1.0)
-        } else {
-            setupLabel.textColor = UIColor.darkGrayColor()
-        }
-        
-        setupSwitch.on = broadcast.hasSetup
-        
-        if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
-            if uid == broadcast.authorUid {
-                setupSwitch.userInteractionEnabled = true
-                broadcastDesc.userInteractionEnabled = true
-                broadcastDesc.editable = true
-            }
-        }
-    }
-    
-    func getBroadcastTime(time: NSTimeInterval) -> String {
-        let currentTime = NSDate().timeIntervalSince1970
-        var timeDifference = currentTime - time
-        if timeDifference < 60 { // seconds
-            return "\(Int(timeDifference))s"
-        } else {
-            timeDifference /= 60.0
-            if timeDifference < 60 { //minutes
-                return "\(Int(timeDifference))m"
+            if broadcast.hasSetup {
+                setupLabel.textColor = UIColor(red: 38.0/255.0, green: 255.0/255.0, blue: 60.0/255.0, alpha: 1.0)
             } else {
-                timeDifference /= 60.0
-                if timeDifference < 60 { //hours
-                    return "\(Int(timeDifference))h"
-                } else {
-                    timeDifference /= 24.0
-                    if timeDifference < 24 { //days
-                        return "\(Int(timeDifference))d"
-                    } else {
-                        timeDifference /= 52.0
-                        if timeDifference < 52.0 { //weeks
-                            return "\(Int(timeDifference))w"
-                        } else {
-                            return "\(Int(timeDifference))y" //years
-                        }
-                    }
+                setupLabel.textColor = UIColor.darkGrayColor()
+            }
+        
+            setupSwitch.on = broadcast.hasSetup
+            setupSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5)
+            
+            if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+                if uid == broadcast.authorUid {
+                    setupSwitch.userInteractionEnabled = true
+                    broadcastDesc.userInteractionEnabled = true
+                    broadcastDesc.editable = true
                 }
             }
         }
@@ -108,10 +84,7 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
     func textViewDidBeginEditing(textView: UITextView) {
         
         delegate?.onTextViewEditing(textView)
-        
-        if textView.text == "Available to play" {
-            textView.text = ""
-        }
+
         textView.textColor = UIColor.whiteColor()
         textView.font = UIFont(name: textView.font!.fontName, size: 16)
     }
@@ -145,4 +118,34 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
         firebase.child("broadcasts").child(broadcast.key).child("hasSetup").setValue(broadcast.hasSetup)
     }
 
+}
+
+func getBroadcastTime(time: NSTimeInterval) -> (value: String, unit: String) {
+    let currentTime = NSDate().timeIntervalSince1970
+    var timeDifference = currentTime - time
+    if timeDifference < 60 { // seconds
+        return ("\(Int(timeDifference))", "s")
+    } else {
+        timeDifference /= 60.0
+        if timeDifference < 60 { //minutes
+            return ("\(Int(timeDifference))", "m")
+        } else {
+            timeDifference /= 60.0
+            if timeDifference < 60 { //hours
+                return ("\(Int(timeDifference))", "h")
+            } else {
+                timeDifference /= 24.0
+                if timeDifference < 24 { //days
+                    return ("\(Int(timeDifference))", "d")
+                } else {
+                    timeDifference /= 52.0
+                    if timeDifference < 52.0 { //weeks
+                        return ("\(Int(timeDifference))", "w")
+                    } else {
+                        return ("\(Int(timeDifference))", "y") //years
+                    }
+                }
+            }
+        }
+    }
 }

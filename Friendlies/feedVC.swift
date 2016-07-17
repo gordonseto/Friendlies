@@ -19,6 +19,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     @IBOutlet weak var broadcastContentView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var progressView: UIProgressView!
     
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation!
@@ -33,6 +34,10 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     var broadcasts = [Broadcast]()
     var broadcastKeys = [[String:AnyObject]]()
     
+    var activityIndicator: UIActivityIndicatorView!
+    var loadingLabel: UILabel!
+    
+    var downloadedImages = [String: UIImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +50,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         tbc?.tabBar.selectedImageTintColor = UIColor.whiteColor()
         
         self.hideKeyboardWhenTappedAround()
+        
+        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
+        loadingLabel = UILabel(frame: CGRectMake(0, 0, 100, 30))
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: Selector("refreshView:"), forControlEvents: UIControlEvents.ValueChanged)
@@ -63,6 +71,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         } else {
             presentLoginVC()
         }
+        
+        broadcastContentView.hidden = true
         
         locationManager.delegate = self
         
@@ -94,7 +104,16 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                             if error != nil {
                                 print(error.localizedDescription)
                             } else {
-                                print("broadcast sent")
+                                self.progressView.hidden = false
+                                self.progressView.progress = 0.75
+                                self.progressView.setProgress(1, animated: true)
+                                let delay = 0.5 * Double(NSEC_PER_SEC)
+                                let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                                dispatch_after(time, dispatch_get_main_queue()) {
+                                    self.progressView.hidden = true
+                                    self.progressView.progress = 0.5
+                                    self.queryBroadcasts()
+                                }
                             }
                             self.hexagonButton.userInteractionEnabled = true
                         })
@@ -108,6 +127,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     
     func queryBroadcasts() {
         if let currentloc = currentLocation {
+            if broadcasts.count == 0 {
+                self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
+            }
             hasLoadedBroadcasts = true
         
             let geofireRef = firebase.child("geolocations")
@@ -134,6 +156,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                 circleQuery.removeAllObservers()
                 self.getBroadcastsFromKeys()
             })
+            
         }
     }
     
@@ -148,10 +171,13 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                         guard let hasSetup = snapshot.value!["hasSetup"] as? Bool else { return }
                         guard let time = snapshot.value!["time"] as? NSTimeInterval else { return }
                         let broadcast = Broadcast(key: key, authorUid: authorUid, broadcastDesc: broadcastDesc, hasSetup: hasSetup, geolocation: location, time: time)
-                        self.broadcasts.append(broadcast)
-                        
-                        if self.broadcasts.count == self.broadcastKeys.count {
-                            self.sortBroadcasts()
+                        broadcast.getUser() {
+                            self.broadcasts.append(broadcast)
+                            if let author = broadcast.user {
+                                if self.broadcasts.count == self.broadcastKeys.count {
+                                    self.sortBroadcasts()
+                                }
+                            }
                         }
                     })
                 }
@@ -159,6 +185,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         }
         if broadcastKeys.count == 0 {
             self.refreshControl.endRefreshing()
+            self.stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
+            broadcastContentView.hidden = false
             tableView.reloadData()
         }
     }
@@ -169,6 +197,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         }
         print(broadcasts)
         self.refreshControl.endRefreshing()
+        stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
+        broadcastContentView.hidden = false
         tableView.reloadData()
     }
 
@@ -194,6 +224,15 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BroadcastCell", forIndexPath: indexPath) as! BroadcastCell
         let broadcast = broadcasts[indexPath.row]
+        if self.downloadedImages[broadcast.user.uid] == nil {
+            print("downloading \(broadcast.user.displayName)")
+            self.downloadedImages[broadcast.user.uid] = UIImage(named: "default_character")
+            broadcast.user.getUserProfilePhoto() {
+                self.downloadedImages[broadcast.user.uid] = broadcast.user.profilePhoto
+            }
+        } else {
+            broadcast.user.profilePhoto = downloadedImages[broadcast.user.uid]
+        }
         cell.delegate = self
         cell.configureCell(broadcast)
         if let currentloc = currentLocation {
@@ -219,7 +258,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func onTextViewEditing(textView: UITextView) {
-        tableView.setContentOffset(CGPointMake(0, textView.center.y-60), animated: true)
+        //tableView.setContentOffset(CGPointMake(0, textView.center.y-60), animated: true)
     }
 }
 
@@ -245,5 +284,22 @@ extension UIViewController {
             let lvc: loginVC = self.generateLoginVC()
             self.presentViewController(lvc, animated: true, completion: nil)
         }
+    }
+    
+    func startLoadingAnimation(activityIndicator: UIActivityIndicatorView, loadingLabel: UILabel, viewToAdd: UIView){
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        activityIndicator.center = CGPointMake(UIScreen.mainScreen().bounds.size.width/2 - 32, UIScreen.mainScreen().bounds.size.height/2 - 90)
+        activityIndicator.startAnimating()
+        viewToAdd.addSubview(activityIndicator)
+        
+        loadingLabel.center = CGPointMake(UIScreen.mainScreen().bounds.size.width/2 + 32, UIScreen.mainScreen().bounds.size.height/2 - 90)
+        loadingLabel.text = "Loading..."
+        loadingLabel.textColor = UIColor.whiteColor()
+        viewToAdd.addSubview(loadingLabel)
+    }
+    
+    func stopLoadingAnimation(activityIndicator: UIActivityIndicatorView, loadingLabel: UILabel){
+        activityIndicator.removeFromSuperview()
+        loadingLabel.removeFromSuperview()
     }
 }

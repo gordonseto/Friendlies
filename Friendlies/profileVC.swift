@@ -14,6 +14,7 @@ class profileVC: UIViewController {
     @IBOutlet weak var userPhoto: profilePhoto!
     @IBOutlet weak var displayName: UILabel!
     @IBOutlet weak var gamerTag: UILabel!
+    @IBOutlet weak var lastAvailable: UILabel!
     
     @IBOutlet weak var character1: UIImageView!
     @IBOutlet weak var character2: UIImageView!
@@ -69,9 +70,7 @@ class profileVC: UIViewController {
     }
     
     func initializeViewWithUser() {
-        for stackView in characterStackView.subviews {
-            stackView.removeFromSuperview()
-        }
+        
         user.downloadUserInfo() {
             if let name = self.user.displayName {
                 self.displayName.text = name
@@ -79,20 +78,19 @@ class profileVC: UIViewController {
             if let tag = self.user.gamerTag {
                 self.gamerTag.text = tag
             }
-            if let characters = self.user.characters {
-                for character in characters {
-                    let imageView = UIImageView()
-                    imageView.image = UIImage(named: character)
-                    imageView.heightAnchor.constraintEqualToConstant(25).active = true
-                    imageView.widthAnchor.constraintEqualToConstant(25).active = true
-                    self.characterStackView.addArrangedSubview(imageView)
-                }
-            }
+            
+            arrangeStackViewCharacters(self.user, characterStackView: self.characterStackView, height: 25)
+            
             if self.userPhoto.image == nil {
                 self.user.getUserProfilePhoto(){
                     self.userPhoto.image = self.user.profilePhoto
                 }
             }
+            
+            if let lastavailable = self.user.lastAvailable {
+                self.initializeTimeLabel(lastavailable)
+            }
+        
         }
     }
     
@@ -120,5 +118,50 @@ class profileVC: UIViewController {
     func refreshView(sender: AnyObject){
         initializeViewWithUser()
         self.refreshControl.endRefreshing()
+    }
+    
+    func initializeTimeLabel(lastavailable: NSTimeInterval){
+        var timeDifference = getBroadcastTime(lastavailable)
+        var suffix: String = ""
+        if timeDifference.1 == "s" {
+            suffix = "SECOND"
+        }
+        if timeDifference.1 == "m" {
+            suffix = "MINUTE"
+        }
+        if timeDifference.1 == "h" {
+            suffix = "HOUR"
+        }
+        if timeDifference.1 == "d" {
+            suffix = "DAY"
+        }
+        if timeDifference.1 == "w" {
+            suffix = "WEEK"
+        }
+        if timeDifference.1 == "Y" {
+            suffix = "YEAR"
+        }
+        var plural: String = ""
+        if timeDifference.0 != "1" {
+            plural = "S"
+        }
+        
+        lastAvailable.text = "AVAILABLE \(timeDifference.0) \(suffix)\(plural) AGO"
+    }
+}
+
+func arrangeStackViewCharacters(user: User, characterStackView: UIStackView, height: CGFloat){
+    for stackView in characterStackView.subviews {
+        stackView.removeFromSuperview()
+    }
+    
+    if let characters = user.characters {
+        for character in characters {
+            let imageView = UIImageView()
+            imageView.image = UIImage(named: character)
+            imageView.heightAnchor.constraintEqualToConstant(height).active = true
+            imageView.widthAnchor.constraintEqualToConstant(height).active = true
+            characterStackView.addArrangedSubview(imageView)
+        }
     }
 }

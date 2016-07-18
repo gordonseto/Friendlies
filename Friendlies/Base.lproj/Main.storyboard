@@ -405,7 +405,7 @@
                                                                     <constraint firstAttribute="width" constant="200" id="lLS-6a-C87"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                                                <state key="normal" title="SEND A MESSAGE">
+                                                                <state key="normal">
                                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </state>
                                                                 <variation key="default">
@@ -425,7 +425,7 @@
                                                                     <constraint firstAttribute="height" constant="40" id="Vpx-wb-zkN"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                                                <state key="normal" title="ADD AS A FRIEND">
+                                                                <state key="normal">
                                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </state>
                                                                 <variation key="default">
@@ -445,7 +445,7 @@
                                                                     <constraint firstAttribute="height" constant="40" id="wsf-KU-gaJ"/>
                                                                 </constraints>
                                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                                                <state key="normal" title="FOLLOW">
+                                                                <state key="normal">
                                                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </state>
                                                                 <variation key="default">

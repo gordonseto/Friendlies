@@ -9,6 +9,47 @@
 import UIKit
 import FirebaseAuth
 
+enum FriendsStatus: Int, CustomStringConvertible {
+    case Friends, NotFriends, WantsToAdd, WantsToBeAddedBy
+    
+    var blueButtonLabel: String {
+        let labels = [
+            "REMOVE FRIEND",
+            "ADD AS A FRIEND",
+            "PENDING FRIEND REQUEST",
+            "ACCEPT FRIEND REQUEST"
+        ]
+        
+        return labels[rawValue]
+    }
+    
+    var description: String {
+        return blueButtonLabel
+    }
+    
+    func addInteraction(uid: String, completion: ()->()) {
+        switch rawValue {
+        case 0:
+            CurrentUser.sharedInstance.removeUser(uid){
+                completion()
+            }
+        case 1:
+            CurrentUser.sharedInstance.sendAddRequestToUser(uid){
+                completion()
+            }
+        case 2:
+            CurrentUser.sharedInstance.cancelAddRequest(uid){
+                completion()
+            }
+        case 3:
+            CurrentUser.sharedInstance.acceptAddRequest(uid){
+                completion()
+            }
+        default: break
+        }
+    }
+}
+
 class profileVC: UIViewController {
 
     @IBOutlet weak var userPhoto: profilePhoto!
@@ -35,11 +76,14 @@ class profileVC: UIViewController {
     
     var ownProfile: Bool = false
     var user: User!
+    var currentUser: User!
     var uid: String!
     
     var refreshControl: UIRefreshControl!
     
     var fromFeed: Bool = false
+    
+    var friendsStatus: FriendsStatus!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,9 +109,11 @@ class profileVC: UIViewController {
             initializeView()
         } else {
             if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
-                user = User(uid: uid)
-                ownProfile = true
-                downloadUserAndInitializeView()
+                CurrentUser.sharedInstance.getCurrentUser(){
+                    self.user = CurrentUser.sharedInstance.user
+                    self.initializeView()
+                    self.ownProfile = true
+                }
             }
         }
         
@@ -106,13 +152,53 @@ class profileVC: UIViewController {
         if let lastavailable = self.user.lastAvailable {
             self.initializeTimeLabel(lastavailable)
         }
+        
+        if !ownProfile {
+            getCurrentUser()
+        }
     }
     
+    func getCurrentUser(){
+        CurrentUser.sharedInstance.getCurrentUser(){
+            self.currentUser = CurrentUser.sharedInstance.user
+            self.checkFriendsStatus()
+        }
+    }
+    
+    func checkFriendsStatus() {
+        if let friends = currentUser.friends {
+            if let wantsToAdd = currentUser.wantsToAdd {
+                if let wantsToBeAddedBy = currentUser.wantsToBeAddedBy {
+                    if friends.contains(user.uid) {
+                        friendsStatus = FriendsStatus.Friends
+                    } else if wantsToAdd.contains(user.uid) {
+                        friendsStatus = FriendsStatus.WantsToAdd
+                    } else if wantsToBeAddedBy.contains(user.uid) {
+                        friendsStatus = FriendsStatus.WantsToBeAddedBy
+                    } else {
+                        friendsStatus = FriendsStatus.NotFriends
+                    }
+                    updateButtonLabels()
+                }
+            }
+        }
+    }
+    
+    func updateButtonLabels(){
+        blueButton.setTitle(friendsStatus.blueButtonLabel, forState: .Normal)
+    }
 
     @IBAction func onYellowPressed(sender: AnyObject) {
     }
     
     @IBAction func onBluePressed(sender: AnyObject) {
+        if let friendsStatus = friendsStatus {
+            blueButton.userInteractionEnabled = false
+            friendsStatus.addInteraction(self.user.uid){
+                self.checkFriendsStatus()
+                self.blueButton.userInteractionEnabled = true
+            }
+        }
     }
     
     @IBAction func onRedPressed(sender: AnyObject) {

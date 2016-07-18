@@ -19,6 +19,9 @@ class User {
     private var _gamerTag: String!
     private var _characters: [String]!
     private var _lastAvailable: NSTimeInterval!
+    private var _friends: [String]!
+    private var _wantsToAdd: [String]!
+    private var _wantsToBeAddedBy: [String]!
     
     var uid: String {
         return _uid
@@ -40,6 +43,18 @@ class User {
         return _lastAvailable
     }
     
+    var friends: [String]! {
+        return _friends
+    }
+    
+    var wantsToAdd: [String]! {
+        return _wantsToAdd
+    }
+    
+    var wantsToBeAddedBy: [String]! {
+        return _wantsToBeAddedBy
+    }
+    
     init(uid: String) {
         _uid = uid
     }
@@ -52,6 +67,9 @@ class User {
             self._characters = snapshot.value!["characters"] as? [String] ?? []
             self.facebookId = snapshot.value!["facebookId"] as? String ?? ""
             self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? nil
+            self._friends = snapshot.value!["friends"] as? [String] ?? []
+            self._wantsToAdd = snapshot.value!["wantsToAdd"] as? [String] ?? []
+            self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [String] ?? []
             print("downloaded \(self._displayName)")
             completion()
         }) { (error) in

@@ -63,7 +63,7 @@ class editProfileVC: UIViewController, UITextFieldDelegate {
             firebase.child("users").child(uid).child("characters").setValue(characters)
             if let navController = self.navigationController {
                 let pVC = self.navigationController?.viewControllers[0] as! profileVC
-                pVC.initializeViewWithUser()
+                pVC.downloadUserAndInitializeView()
                 navController.popViewControllerAnimated(true)
             }
         }

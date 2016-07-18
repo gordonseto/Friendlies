@@ -67,6 +67,7 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
                     setupSwitch.userInteractionEnabled = true
                     broadcastDesc.userInteractionEnabled = true
                     broadcastDesc.editable = true
+                    setupSwitch.enabled = true
                 }
             }
         }

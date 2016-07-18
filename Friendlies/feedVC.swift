@@ -36,6 +36,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     
     var activityIndicator: UIActivityIndicatorView!
     var loadingLabel: UILabel!
+    var noLocationLabel: UILabel!
     
     var downloadedImages = [String: UIImage]()
     var pendingDownloads = [Int: String]()
@@ -44,8 +45,12 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
+        
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.allowsSelection = true
         
         let tbc = self.tabBarController
         tbc?.tabBar.barStyle = UIBarStyle.BlackOpaque
@@ -55,6 +60,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
         loadingLabel = UILabel(frame: CGRectMake(0, 0, 100, 30))
+        noLocationLabel = UILabel(frame: CGRectMake(0, 0, 100, 30))
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: Selector("refreshView:"), forControlEvents: UIControlEvents.ValueChanged)
@@ -66,10 +72,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         
         firebase = FIRDatabase.database().reference()
         
-        if let user = FIRAuth.auth()?.currentUser {
-            print(user.displayName)
-            print(user.photoURL)
-            print(user.uid)
+        if let displayName = FIRAuth.auth()?.currentUser?.displayName {
+            print(displayName)
+            print(FIRAuth.auth()?.currentUser?.uid)
         } else {
             presentLoginVC()
         }
@@ -205,6 +210,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
 
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        removeLocationSettingsMessage(noLocationLabel)
+        
         if let location = locations.first {
             //print(location)
             self.currentLocation = location
@@ -218,6 +226,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse {
             locationManager.startUpdatingLocation()
         } else {
+            displayLocationSettingsMessage(noLocationLabel, viewToAdd: self.tableView)
             locationManager.requestWhenInUseAuthorization()
             locationManager.startUpdatingLocation()
         }
@@ -238,7 +247,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                     for (index, uid) in self.pendingDownloads {
                         if uid == broadcast.user.uid {
                             let indexPath = NSIndexPath(forRow: index, inSection: 0)
-                            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Top)
+                            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
                         }
                     }
                     if let index = self.uidsBeingDownloaded.indexOf(broadcast.user.uid) {
@@ -262,7 +271,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print("yo")
+        if let user = broadcasts[indexPath.row].user {
+            performSegueWithIdentifier("profileVCFromFeed", sender: user)
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -276,11 +287,21 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     func onTextViewEditing(textView: UITextView) {
         //tableView.setContentOffset(CGPointMake(0, textView.center.y-60), animated: true)
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "profileVCFromFeed" {
+            if let pvc = segue.destinationViewController as? profileVC {
+                pvc.user = sender as! User
+                pvc.fromFeed = true
+            }
+        }
+    }
 }
 
 extension UIViewController {
     func hideKeyboardWhenTappedAround() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
     
@@ -317,5 +338,18 @@ extension UIViewController {
     func stopLoadingAnimation(activityIndicator: UIActivityIndicatorView, loadingLabel: UILabel){
         activityIndicator.removeFromSuperview()
         loadingLabel.removeFromSuperview()
+    }
+    
+    func displayLocationSettingsMessage(noLocationLabel: UILabel, viewToAdd: UIView) {
+        noLocationLabel.center = CGPointMake(UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height/2 - 90)
+        noLocationLabel.text = "Please enable location services."
+        noLocationLabel.textColor = UIColor.whiteColor()
+        viewToAdd.addSubview(noLocationLabel)
+    }
+    
+    func removeLocationSettingsMessage(noLocationLabel: UILabel!){
+        if let label = noLocationLabel {
+            noLocationLabel.removeFromSuperview()
+        }
     }
 }

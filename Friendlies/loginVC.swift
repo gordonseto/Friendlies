@@ -29,7 +29,7 @@ class loginVC: UIViewController {
             UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
             
             if error != nil {
-                print("error")
+                print(error)
             } else if result.isCancelled {
                 print("cancelled")
             } else {

@@ -24,19 +24,22 @@ class profileVC: UIViewController {
     
     @IBOutlet weak var characterStackView: UIStackView!
     
-    @IBOutlet weak var messageButton: friendliesButton!
-    @IBOutlet weak var addButton: friendliesButton!
-    @IBOutlet weak var blockButton: friendliesButton!
+    @IBOutlet weak var yellowButton: friendliesButton!
+    @IBOutlet weak var blueButton: friendliesButton!
+    @IBOutlet weak var redButton: friendliesButton!
     
     @IBOutlet weak var settingsButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
     
     @IBOutlet weak var scrollView: UIScrollView!
     
-    var ownProfile: Bool = true
+    var ownProfile: Bool = false
     var user: User!
     var uid: String!
     
     var refreshControl: UIRefreshControl!
+    
+    var fromFeed: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,57 +57,76 @@ class profileVC: UIViewController {
         scrollView.delaysContentTouches = false
         
         if let user = user {
-            initializeViewWithUser()
-        } else {
-            if ownProfile {
-                if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
-                    user = User(uid: uid)
-                    initializeViewWithUser()
+            if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+                if user.uid == uid {
+                    ownProfile = true
                 }
+            }
+            initializeView()
+        } else {
+            if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+                user = User(uid: uid)
+                ownProfile = true
+                downloadUserAndInitializeView()
             }
         }
         
         if ownProfile {
             settingsButton.hidden = false
         }
+        
+        if fromFeed {
+            backButton.hidden = false
+        }
     }
     
-    func initializeViewWithUser() {
+    func downloadUserAndInitializeView() {
         
         user.downloadUserInfo() {
-            if let name = self.user.displayName {
-                self.displayName.text = name
-            }
-            if let tag = self.user.gamerTag {
-                self.gamerTag.text = tag
-            }
-            
-            arrangeStackViewCharacters(self.user, characterStackView: self.characterStackView, height: 25)
-            
-            if self.userPhoto.image == nil {
-                self.user.getUserProfilePhoto(){
-                    self.userPhoto.image = self.user.profilePhoto
-                }
-            }
-            
-            if let lastavailable = self.user.lastAvailable {
-                self.initializeTimeLabel(lastavailable)
-            }
+            self.initializeView()
+        }
+    }
+    
+    func initializeView(){
+        if let name = self.user.displayName {
+            self.displayName.text = name
+        }
+        if let tag = self.user.gamerTag {
+            self.gamerTag.text = tag
+        }
         
+        arrangeStackViewCharacters(self.user, characterStackView: self.characterStackView, height: 25)
+        
+        if self.userPhoto.image == nil {
+            self.user.getUserProfilePhoto(){
+                self.userPhoto.image = self.user.profilePhoto
+            }
+        }
+        
+        if let lastavailable = self.user.lastAvailable {
+            self.initializeTimeLabel(lastavailable)
         }
     }
     
 
-    @IBAction func onMessagePressed(sender: AnyObject) {
+    @IBAction func onYellowPressed(sender: AnyObject) {
     }
-    @IBAction func onAddPressed(sender: AnyObject) {
+    
+    @IBAction func onBluePressed(sender: AnyObject) {
     }
-    @IBAction func onBlockPressed(sender: AnyObject) {
+    
+    @IBAction func onRedPressed(sender: AnyObject) {
     }
     
     @IBAction func onSettingsPressed(sender: AnyObject) {
         if user != nil {
             performSegueWithIdentifier("editProfileVC", sender: nil)
+        }
+    }
+    
+    @IBAction func onBackButtonPressed(sender: AnyObject) {
+        if let navController = self.navigationController {
+            navController.popViewControllerAnimated(true)
         }
     }
     
@@ -116,7 +138,7 @@ class profileVC: UIViewController {
     }
     
     func refreshView(sender: AnyObject){
-        initializeViewWithUser()
+        downloadUserAndInitializeView()
         self.refreshControl.endRefreshing()
     }
     

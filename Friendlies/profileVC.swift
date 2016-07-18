@@ -111,8 +111,9 @@ class profileVC: UIViewController {
             if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
                 CurrentUser.sharedInstance.getCurrentUser(){
                     self.user = CurrentUser.sharedInstance.user
-                    self.initializeView()
                     self.ownProfile = true
+                    self.settingsButton.hidden = false
+                    self.initializeView()
                 }
             }
         }

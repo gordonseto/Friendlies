@@ -107,35 +107,9 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         } else {
             user = filteredUsers[indexPath.row]
         }
-        getProfilePhoto(user, indexPath: indexPath)
+        getProfilePhoto(user, indexPath: indexPath, downloadedImages: &downloadedImages, uidsBeingDownloaded: &uidsBeingDownloaded, pendingDownloads: &pendingDownloads, tableView: tableView)
         cell.configureCell(user)
         return cell
-    }
-    
-    func getProfilePhoto(user: User, indexPath: NSIndexPath){
-        if self.downloadedImages[user.uid] == nil {
-            if uidsBeingDownloaded.contains(user.uid) {
-                pendingDownloads[indexPath.row] = user.uid
-            } else {
-                print("downloading \(user.displayName)")
-                uidsBeingDownloaded.append(user.uid)
-                pendingDownloads[indexPath.row] = user.uid
-                user.getUserProfilePhoto() {
-                    self.downloadedImages[user.uid] = user.profilePhoto
-                    for (index, uid) in self.pendingDownloads {
-                        if uid == user.uid {
-                            let indexPath = NSIndexPath(forRow: index, inSection: 0)
-                            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-                        }
-                    }
-                    if let index = self.uidsBeingDownloaded.indexOf(user.uid) {
-                        self.uidsBeingDownloaded.removeAtIndex(index)
-                    }
-                }
-            }
-        } else {
-            user.profilePhoto = downloadedImages[user.uid]
-        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

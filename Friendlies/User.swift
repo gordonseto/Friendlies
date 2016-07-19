@@ -22,6 +22,7 @@ class User {
     private var _friends: [String]!
     private var _wantsToAdd: [String]!
     private var _wantsToBeAddedBy: [String]!
+    private var _conversations: [String: Bool]!
     
     var uid: String {
         return _uid
@@ -51,6 +52,10 @@ class User {
         return _wantsToBeAddedBy
     }
     
+    var conversations: [String: Bool]! {
+        return _conversations
+    }
+    
     init(uid: String) {
         _uid = uid
     }
@@ -66,6 +71,7 @@ class User {
             self._friends = snapshot.value!["friends"] as? [String] ?? []
             self._wantsToAdd = snapshot.value!["wantsToAdd"] as? [String] ?? []
             self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [String] ?? []
+            self._conversations = snapshot.value!["conversations"] as? [String: Bool] ?? [:]
             print("downloaded \(self.displayName)")
             completion()
         }) { (error) in

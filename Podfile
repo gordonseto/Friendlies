@@ -13,4 +13,5 @@ target 'Friendlies' do
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   pod 'GeoFire', :git => 'https://github.com/firebase/geofire-objc.git'
+  pod 'JSQMessagesViewController', '~> 7.3'
 end

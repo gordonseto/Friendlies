@@ -62,6 +62,11 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         getCurrentUsersFriends()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = false
+        self.navigationController?.navigationBarHidden = true
+    }
+    
     func getCurrentUsersFriends(){
         if friends.count == 0 {
             self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
@@ -144,6 +149,17 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var user: User!
+        if inSearchMode{
+            user = filteredUsers[indexPath.row]
+        } else {
+            user = friends[indexPath.row]
+        }
+        if let user = user {
+            if let currentuser = CurrentUser.sharedInstance.user {
+                performSegueWithIdentifier("chatVC", sender: user)
+            }
+        }
         
     }
     
@@ -204,6 +220,19 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
 
     func refreshView(sender: AnyObject){
         getCurrentUsersFriends()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let currentuser = CurrentUser.sharedInstance.user {
+            if segue.identifier == "chatVC" {
+                if let destinationVC = segue.destinationViewController as? chatVC {
+                    super.prepareForSegue(segue, sender: sender)
+                    destinationVC.senderId = currentuser.uid
+                    destinationVC.senderDisplayName = currentuser.displayName
+                    destinationVC.otherUser = sender as? User
+                }
+            }
+        }
     }
     
 }

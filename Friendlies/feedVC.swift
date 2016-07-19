@@ -71,7 +71,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         self.tableView.delaysContentTouches = false
         
         firebase = FIRDatabase.database().reference()
-        
+
         if let displayName = FIRAuth.auth()?.currentUser?.displayName {
             print(displayName)
             print(FIRAuth.auth()?.currentUser?.uid)
@@ -235,35 +235,39 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("BroadcastCell", forIndexPath: indexPath) as! BroadcastCell
         let broadcast = broadcasts[indexPath.row]
-        if self.downloadedImages[broadcast.user.uid] == nil {
-            if uidsBeingDownloaded.contains(broadcast.user.uid) {
-                pendingDownloads[indexPath.row] = broadcast.user.uid
-            } else {
-                print("downloading \(broadcast.user.displayName)")
-                uidsBeingDownloaded.append(broadcast.user.uid)
-                pendingDownloads[indexPath.row] = broadcast.user.uid
-                broadcast.user.getUserProfilePhoto() {
-                    self.downloadedImages[broadcast.user.uid] = broadcast.user.profilePhoto
-                    for (index, uid) in self.pendingDownloads {
-                        if uid == broadcast.user.uid {
-                            let indexPath = NSIndexPath(forRow: index, inSection: 0)
-                            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
-                        }
-                    }
-                    if let index = self.uidsBeingDownloaded.indexOf(broadcast.user.uid) {
-                        self.uidsBeingDownloaded.removeAtIndex(index)
-                    }
-                }
-            }
-        } else {
-            broadcast.user.profilePhoto = downloadedImages[broadcast.user.uid]
-        }
+        getProfilePhoto(broadcast.user, indexPath: indexPath)
         cell.delegate = self
         cell.configureCell(broadcast)
         if let currentloc = currentLocation {
             cell.findDistanceFrom(currentloc)
         }
         return cell
+    }
+    
+    func getProfilePhoto(user: User, indexPath: NSIndexPath){
+        if self.downloadedImages[user.uid] == nil {
+            if uidsBeingDownloaded.contains(user.uid) {
+                pendingDownloads[indexPath.row] = user.uid
+            } else {
+                print("downloading \(user.displayName)")
+                uidsBeingDownloaded.append(user.uid)
+                pendingDownloads[indexPath.row] = user.uid
+                user.getUserProfilePhoto() {
+                    self.downloadedImages[user.uid] = user.profilePhoto
+                    for (index, uid) in self.pendingDownloads {
+                        if uid == user.uid {
+                            let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+                        }
+                    }
+                    if let index = self.uidsBeingDownloaded.indexOf(user.uid) {
+                        self.uidsBeingDownloaded.removeAtIndex(index)
+                    }
+                }
+            }
+        } else {
+            user.profilePhoto = downloadedImages[user.uid]
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

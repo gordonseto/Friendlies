@@ -14,8 +14,8 @@ class User {
     
     var facebookId: String!
     var profilePhoto: UIImage!
+    var displayName: String!
     private var _uid: String!
-    private var _displayName: String!
     private var _gamerTag: String!
     private var _characters: [String]!
     private var _lastAvailable: NSTimeInterval!
@@ -25,10 +25,6 @@ class User {
     
     var uid: String {
         return _uid
-    }
-    
-    var displayName: String! {
-        return _displayName
     }
     
     var gamerTag: String! {
@@ -62,7 +58,7 @@ class User {
     func downloadUserInfo(completion: () -> ()) {
         let firebase = FIRDatabase.database().reference()
         firebase.child("users").child(_uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
-            self._displayName = snapshot.value!["displayName"] as? String ?? ""
+            self.displayName = snapshot.value!["displayName"] as? String ?? ""
             self._gamerTag = snapshot.value!["gamerTag"] as? String ?? ""
             self._characters = snapshot.value!["characters"] as? [String] ?? []
             self.facebookId = snapshot.value!["facebookId"] as? String ?? ""
@@ -70,7 +66,7 @@ class User {
             self._friends = snapshot.value!["friends"] as? [String] ?? []
             self._wantsToAdd = snapshot.value!["wantsToAdd"] as? [String] ?? []
             self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [String] ?? []
-            print("downloaded \(self._displayName)")
+            print("downloaded \(self.displayName)")
             completion()
         }) { (error) in
             print("error retreiving user")
@@ -83,6 +79,7 @@ class User {
             let url = NSURL(string: "http://graph.facebook.com/\(facebookid)/picture?type=large")
             
             downloadImage(url!) {
+                print("downloaded \(self.displayName)'s photo")
                 completion()
             }
         }

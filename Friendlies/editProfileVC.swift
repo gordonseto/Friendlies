@@ -79,7 +79,6 @@ class editProfileVC: UIViewController, UITextFieldDelegate {
         let tag = sender.tag
         if tag < characters.count {
             characters.removeAtIndex(tag)
-            let delay = 0.01 * Double(NSEC_PER_SEC)
             self.updateChosenCharacters()
         }
     }

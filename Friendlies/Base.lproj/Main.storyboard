@@ -622,7 +622,7 @@
                                                 <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vYI-TU-a8I">
                                                     <rect key="frame" x="0.0" y="2" width="600" height="131"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="testProfileImage" translatesAutoresizingMaskIntoConstraints="NO" id="gjF-ZF-H8D" customClass="profilePhoto" customModule="Friendlies" customModuleProvider="target">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gjF-ZF-H8D" customClass="profilePhoto" customModule="Friendlies" customModuleProvider="target">
                                                             <rect key="frame" x="8" y="37" width="60" height="60"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="60" id="JBq-cJ-2Wh"/>
@@ -1204,7 +1204,6 @@
         <image name="default_character" width="24" height="24"/>
         <image name="hexagon" width="54" height="61"/>
         <image name="settings" width="129" height="135"/>
-        <image name="testProfileImage" width="200" height="300"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="QMB-5h-5Qh"/>

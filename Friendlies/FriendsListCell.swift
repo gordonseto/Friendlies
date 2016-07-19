@@ -23,5 +23,8 @@ class FriendsListCell: UITableViewCell {
         if let name = user.displayName {
             displayName.text = name
         }
+        if let image = user.profilePhoto {
+            profilePhoto.image = image
+        }
     }
 }

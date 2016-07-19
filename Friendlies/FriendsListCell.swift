@@ -13,6 +13,7 @@ class FriendsListCell: UITableViewCell {
     
     @IBOutlet weak var displayName: UILabel!
     @IBOutlet weak var profilePhoto: UIImageView!
+    @IBOutlet weak var lastAvailable: UILabel!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -26,5 +27,37 @@ class FriendsListCell: UITableViewCell {
         if let image = user.profilePhoto {
             profilePhoto.image = image
         }
+        if let lastavailable = user.lastAvailable {
+            lastAvailable.text = initializeTimeLabel(user.lastAvailable)
+        }
+    }
+    
+    func initializeTimeLabel(lastavailable: NSTimeInterval) -> String {
+        var timeDifference = getBroadcastTime(lastavailable)
+        var suffix: String = ""
+        if timeDifference.1 == "s" {
+            suffix = "SECOND"
+        }
+        if timeDifference.1 == "m" {
+            suffix = "MINUTE"
+        }
+        if timeDifference.1 == "h" {
+            suffix = "HOUR"
+        }
+        if timeDifference.1 == "d" {
+            suffix = "DAY"
+        }
+        if timeDifference.1 == "w" {
+            suffix = "WEEK"
+        }
+        if timeDifference.1 == "Y" {
+            suffix = "YEAR"
+        }
+        var plural: String = ""
+        if timeDifference.0 != "1" {
+            plural = "S"
+        }
+        
+        return "AVAILABLE \(timeDifference.0) \(suffix)\(plural) AGO"
     }
 }

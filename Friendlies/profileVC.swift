@@ -151,7 +151,7 @@ class profileVC: UIViewController {
         }
         
         if let lastavailable = self.user.lastAvailable {
-            self.initializeTimeLabel(lastavailable)
+            lastAvailable.text = self.initializeTimeLabel(lastavailable)
         }
         
         if !ownProfile {
@@ -229,7 +229,7 @@ class profileVC: UIViewController {
         self.refreshControl.endRefreshing()
     }
     
-    func initializeTimeLabel(lastavailable: NSTimeInterval){
+    func initializeTimeLabel(lastavailable: NSTimeInterval) -> String {
         var timeDifference = getBroadcastTime(lastavailable)
         var suffix: String = ""
         if timeDifference.1 == "s" {
@@ -255,7 +255,7 @@ class profileVC: UIViewController {
             plural = "S"
         }
         
-        lastAvailable.text = "AVAILABLE \(timeDifference.0) \(suffix)\(plural) AGO"
+        return "AVAILABLE \(timeDifference.0) \(suffix)\(plural) AGO"
     }
 }
 

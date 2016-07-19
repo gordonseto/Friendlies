@@ -107,9 +107,40 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         } else {
             user = filteredUsers[indexPath.row]
         }
-        getProfilePhoto(user, indexPath: indexPath, downloadedImages: &downloadedImages, uidsBeingDownloaded: &uidsBeingDownloaded, pendingDownloads: &pendingDownloads, tableView: tableView)
+        getUser(user, indexPath: indexPath)
         cell.configureCell(user)
         return cell
+    }
+    
+    func getUser(user: User, indexPath: NSIndexPath){
+        if downloadedImages[user.uid] == nil {
+            if uidsBeingDownloaded.contains(user.uid) {
+                print("pending download for \(user.displayName)")
+                pendingDownloads[indexPath.row] = user.uid
+            } else {
+                print("downloading \(user.displayName)")
+                uidsBeingDownloaded.append(user.uid)
+                pendingDownloads[indexPath.row] = user.uid
+                user.getUserProfilePhoto() {
+                    user.downloadUserInfo(){
+                        self.downloadedImages[user.uid] = user.profilePhoto
+                        for (index, uid) in self.pendingDownloads {
+                            if uid == user.uid {
+                                let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                                if indexPath.row < self.tableView.numberOfRowsInSection(0) {
+                                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+                                }
+                            }
+                        }
+                        if let index = self.uidsBeingDownloaded.indexOf(user.uid) {
+                            self.uidsBeingDownloaded.removeAtIndex(index)
+                        }
+                    }
+                }
+            }
+        } else {
+            user.profilePhoto = downloadedImages[user.uid]
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -151,12 +182,12 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                                     user.displayName = child.key
                                     user.facebookId = facebookid
                                     self.allUsers.append(user)
-                                    self.filteredUsers = self.allUsers.filter({$0.displayName.rangeOfString(lower) != nil})
-                                    self.tableView.reloadData()
                                 }
                             }
                         }
                     }
+                    self.filteredUsers = self.allUsers.filter({$0.displayName.rangeOfString(lower) != nil})
+                    self.tableView.reloadData()
                 })
             } else {
                 if allUsers.count != 0 {

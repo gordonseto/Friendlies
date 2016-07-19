@@ -32,10 +32,6 @@ class Broadcast {
         return _authorUid
     }
     
-    var author: User {
-        return _author
-    }
-    
     var geolocation: CLLocation {
         return _geolocation
     }

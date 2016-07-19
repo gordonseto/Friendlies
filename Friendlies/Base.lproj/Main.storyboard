@@ -619,8 +619,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="133"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vYI-TU-a8I">
-                                                    <rect key="frame" x="0.0" y="2" width="600" height="131"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vYI-TU-a8I">
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="133"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gjF-ZF-H8D" customClass="profilePhoto" customModule="Friendlies" customModuleProvider="target">
                                                             <rect key="frame" x="8" y="37" width="60" height="60"/>
@@ -629,20 +629,43 @@
                                                                 <constraint firstAttribute="width" constant="60" id="bF3-Kd-gmE"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Gordon Seto" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HQQ-us-d6w">
-                                                            <rect key="frame" x="96" y="35" width="395" height="27"/>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
-                                                            <color key="textColor" red="1" green="0.81568627449999997" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ciz-QL-i6c">
+                                                            <rect key="frame" x="76" y="49" width="112" height="33"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Gordon Seto" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="HQQ-us-d6w">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="112" height="21"/>
+                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                                                    <color key="textColor" red="1" green="0.81568627449999997" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="AVAILABLE 5 HRS AGO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="deD-g2-U7D">
+                                                                    <rect key="frame" x="0.0" y="21" width="112" height="12"/>
+                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="10"/>
+                                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
+                                                        <constraint firstItem="ciz-QL-i6c" firstAttribute="top" secondItem="gjF-ZF-H8D" secondAttribute="top" id="0No-mB-VZ9"/>
+                                                        <constraint firstItem="ciz-QL-i6c" firstAttribute="centerY" secondItem="gjF-ZF-H8D" secondAttribute="centerY" constant="-4" id="2s1-Kj-1mn"/>
                                                         <constraint firstItem="gjF-ZF-H8D" firstAttribute="leading" secondItem="vYI-TU-a8I" secondAttribute="leading" constant="8" id="5NI-Wx-DFJ"/>
+                                                        <constraint firstItem="ciz-QL-i6c" firstAttribute="leading" secondItem="gjF-ZF-H8D" secondAttribute="trailing" constant="12" id="HfI-xc-9uc"/>
+                                                        <constraint firstItem="ciz-QL-i6c" firstAttribute="centerY" secondItem="vYI-TU-a8I" secondAttribute="centerY" id="Mym-dx-sm2"/>
                                                         <constraint firstItem="gjF-ZF-H8D" firstAttribute="centerY" secondItem="vYI-TU-a8I" secondAttribute="centerY" id="QtX-bw-HIE"/>
-                                                        <constraint firstItem="HQQ-us-d6w" firstAttribute="leading" secondItem="gjF-ZF-H8D" secondAttribute="trailing" constant="8" id="UTM-HS-foU"/>
-                                                        <constraint firstItem="HQQ-us-d6w" firstAttribute="top" secondItem="gjF-ZF-H8D" secondAttribute="top" id="utT-7g-aon"/>
+                                                        <constraint firstItem="ciz-QL-i6c" firstAttribute="leading" secondItem="gjF-ZF-H8D" secondAttribute="trailing" constant="12" id="RBB-wV-wYh"/>
+                                                        <constraint firstItem="ciz-QL-i6c" firstAttribute="centerX" secondItem="vYI-TU-a8I" secondAttribute="centerX" id="i84-Q7-sJR"/>
                                                     </constraints>
+                                                    <variation key="default">
+                                                        <mask key="constraints">
+                                                            <exclude reference="0No-mB-VZ9"/>
+                                                            <exclude reference="HfI-xc-9uc"/>
+                                                            <exclude reference="Mym-dx-sm2"/>
+                                                            <exclude reference="i84-Q7-sJR"/>
+                                                        </mask>
+                                                    </variation>
                                                 </view>
                                             </subviews>
                                             <constraints>
@@ -654,6 +677,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="displayName" destination="HQQ-us-d6w" id="OSP-qs-sjl"/>
+                                            <outlet property="lastAvailable" destination="deD-g2-U7D" id="xJi-Su-MI9"/>
                                             <outlet property="profilePhoto" destination="gjF-ZF-H8D" id="fBV-1g-ZZM"/>
                                         </connections>
                                     </tableViewCell>

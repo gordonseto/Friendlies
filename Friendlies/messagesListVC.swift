@@ -26,6 +26,8 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     var downloadedImages = [String: UIImage]()
     var pendingDownloads = [Int: String]()
     var uidsBeingDownloaded = [String]()
+    
+    var noMessagesLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,17 +51,26 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.tableView.alwaysBounceVertical = true
         self.tableView.delaysContentTouches = false
         
+        noMessagesLabel = UILabel(frame: CGRectMake(0, 0, 220, 120))
+        
         firebase = FIRDatabase.database().reference()
         
         getCurrentUserConversations()
     }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.tabBarController?.tabBar.hidden = false
+        self.navigationController?.navigationBarHidden = true
+    }
+            
 
     func getCurrentUserConversations() {
+        if self.conversationPreviews.count == 0 {
+            self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
+            self.removeBackgroundMessage(self.noMessagesLabel)
+        }
         CurrentUser.sharedInstance.getCurrentUser(){
             if let user = CurrentUser.sharedInstance.user {
-                if self.conversationPreviews.count == 0 {
-                    self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
-                }
                 self.currentUser = user
                 self.conversationsDownloaded = 0
                 self.conversationPreviews = []
@@ -119,6 +130,11 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
         self.refreshControl.endRefreshing()
         tableView.reloadData()
+        if conversationPreviews.count == 0 {
+            displayBackgroundMessage("You have no messages!", label: noMessagesLabel, viewToAdd: tableView)
+        } else {
+            removeBackgroundMessage(noMessagesLabel)
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -159,7 +175,10 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+        let conversationPreview = conversationPreviews[indexPath.row]
+        if let conversationId = conversationPreview.conversationId {
+            performSegueWithIdentifier("chatVC", sender: conversationPreview)
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -204,6 +223,23 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func refreshView(sender: AnyObject){
         getCurrentUserConversations()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "chatVC" {
+            if let destinationVC = segue.destinationViewController as? chatVC {
+                if let conversationPreview = sender as? ConversationPreview {
+                    if let uid = conversationPreview.uid {
+                        if let conversationId = conversationPreview.conversationId {
+                            destinationVC.senderId = currentUser.uid
+                            destinationVC.senderDisplayName = currentUser.displayName
+                            destinationVC.otherUser = User(uid: conversationPreview.uid)
+                            destinationVC.conversationId = conversationId
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

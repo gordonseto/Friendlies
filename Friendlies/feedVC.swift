@@ -42,6 +42,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     var pendingDownloads = [Int: String]()
     var uidsBeingDownloaded = [String]()
     
+    var noBroadcastsLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -69,6 +71,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         self.tableView.scrollEnabled = true
         self.tableView.alwaysBounceVertical = true
         self.tableView.delaysContentTouches = false
+        
+        noBroadcastsLabel = UILabel(frame: CGRectMake(0, 0, 220, 120))
         
         firebase = FIRDatabase.database().reference()
 
@@ -140,6 +144,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if let currentloc = currentLocation {
             if broadcasts.count == 0 {
                 self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
+                removeBackgroundMessage(noBroadcastsLabel)
             }
             hasLoadedBroadcasts = true
         
@@ -195,10 +200,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             }
         }
         if broadcastKeys.count == 0 {
-            self.refreshControl.endRefreshing()
-            self.stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
-            broadcastContentView.hidden = false
-            tableView.reloadData()
+            sortBroadcasts()
         }
     }
     
@@ -211,11 +213,14 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
         broadcastContentView.hidden = false
         tableView.reloadData()
+        if broadcasts.count == 0 {
+            displayBackgroundMessage("There are no broadcasts near this area!", label: noBroadcastsLabel, viewToAdd: tableView)
+        } else {
+            removeBackgroundMessage(noBroadcastsLabel)
+        }
     }
 
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        removeLocationSettingsMessage(noLocationLabel)
         
         if let location = locations.first {
             //print(location)
@@ -230,7 +235,6 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse {
             locationManager.startUpdatingLocation()
         } else {
-            displayLocationSettingsMessage(noLocationLabel, viewToAdd: self.tableView)
             locationManager.requestWhenInUseAuthorization()
             locationManager.startUpdatingLocation()
         }
@@ -350,16 +354,18 @@ extension UIViewController {
         loadingLabel.removeFromSuperview()
     }
     
-    func displayLocationSettingsMessage(noLocationLabel: UILabel, viewToAdd: UIView) {
-        noLocationLabel.center = CGPointMake(UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height/2 - 90)
-        noLocationLabel.text = "Please enable location services."
-        noLocationLabel.textColor = UIColor.whiteColor()
-        viewToAdd.addSubview(noLocationLabel)
+    func displayBackgroundMessage(message: String, label: UILabel, viewToAdd: UIView) {
+        label.center = CGPointMake(UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.height/2 - 90)
+        label.text = message
+        label.textAlignment = .Center
+        label.font = UIFont(name: "HelveticaNeue", size: 15)
+        label.textColor = UIColor.darkGrayColor()
+        viewToAdd.addSubview(label)
     }
     
-    func removeLocationSettingsMessage(noLocationLabel: UILabel!){
-        if let label = noLocationLabel {
-            noLocationLabel.removeFromSuperview()
+    func removeBackgroundMessage(label: UILabel!){
+        if let label = label {
+            label.removeFromSuperview()
         }
     }
 }

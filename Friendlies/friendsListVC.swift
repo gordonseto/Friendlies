@@ -32,6 +32,8 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     var firebase: FIRDatabaseReference!
     var isDownloadingPeople: Bool = false
     
+    var noFriendsLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -57,6 +59,8 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         self.tableView.alwaysBounceVertical = true
         self.tableView.delaysContentTouches = false
         
+        noFriendsLabel = UILabel(frame: CGRectMake(0, 0, 220, 120))
+        
         firebase = FIRDatabase.database().reference()
       
         getCurrentUsersFriends()
@@ -70,6 +74,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     func getCurrentUsersFriends(){
         if friends.count == 0 {
             self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
+            removeBackgroundMessage(noFriendsLabel)
         }
         CurrentUser.sharedInstance.getCurrentUser(){
             if let user = CurrentUser.sharedInstance.user {
@@ -86,6 +91,9 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     }
     
     func getFriendProfiles(){
+        if friendsKeys.count == 0 {
+            doneGettingProfiles()
+        }
         for friendKey in friendsKeys {
             var user = User(uid: friendKey)
             user.downloadUserInfo(){
@@ -102,6 +110,13 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
         self.refreshControl.endRefreshing()
         tableView.reloadData()
+        if !inSearchMode {
+            if friends.count == 0 {
+                displayBackgroundMessage("You have not added any friends!", label: noFriendsLabel, viewToAdd: tableView)
+            } else {
+                removeBackgroundMessage(noFriendsLabel)
+            }
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -149,6 +164,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        /*
         var user: User!
         if inSearchMode{
             user = filteredUsers[indexPath.row]
@@ -160,7 +176,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                 performSegueWithIdentifier("chatVC", sender: user)
             }
         }
-        
+        */
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

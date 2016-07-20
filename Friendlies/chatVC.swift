@@ -1,3 +1,4 @@
+
 //
 //  chatVC.swift
 //  Friendlies
@@ -31,6 +32,7 @@ class chatVC: JSQMessagesViewController {
     var usersTypingQuery: FIRDatabaseQuery!
     
     var avatars = [String: JSQMessagesAvatarImage]()
+    
     /*
     private var localTyping = false
     var isTyping: Bool {
@@ -66,8 +68,21 @@ class chatVC: JSQMessagesViewController {
         self.inputToolbar.contentView.backgroundColor = UIColor(red: 28.0/255.0, green: 28.0/255.0, blue: 28.0/255.0, alpha: 1.0)
         self.inputToolbar.contentView.textView.textColor = UIColor.darkGrayColor()
         self.inputToolbar.contentView.textView.placeHolderTextColor = UIColor.darkGrayColor()
+        
         currentUser = CurrentUser.sharedInstance.user
         
+        if otherUser.displayName == nil {
+            otherUser.downloadUserInfo(){
+                self.beginSetup()
+            }
+        } else {
+            beginSetup()
+        }
+        
+        
+    }
+    
+    func beginSetup(){
         firebase = FIRDatabase.database().reference()
         messagesRef = firebase.child("messages")
         currentUserConversationRef = firebase.child("users").child(currentUser.uid).child("conversations")
@@ -80,12 +95,15 @@ class chatVC: JSQMessagesViewController {
         if currentUser != nil {
             if otherUser != nil {
                 setupBubbles()
-                getConversation() {
-                    self.setupConversation()
+                if conversationId == nil {
+                    getConversation() {
+                        self.setupConversation()
+                    }
+                } else {
+                    setupConversation()
                 }
             }
         }
-        
     }
     
     /*
@@ -119,6 +137,7 @@ class chatVC: JSQMessagesViewController {
             firebase.child("messages").child(conversationId).observeEventType(.ChildAdded, withBlock: { (snapshot) in
                 guard let id = snapshot.value!["senderId"] as? String else { return }
                 guard let text = snapshot.value!["text"] as? String else { return }
+                guard let time = snapshot.value!["time"] as? NSTimeInterval else { return }
                 
                 var displayName: String!
                 if id == self.senderId {
@@ -127,7 +146,7 @@ class chatVC: JSQMessagesViewController {
                     displayName = self.otherUser.displayName
                 }
                 
-                self.addMessage(id, displayName: displayName, text: text)
+                self.addMessage(id, displayName: displayName, text: text, time: time)
                 
                 self.finishReceivingMessage()
             })
@@ -283,8 +302,9 @@ class chatVC: JSQMessagesViewController {
         performSegueWithIdentifier("profileVCFromChat", sender: nil)
     }
     
-    func addMessage(id: String, displayName: String, text: String){
-        let message = JSQMessage(senderId: id, displayName: displayName, text: text)
+    func addMessage(id: String, displayName: String, text: String, time: NSTimeInterval){
+        let date = NSDate(timeIntervalSince1970: time)
+        let message = JSQMessage(senderId: id, senderDisplayName: displayName, date: date, text: text)
         messages.append(message)
     }
     
@@ -316,6 +336,42 @@ class chatVC: JSQMessagesViewController {
         }
         
         return cell
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+        let message = messages[indexPath.row]
+        if indexPath.row == 0 {
+            return kJSQMessagesCollectionViewCellLabelHeightDefault
+        } else {
+            let difference = getTimeDifference(messages[indexPath.row - 1].date, endDate: messages[indexPath.row].date)
+            if difference > 10 {
+                return kJSQMessagesCollectionViewCellLabelHeightDefault
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    func getTimeDifference(startDate: NSDate, endDate: NSDate) -> Int {
+        let calendar = NSCalendar.currentCalendar()
+        let datecomponenets = calendar.components(NSCalendarUnit.NSMinuteCalendarUnit, fromDate: startDate, toDate: endDate, options: NSCalendarOptions.MatchFirst)
+        let minutes = datecomponenets.minute
+        return minutes
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
+        let message = messages[indexPath.row]
+        let sharedFormatter = JSQMessagesTimestampFormatter()
+        if indexPath.row == 0 {
+            return sharedFormatter.attributedTimestampForDate(message.date)
+        } else {
+            let difference = getTimeDifference(messages[indexPath.row - 1].date, endDate: messages[indexPath.row].date)
+            if difference > 10 {
+                return sharedFormatter.attributedTimestampForDate(message.date)
+            } else {
+                return nil
+            }
+        }
     }
     
     private func setupBubbles() {

@@ -701,7 +701,6 @@
                     <connections>
                         <outlet property="searchBar" destination="4Kg-LM-nBP" id="iw0-VH-kq6"/>
                         <outlet property="tableView" destination="z15-4t-DMk" id="FQG-gh-QAc"/>
-                        <segue destination="ftA-Yf-DnT" kind="show" identifier="chatVC" id="0V2-M0-Vh8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q0h-8M-Kfk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -727,7 +726,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QWO-ne-Rkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2054" y="2031"/>
+            <point key="canvasLocation" x="2118" y="2807"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="KHl-4h-ZH4">
@@ -876,6 +875,7 @@
                     <connections>
                         <outlet property="searchBar" destination="JOh-KF-wyu" id="hcp-XI-WeJ"/>
                         <outlet property="tableView" destination="DcM-Hi-uo4" id="5I3-J7-erI"/>
+                        <segue destination="ftA-Yf-DnT" kind="show" identifier="chatVC" id="55E-u4-M3s"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WQd-AV-ceS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1407,7 +1407,7 @@
         <image name="settings" width="129" height="135"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0V2-M0-Vh8"/>
+        <segue reference="55E-u4-M3s"/>
         <segue reference="j3X-Iq-QdZ"/>
     </inferredMetricsTieBreakers>
 </document>

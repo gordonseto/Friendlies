@@ -24,7 +24,7 @@ class User {
     private var _wantsToBeAddedBy: [String]!
     private var _conversations: [String: Bool]!
     
-    var uid: String {
+    var uid: String! {
         return _uid
     }
     

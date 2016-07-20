@@ -26,6 +26,23 @@ class chatVC: JSQMessagesViewController {
     
     var conversationId: String!
     
+    var userIsTypingRef: FIRDatabaseReference!
+    var usersTypingQuery: FIRDatabaseQuery!
+    
+    var avatars = [String: JSQMessagesAvatarImage]()
+    
+    private var localTyping = false
+    var isTyping: Bool {
+        get {
+            return localTyping
+        }
+        set {
+            // 3
+            localTyping = newValue
+            userIsTypingRef.setValue(newValue)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,6 +56,8 @@ class chatVC: JSQMessagesViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.collectionView.backgroundColor = UIColor.blackColor()
+        self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
+        self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
         self.inputToolbar.contentView.textView.keyboardAppearance = UIKeyboardAppearance.Dark
         self.inputToolbar.contentView.backgroundColor = UIColor(red: 28.0/255.0, green: 28.0/255.0, blue: 28.0/255.0, alpha: 1.0)
         self.inputToolbar.contentView.textView.textColor = UIColor.darkGrayColor()
@@ -50,7 +69,22 @@ class chatVC: JSQMessagesViewController {
         currentUserConversationRef = firebase.child("users").child(currentUser.uid).child("conversations")
         otherUserConversationRef = firebase.child("users").child(otherUser.uid).child("conversations")
         
+        if otherUser != nil {
+            addTitleButton()
+        }
+        
+        if currentUser != nil {
+            if otherUser != nil {
+                setupBubbles()
+                getConversation() {
+                    self.setupConversation()
+                }
+            }
+        }
+        
     }
+    
+    /*
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
@@ -60,14 +94,19 @@ class chatVC: JSQMessagesViewController {
         
         if currentUser != nil {
             if otherUser != nil {
-                title = otherUser.displayName
                 setupBubbles()
                 getConversation() {
-                    self.getMessages()
+                    self.setupConversation()
                 }
             }
         }
         
+    }
+    */
+    func setupConversation(){
+        //setupAvatars()
+        getMessages()
+        observeTyping()
     }
     
     func getMessages() {
@@ -128,11 +167,88 @@ class chatVC: JSQMessagesViewController {
         
         finishSendingMessage()
         
+        isTyping = false
+        
         if noConversationId {
             currentUser.downloadUserInfo(){
-                self.getMessages()
+                self.setupConversation()
             }
         }
+    }
+    
+    override func textViewDidChange(textView: UITextView) {
+        super.textViewDidChange(textView)
+        
+        isTyping = textView.text != ""
+    }
+    
+    private func observeTyping() {
+        if let conversationId = conversationId {
+            let typingIndicatorRef = messagesRef.child(conversationId).child("typingIndicator")
+            userIsTypingRef = typingIndicatorRef.child(senderId)
+            userIsTypingRef.onDisconnectRemoveValue()
+            
+            usersTypingQuery = typingIndicatorRef.queryOrderedByValue().queryEqualToValue(true)
+            
+            usersTypingQuery.observeEventType(.Value, withBlock: { (snapshot) in
+                if snapshot.childrenCount == 1 && self.isTyping {
+                    return
+                }
+                
+                self.showTypingIndicator = snapshot.childrenCount > 0
+                self.scrollToBottomAnimated(true)
+            })
+        }
+    }
+    /*
+    func setupAvatarImage(name: String, imageUrl: String?, incoming: Bool) {
+        let image =
+        let diameter = incoming ? UInt(collectionView.collectionViewLayout.incomingAvatarViewSize.width) : UInt(collectionView.collectionViewLayout.outgoingAvatarViewSize.width)
+        let avatarImage = JSQMessagesAvatarFactory.avatarWithImage(image, diameter: diameter)
+        avatars[name] = avatarImage
+        return
+    }
+    */
+    
+    func setupAvatars() {
+        if let currentuserpic = currentUser.profilePhoto {
+            avatars[currentUser.uid] = JSQMessagesAvatarImageFactory.avatarImageWithImage(currentUser.profilePhoto, diameter: 30)
+        } else {
+            CurrentUser.sharedInstance.user.getUserProfilePhoto(){
+                self.currentUser.profilePhoto = CurrentUser.sharedInstance.user.profilePhoto
+                self.avatars[self.currentUser.uid] = JSQMessagesAvatarImageFactory.avatarImageWithImage(self.currentUser.profilePhoto, diameter: 30)
+                self.collectionView.reloadData()
+            }
+        }
+        if let otheruserpic = otherUser.profilePhoto {
+            avatars[otherUser.uid] = JSQMessagesAvatarImageFactory.avatarImageWithImage(otherUser.profilePhoto, diameter: 30)
+        }
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
+        let message = messages[indexPath.item]
+        /*
+        if let avatar = avatars[message.senderId] {
+            return avatar
+        } else {
+            return nil
+        }
+         */
+        return nil
+    }
+
+    func addTitleButton(){
+        var titleButton = UIButton()
+        titleButton.setTitle(otherUser.displayName, forState: .Normal)
+        titleButton.titleLabel!.font = UIFont(name: "HelveticaNeue-Bold", size: 17)
+        titleButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        titleButton.frame = CGRectMake(0, 0, 100, 44)
+        titleButton.addTarget(self, action: "onTitleTapped", forControlEvents: UIControlEvents.TouchUpInside)
+        self.navigationItem.titleView = titleButton
+    }
+    
+    func onTitleTapped(){
+        performSegueWithIdentifier("profileVCFromChat", sender: nil)
     }
     
     func addMessage(id: String, displayName: String, text: String){
@@ -157,10 +273,6 @@ class chatVC: JSQMessagesViewController {
         }
     }
     
-    override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        return nil
-    }
-    
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell
         let message = messages[indexPath.item]
@@ -180,6 +292,16 @@ class chatVC: JSQMessagesViewController {
             UIColor.jsq_messageBubbleBlueColor())
         incomingBubbleImageView = factory.incomingMessagesBubbleImageWithColor(
             UIColor.lightGrayColor())
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "profileVCFromChat" {
+            if let destinationVC = segue.destinationViewController as? profileVC {
+                destinationVC.user = otherUser
+                destinationVC.notFromTabBar = true
+                destinationVC.fromChat = true
+            }
+        }
     }
 
 }

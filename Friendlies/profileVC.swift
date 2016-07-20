@@ -81,14 +81,14 @@ class profileVC: UIViewController {
     
     var refreshControl: UIRefreshControl!
     
-    var fromFeed: Bool = false
+    var fromChat: Bool = false
+    var notFromTabBar: Bool = false
     
     var friendsStatus: FriendsStatus!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBarHidden = true
         self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
         
         refreshControl = UIRefreshControl()
@@ -122,9 +122,17 @@ class profileVC: UIViewController {
             settingsButton.hidden = false
         }
         
-        if fromFeed {
+        if notFromTabBar {
             backButton.hidden = false
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if !fromChat {
+            self.navigationController?.setNavigationBarHidden(true, animated: true)
+            self.tabBarController?.tabBar.hidden = false
+        }
+        
     }
     
     func downloadUserAndInitializeView() {
@@ -187,9 +195,11 @@ class profileVC: UIViewController {
     
     func updateButtonLabels(){
         blueButton.setTitle(friendsStatus.blueButtonLabel, forState: .Normal)
+        yellowButton.setTitle("SEND A MESSAGE", forState: .Normal)
     }
 
     @IBAction func onYellowPressed(sender: AnyObject) {
+        performSegueWithIdentifier("chatVCFromProfile", sender: nil)
     }
     
     @IBAction func onBluePressed(sender: AnyObject) {
@@ -221,6 +231,11 @@ class profileVC: UIViewController {
         if segue.identifier == "editProfileVC" {
             var destinationVC = segue.destinationViewController as! editProfileVC
             destinationVC.user = user
+        } else if segue.identifier == "chatVCFromProfile" {
+            var destinationVC = segue.destinationViewController as! chatVC
+            destinationVC.otherUser = user
+            destinationVC.senderId = currentUser.uid
+            destinationVC.senderDisplayName = currentUser.displayName
         }
     }
     

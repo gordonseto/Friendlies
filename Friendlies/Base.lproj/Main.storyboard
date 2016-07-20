@@ -537,6 +537,7 @@
                         <outlet property="userPhoto" destination="APN-Re-2xk" id="f9x-gS-aGF"/>
                         <outlet property="yellowButton" destination="4a5-2q-SnS" id="DZy-ie-p2C"/>
                         <segue destination="JRS-RI-bVP" kind="show" identifier="editProfileVC" id="FR8-zK-pYi"/>
+                        <segue destination="ftA-Yf-DnT" kind="show" identifier="chatVCFromProfile" id="3hv-uT-Y7D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="do2-Tr-JnO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -717,8 +718,11 @@
                     <view key="view" contentMode="scaleToFill" id="X0F-R1-ROh">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <segue destination="Ic4-5m-t60" kind="show" identifier="profileVCFromChat" id="j3X-Iq-QdZ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QWO-ne-Rkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1249,6 +1253,7 @@
         <image name="settings" width="129" height="135"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="QMB-5h-5Qh"/>
+        <segue reference="3hv-uT-Y7D"/>
+        <segue reference="j3X-Iq-QdZ"/>
     </inferredMetricsTieBreakers>
 </document>

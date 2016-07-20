@@ -86,6 +86,10 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         locationAuthStatus()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = true
+    }
+    
     @IBAction func onHexagonTapped(sender: AnyObject) {
         if let user = FIRAuth.auth()?.currentUser {
             if let firebase = firebase {
@@ -297,7 +301,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if segue.identifier == "profileVCFromFeed" {
             if let pvc = segue.destinationViewController as? profileVC {
                 pvc.user = sender as! User
-                pvc.fromFeed = true
+                pvc.notFromTabBar = true
             }
         }
     }

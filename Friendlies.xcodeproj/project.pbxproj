@@ -27,6 +27,8 @@
 		8EA99A4A1D3D870B001DB679 /* friendsListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A491D3D870B001DB679 /* friendsListVC.swift */; };
 		8EA99A4C1D3D94EE001DB679 /* FriendsListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A4B1D3D94EE001DB679 /* FriendsListCell.swift */; };
 		8EA99A571D3EA066001DB679 /* chatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A561D3EA066001DB679 /* chatVC.swift */; };
+		8EA99A591D3FDE8B001DB679 /* messagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A581D3FDE8B001DB679 /* messagesListVC.swift */; };
+		8EA99A5B1D3FE705001DB679 /* conversationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A5A1D3FE705001DB679 /* conversationPreview.swift */; };
 		FD25912E391B32A2D21012B7 /* Pods_Friendlies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B0887ED05FC3B0473672E8 /* Pods_Friendlies.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +58,8 @@
 		8EA99A4B1D3D94EE001DB679 /* FriendsListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsListCell.swift; sourceTree = "<group>"; };
 		8EA99A501D3E95BD001DB679 /* Friendlies-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Friendlies-Bridging-Header.h"; sourceTree = "<group>"; };
 		8EA99A561D3EA066001DB679 /* chatVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = chatVC.swift; sourceTree = "<group>"; };
+		8EA99A581D3FDE8B001DB679 /* messagesListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = messagesListVC.swift; sourceTree = "<group>"; };
+		8EA99A5A1D3FE705001DB679 /* conversationPreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = conversationPreview.swift; sourceTree = "<group>"; };
 		E2B0887ED05FC3B0473672E8 /* Pods_Friendlies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Friendlies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -142,6 +146,7 @@
 			children = (
 				8E629CFA1D397ED7001E8EC3 /* User.swift */,
 				8E9648F81D3ABDE90048B3B3 /* Broadcast.swift */,
+				8EA99A5A1D3FE705001DB679 /* conversationPreview.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -155,6 +160,7 @@
 				8E629CFE1D39A400001E8EC3 /* editProfileVC.swift */,
 				8EA99A491D3D870B001DB679 /* friendsListVC.swift */,
 				8EA99A561D3EA066001DB679 /* chatVC.swift */,
+				8EA99A581D3FDE8B001DB679 /* messagesListVC.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -298,10 +304,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EA99A591D3FDE8B001DB679 /* messagesListVC.swift in Sources */,
 				8EA99A571D3EA066001DB679 /* chatVC.swift in Sources */,
 				8E629CF41D39677F001E8EC3 /* feedVC.swift in Sources */,
 				8E756A511D39C22E00B8A0EB /* friendliesTextField.swift in Sources */,
 				8E629CDC1D394FCB001E8EC3 /* loginVC.swift in Sources */,
+				8EA99A5B1D3FE705001DB679 /* conversationPreview.swift in Sources */,
 				8EA99A481D3D6727001DB679 /* CurrentUser.swift in Sources */,
 				8E629CDA1D394FCB001E8EC3 /* AppDelegate.swift in Sources */,
 				8E9648F91D3ABDE90048B3B3 /* Broadcast.swift in Sources */,

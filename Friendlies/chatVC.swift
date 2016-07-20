@@ -23,6 +23,7 @@ class chatVC: JSQMessagesViewController {
     var messagesRef: FIRDatabaseReference!
     var currentUserConversationRef: FIRDatabaseReference!
     var otherUserConversationRef: FIRDatabaseReference!
+    var conversationInfoRef: FIRDatabaseReference!
     
     var conversationId: String!
     
@@ -30,7 +31,7 @@ class chatVC: JSQMessagesViewController {
     var usersTypingQuery: FIRDatabaseQuery!
     
     var avatars = [String: JSQMessagesAvatarImage]()
-    
+    /*
     private var localTyping = false
     var isTyping: Bool {
         get {
@@ -42,7 +43,7 @@ class chatVC: JSQMessagesViewController {
             userIsTypingRef.setValue(newValue)
         }
     }
-    
+    */
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,10 +53,13 @@ class chatVC: JSQMessagesViewController {
         
         self.navigationController?.navigationBarHidden = false
         
+        self.view.backgroundColor = UIColor.blackColor()
+        
         self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.collectionView.backgroundColor = UIColor.blackColor()
+        //self.collectionView.backgroundColor = UIColor.darkGrayColor()
         self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
         self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
         self.inputToolbar.contentView.textView.keyboardAppearance = UIKeyboardAppearance.Dark
@@ -106,11 +110,12 @@ class chatVC: JSQMessagesViewController {
     func setupConversation(){
         //setupAvatars()
         getMessages()
-        observeTyping()
+        //observeTyping()
     }
     
     func getMessages() {
         if let conversationId = self.conversationId {
+            conversationInfoRef = firebase.child("conversationInfos").child(conversationId)
             firebase.child("messages").child(conversationId).observeEventType(.ChildAdded, withBlock: { (snapshot) in
                 guard let id = snapshot.value!["senderId"] as? String else { return }
                 guard let text = snapshot.value!["text"] as? String else { return }
@@ -147,39 +152,65 @@ class chatVC: JSQMessagesViewController {
         var noConversationId: Bool = true
         
         if self.conversationId == nil {
-            conversationId = currentUserConversationRef.childByAutoId().key
-            currentUserConversationRef.child(conversationId).setValue(true)
-            otherUserConversationRef.child(conversationId).setValue(true)
-            self.conversationId = conversationId
+            noConversationId = true
+            conversationId = setupNewConversation()
         } else {
             noConversationId = false
             conversationId = self.conversationId
         }
         
         let itemRef = messagesRef.child(conversationId).childByAutoId()
+        
+        let time = NSDate().timeIntervalSince1970
+        
         let messageItem = [
             "text": text,
             "senderId": senderId,
+            "time": time
         ]
         itemRef.setValue(messageItem)
+        
+        conversationInfoRef.child("lastMessage").setValue(text)
+        conversationInfoRef.child("lastMessageTime").setValue(time)
+        conversationInfoRef.child("uids").child(currentUser.uid).setValue("seen")
+        conversationInfoRef.child("uids").child(otherUser.uid).setValue("unseen")
         
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
         
         finishSendingMessage()
         
-        isTyping = false
+        //isTyping = false
         
         if noConversationId {
-            currentUser.downloadUserInfo(){
-                self.setupConversation()
+            CurrentUser.sharedInstance.user.downloadUserInfo(){
+                if let user = CurrentUser.sharedInstance.user {
+                    self.currentUser = user
+                    self.setupConversation()
+                }
             }
         }
     }
     
+    func setupNewConversation() -> String {
+        conversationId = currentUserConversationRef.childByAutoId().key
+        currentUserConversationRef.child(conversationId).setValue(true)
+        otherUserConversationRef.child(conversationId).setValue(true)
+        let uids = [currentUser.uid: "unseen", otherUser.uid: "unseen"]
+        let displayNames = [currentUser.displayName, otherUser.displayName]
+        let facebookIds = [currentUser.facebookId, otherUser.facebookId]
+        let newConversation = ["displayNames": displayNames, "facebookIds": facebookIds]
+        conversationInfoRef = firebase.child("conversationInfos").child(conversationId)
+        conversationInfoRef.setValue(newConversation)
+        conversationInfoRef.child("uids").setValue(uids)
+        return conversationId
+    }
+    /*
     override func textViewDidChange(textView: UITextView) {
         super.textViewDidChange(textView)
         
-        isTyping = textView.text != ""
+        if let text = textView.text {
+            isTyping = textView.text != ""
+        }
     }
     
     private func observeTyping() {
@@ -200,6 +231,7 @@ class chatVC: JSQMessagesViewController {
             })
         }
     }
+ */
     /*
     func setupAvatarImage(name: String, imageUrl: String?, incoming: Bool) {
         let image =
@@ -289,7 +321,7 @@ class chatVC: JSQMessagesViewController {
     private func setupBubbles() {
         let factory = JSQMessagesBubbleImageFactory()
         outgoingBubbleImageView = factory.outgoingMessagesBubbleImageWithColor(
-            UIColor.jsq_messageBubbleBlueColor())
+            UIColor.jsq_messageBubbleGreenColor())
         incomingBubbleImageView = factory.incomingMessagesBubbleImageWithColor(
             UIColor.lightGrayColor())
     }

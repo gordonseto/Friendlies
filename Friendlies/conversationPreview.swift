@@ -8,7 +8,7 @@
 
 import Foundation
 
-class conversationPreview {
+class ConversationPreview {
     
     private var _conversationId: String!
     private var _uid: String!

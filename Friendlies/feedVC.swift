@@ -372,4 +372,15 @@ extension UIViewController {
             label.removeFromSuperview()
         }
     }
+    
+    func dismissNotifications(){
+        //let firebase = FIRDatabase.database().reference()
+        //if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String  {
+            //firebase.child("users").child(uid).child("notifications").setValue(0)
+        UIApplication.sharedApplication().cancelAllLocalNotifications()
+        BatchPush.dismissNotifications()
+            //BatchPush.dismissNotifications()
+            //NSUserDefaults.standardUserDefaults().setObject(0, forKey: "NOTIFICATIONS")
+        //}
+    }
 }

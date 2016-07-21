@@ -16,7 +16,7 @@ enum FriendsStatus: Int, CustomStringConvertible {
         let labels = [
             "REMOVE FRIEND",
             "ADD AS A FRIEND",
-            "PENDING FRIEND REQUEST",
+            "CANCEL FRIEND REQUEST",
             "ACCEPT FRIEND REQUEST"
         ]
         
@@ -186,7 +186,7 @@ class profileVC: UIViewController {
                         friendsStatus = FriendsStatus.Friends
                     } else if wantsToAdd.contains(user.uid) {
                         friendsStatus = FriendsStatus.WantsToAdd
-                    } else if wantsToBeAddedBy.contains(user.uid) {
+                    } else if wantsToBeAddedBy.contains({$0[user.uid] != nil}) {
                         friendsStatus = FriendsStatus.WantsToBeAddedBy
                     } else {
                         friendsStatus = FriendsStatus.NotFriends

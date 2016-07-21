@@ -63,7 +63,6 @@ class chatVC: JSQMessagesViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.collectionView.backgroundColor = UIColor.blackColor()
-        //self.collectionView.backgroundColor = UIColor.darkGrayColor()
         self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
         self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
         self.inputToolbar.contentView.textView.keyboardAppearance = UIKeyboardAppearance.Dark
@@ -120,8 +119,8 @@ class chatVC: JSQMessagesViewController {
         }
     }
     
-    /*
     
+    /*
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         
@@ -136,6 +135,7 @@ class chatVC: JSQMessagesViewController {
                 }
             }
         }
+ 
         
     }
     */
@@ -172,6 +172,8 @@ class chatVC: JSQMessagesViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
         isLookingAtMessage = true
     }
     

@@ -21,7 +21,7 @@ class User {
     private var _lastAvailable: NSTimeInterval!
     private var _friends: [String]!
     private var _wantsToAdd: [String]!
-    private var _wantsToBeAddedBy: [String]!
+    private var _wantsToBeAddedBy: [[String: String]]!
     private var _conversations: [String: Bool]!
     
     var uid: String! {
@@ -48,7 +48,7 @@ class User {
         return _wantsToAdd
     }
     
-    var wantsToBeAddedBy: [String]! {
+    var wantsToBeAddedBy: [[String: String]]! {
         return _wantsToBeAddedBy
     }
     
@@ -70,7 +70,7 @@ class User {
             self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? nil
             self._friends = snapshot.value!["friends"] as? [String] ?? []
             self._wantsToAdd = snapshot.value!["wantsToAdd"] as? [String] ?? []
-            self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [String] ?? []
+            self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [[String: String]] ?? [[:]]
             self._conversations = snapshot.value!["conversations"] as? [String: Bool] ?? [:]
             print("downloaded \(self.displayName)")
             completion()
@@ -107,4 +107,5 @@ class User {
             completion(data: data, response: response, error: error)
             }.resume()
     }
+    
 }

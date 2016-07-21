@@ -32,8 +32,8 @@ class CurrentUser {
             firebase = FIRDatabase.database().reference()
             firebase.child("users").child(user.uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
                 if var user = currentData.value as? [String: AnyObject] {
-                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [String] ?? []
-                    if wantsToBeAddedBy.contains(uid) {
+                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
+                    if wantsToBeAddedBy.contains({$0[uid] != nil}) {
                         self.acceptAddRequest(uid){
                             self.user.downloadUserInfo(){
                                 completion()
@@ -58,9 +58,9 @@ class CurrentUser {
             })
             firebase.child("users").child(uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
                 if var user = currentData.value as? [String: AnyObject] {
-                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [String] ?? []
+                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
                     print(wantsToBeAddedBy)
-                    wantsToBeAddedBy.append(self.user.uid)
+                    wantsToBeAddedBy.append([self.user.uid: "unseen"])
                     user["wantsToBeAddedBy"] = wantsToBeAddedBy
                     print("wants to be added by after: \(user["wantsToBeAddedBy"])")
                     currentData.value = user
@@ -101,9 +101,9 @@ class CurrentUser {
             })
             firebase.child("users").child(uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
                 if var user = currentData.value as? [String: AnyObject] {
-                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [String] ?? []
+                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
                     print(wantsToBeAddedBy)
-                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0 != self.user.uid})
+                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0[self.user.uid] == nil})
                     user["wantsToBeAddedBy"] = wantsToBeAddedBy
                     print("wants to be added by after: \(user["wantsToBeAddedBy"])")
                     currentData.value = user
@@ -127,8 +127,8 @@ class CurrentUser {
             firebase = FIRDatabase.database().reference()
             firebase.child("users").child(user.uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
                 if var user = currentData.value as? [String: AnyObject] {
-                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [String] ?? []
-                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0 != uid})
+                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
+                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0[uid] == nil})
                     user["wantsToBeAddedBy"] = wantsToBeAddedBy
                     var friends = user["friends"] as? [String] ?? []
                     friends.append(uid)
@@ -178,8 +178,8 @@ class CurrentUser {
                     var wantsToAdd = user["wantsToAdd"] as? [String] ?? []
                     wantsToAdd = wantsToAdd.filter({$0 != uid})
                     user["wantsToAdd"] = wantsToAdd
-                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [String] ?? []
-                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0 != uid})
+                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
+                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0[uid] == nil})
                     user["wantsToBeAddedBy"] = wantsToBeAddedBy
                     currentData.value = user
                     return FIRTransactionResult.successWithValue(currentData)
@@ -199,8 +199,8 @@ class CurrentUser {
                     var wantsToAdd = user["wantsToAdd"] as? [String] ?? []
                     wantsToAdd = wantsToAdd.filter({$0 != self.user.uid})
                     user["wantsToAdd"] = wantsToAdd
-                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [String] ?? []
-                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0 != self.user.uid})
+                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
+                    wantsToBeAddedBy = wantsToBeAddedBy.filter({$0[self.user.uid] == nil})
                     user["wantsToBeAddedBy"] = wantsToBeAddedBy
                     currentData.value = user
                     return FIRTransactionResult.successWithValue(currentData)
@@ -217,5 +217,38 @@ class CurrentUser {
             })
         }
     }
+    /*
+    func addConversationToUnreadMessages(conversationId: String) {
+        firebase = FIRDatabase.database().reference()
+        if let uid = user.uid {
+            firebase.child("userInfos").child(uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
+            if var userInfo = currentData.value as? [String: AnyObject] {
+                var unreadConversations = user["unreadConversations"] as? [String] ?? []
+                if wantsToBeAddedBy.contains(uid) {
+                    self.acceptAddRequest(uid){
+                        self.user.downloadUserInfo(){
+                            completion()
+                        }
+                    }
+                } else {
+                    var wantsToAdd = user["wantsToAdd"] as? [String] ?? []
+                    print(wantsToAdd)
+                    wantsToAdd.append(uid)
+                    user["wantsToAdd"] = wantsToAdd
+                    print("wants to add after: \(user["wantsToAdd"])")
+                    currentData.value = user
+                    return FIRTransactionResult.successWithValue(currentData)
+                }
+            }
+            return FIRTransactionResult.successWithValue(currentData)
+            }, andCompletionBlock: { (error, committed, snapshot) in
+                if let error = error {
+                    print(error.localizedDescription)
+                    print("WANTS TO ADD FAILED")
+                }
+            })
+        }
+    }
+ */
 
 }

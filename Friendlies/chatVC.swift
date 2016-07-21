@@ -33,6 +33,8 @@ class chatVC: JSQMessagesViewController {
     
     var avatars = [String: JSQMessagesAvatarImage]()
     
+    var isLookingAtMessage: Bool = true
+    
     /*
     private var localTyping = false
     var isTyping: Bool {
@@ -148,9 +150,21 @@ class chatVC: JSQMessagesViewController {
                 
                 self.addMessage(id, displayName: displayName, text: text, time: time)
                 
+                if self.isLookingAtMessage {
+                    self.conversationInfoRef.child("uids").child(self.currentUser.uid).setValue("seen")
+                }
+                
                 self.finishReceivingMessage()
             })
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        isLookingAtMessage = true
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        isLookingAtMessage = false
     }
     
     func getConversation(completion: () -> ()){

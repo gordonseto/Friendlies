@@ -101,14 +101,14 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             guard let lastMessageTime = snapshot.value!["lastMessageTime"] as? NSTimeInterval else { return }
             
             if let index = self.conversationPreviews.indexOf({$0.conversationId == snapshot.key}) {
-                if self.conversationPreviews[index].lastMessage != lastMessage {
+                //if self.conversationPreviews[index].lastMessageTime != lastMessageTime {
                     let newConversationPreview = self.createNewConversationPreview(conversationId, uids: uids, displayNames: displayNames, facebookIds: facebookIds, lastMessage: lastMessage, lastMessageTime: lastMessageTime)
                     self.conversationPreviews.removeAtIndex(index)
                     self.conversationPreviews.append(newConversationPreview)
                     print(lastMessage)
                     print(self.conversationPreviews)
                     self.doneRetreivingConversations()
-                }
+                //}
             } else {
                 let newConversationPreview = self.createNewConversationPreview(conversationId, uids: uids, displayNames: displayNames, facebookIds: facebookIds, lastMessage: lastMessage, lastMessageTime: lastMessageTime)
                 self.conversationPreviews.append(newConversationPreview)
@@ -138,7 +138,7 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MessagesListCell", forIndexPath: indexPath) as! MessagesListCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("MessagesListCell", forIndexPath: indexPath) as!MessagesListCell
         let conversationPreview = conversationPreviews[indexPath.row]
         getConversationPhoto(conversationPreview, indexPath: indexPath)
         cell.configureCell(conversationPreview)

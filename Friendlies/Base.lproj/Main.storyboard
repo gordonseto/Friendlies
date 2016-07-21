@@ -13,6 +13,8 @@
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
+            <string>HelveticaNeue</string>
+            <string>HelveticaNeue</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -790,23 +792,6 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ccU-Kq-KHt">
                                                     <rect key="frame" x="0.0" y="0.0" width="600" height="160"/>
                                                     <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="LGm-W0-dQ9">
-                                                            <rect key="frame" x="76" y="49" width="112" height="33"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gordon Seto" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="llH-DQ-mi1">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="112" height="21"/>
-                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
-                                                                    <color key="textColor" red="1" green="0.81568627449999997" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AVAILABLE 5 HRS AGO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q0H-FP-rcp">
-                                                                    <rect key="frame" x="0.0" y="21" width="112" height="12"/>
-                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="10"/>
-                                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                        </stackView>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cNv-Yl-ZsH" customClass="profilePhoto" customModule="Friendlies" customModuleProvider="target">
                                                             <rect key="frame" x="8" y="50" width="60" height="60"/>
                                                             <constraints>
@@ -814,17 +799,43 @@
                                                                 <constraint firstAttribute="width" constant="60" id="yy8-dG-1ti"/>
                                                             </constraints>
                                                         </imageView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="LGm-W0-dQ9">
+                                                            <rect key="frame" x="76" y="58" width="432" height="43"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gordon Seto" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="llH-DQ-mi1">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="432" height="21"/>
+                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
+                                                                    <color key="textColor" red="1" green="0.81568627449999997" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AVAILABLE 5 HRS AGO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="q0H-FP-rcp">
+                                                                    <rect key="frame" x="0.0" y="23" width="432" height="20"/>
+                                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="10:28 pm" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XPQ-z0-cen">
+                                                            <rect key="frame" x="517" y="58" width="75" height="24"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstItem="LGm-W0-dQ9" firstAttribute="centerY" secondItem="cNv-Yl-ZsH" secondAttribute="centerY" constant="-4" id="4jO-OL-Ohn"/>
+                                                        <constraint firstAttribute="trailing" secondItem="XPQ-z0-cen" secondAttribute="trailing" constant="8" id="34Q-Zl-sM9"/>
+                                                        <constraint firstItem="LGm-W0-dQ9" firstAttribute="centerY" secondItem="cNv-Yl-ZsH" secondAttribute="centerY" id="4jO-OL-Ohn"/>
                                                         <constraint firstItem="LGm-W0-dQ9" firstAttribute="top" secondItem="cNv-Yl-ZsH" secondAttribute="top" id="8Zf-RO-zf6"/>
+                                                        <constraint firstItem="XPQ-z0-cen" firstAttribute="centerY" secondItem="llH-DQ-mi1" secondAttribute="centerY" id="A5u-QO-5lh"/>
                                                         <constraint firstItem="cNv-Yl-ZsH" firstAttribute="leading" secondItem="ccU-Kq-KHt" secondAttribute="leading" constant="8" id="Fmd-L2-nTj"/>
                                                         <constraint firstItem="LGm-W0-dQ9" firstAttribute="leading" secondItem="cNv-Yl-ZsH" secondAttribute="trailing" constant="12" id="OWm-4t-cyQ"/>
                                                         <constraint firstItem="LGm-W0-dQ9" firstAttribute="leading" secondItem="cNv-Yl-ZsH" secondAttribute="trailing" constant="12" id="PaY-2f-nMP"/>
                                                         <constraint firstItem="LGm-W0-dQ9" firstAttribute="centerY" secondItem="ccU-Kq-KHt" secondAttribute="centerY" id="Rah-X6-uSE"/>
                                                         <constraint firstItem="LGm-W0-dQ9" firstAttribute="centerX" secondItem="ccU-Kq-KHt" secondAttribute="centerX" id="V6S-qJ-XeP"/>
                                                         <constraint firstItem="cNv-Yl-ZsH" firstAttribute="centerY" secondItem="ccU-Kq-KHt" secondAttribute="centerY" id="bNC-o8-1dZ"/>
+                                                        <constraint firstItem="XPQ-z0-cen" firstAttribute="leading" secondItem="LGm-W0-dQ9" secondAttribute="trailing" constant="8" id="prF-Wi-GGV"/>
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -847,6 +858,7 @@
                                             <outlet property="conversationPhoto" destination="cNv-Yl-ZsH" id="CJb-R5-FVj"/>
                                             <outlet property="displayName" destination="llH-DQ-mi1" id="oFn-pE-9Z6"/>
                                             <outlet property="messageText" destination="q0H-FP-rcp" id="8Fp-af-X96"/>
+                                            <outlet property="timeLabel" destination="XPQ-z0-cen" id="xLa-oU-k3G"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

@@ -39,7 +39,7 @@ class ConversationPreview {
         return _lastMessage
     }
 
-    var lastMessageTime: NSTimeInterval {
+    var lastMessageTime: NSTimeInterval! {
         return _lastMessageTime
     }
     

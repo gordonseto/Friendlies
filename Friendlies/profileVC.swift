@@ -89,6 +89,10 @@ class profileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if !fromChat {
+            self.navigationController?.setNavigationBarHidden(true, animated: true)
+            self.tabBarController?.tabBar.hidden = false
+        }
         self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
         
         refreshControl = UIRefreshControl()

@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FBSDKCoreKit
+import Batch
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().backgroundColor = UIColor.blackColor()
         
         FIRApp.configure()
+        
+        Batch.startWithAPIKey(BATCH_DEV_API_KEY)
+        BatchPush.registerForRemoteNotifications()
         
         return true
     }

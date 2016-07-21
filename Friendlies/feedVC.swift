@@ -11,6 +11,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import GeoFire
+import Batch
 
 class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, BroadcastCellDelegate {
 
@@ -79,6 +80,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if let displayName = FIRAuth.auth()?.currentUser?.displayName {
             print(displayName)
             print(FIRAuth.auth()?.currentUser?.uid)
+            let editor = BatchUser.editor()
+            editor.setIdentifier(FIRAuth.auth()?.currentUser?.uid)
+            editor.save()
         } else {
             presentLoginVC()
         }

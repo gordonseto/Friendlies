@@ -10,6 +10,7 @@ import UIKit
 import FBSDKLoginKit
 import FirebaseAuth
 import FirebaseDatabase
+import Batch
 
 class loginVC: UIViewController {
 
@@ -49,6 +50,11 @@ class loginVC: UIViewController {
                             firebase.child("users").child(user.uid).child("displayName").setValue(user.displayName!)
                             firebase.child("displayNames").child(user.displayName!).child("uid").setValue(user.uid)
                             firebase.child("displayNames").child(user.displayName!).child("facebookId").setValue(result.token.userID)
+                            
+                            let editor = BatchUser.editor()
+                            editor.setIdentifier(user.uid)
+                            editor.save()
+                            
                             self.dismissViewControllerAnimated(true, completion: nil)
                         } else {
                             print("error with FIR authorization")

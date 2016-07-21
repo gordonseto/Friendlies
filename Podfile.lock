@@ -1,4 +1,5 @@
 PODS:
+  - Batch (1.5.4)
   - Bolts (1.7.0):
     - Bolts/AppLinks (= 1.7.0)
     - Bolts/Tasks (= 1.7.0)
@@ -49,6 +50,7 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
 
 DEPENDENCIES:
+  - Batch
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
@@ -68,6 +70,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/firebase/geofire-objc.git
 
 SPEC CHECKSUMS:
+  Batch: 13083f81837fe1da9ea84b0533a2965c73ff74c6
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
   FBSDKCoreKit: 2807fe0da2ddb49a1469da6d6ff597f99912980f
   FBSDKLoginKit: 6d350cb6a22d6956e9d078885de6ee8a0ebc51b4
@@ -85,6 +88,6 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: 0ee3f80237268192a3e8337fd0d787f1a1bf5a7a
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
 
-PODFILE CHECKSUM: 2b7793920d77fe8aa00919fd2388068b3ec5d23d
+PODFILE CHECKSUM: e182c4d0bdbcce76f80df4b2c9a60154d922cdb7
 
 COCOAPODS: 1.0.1

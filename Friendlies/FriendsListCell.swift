@@ -14,6 +14,7 @@ class FriendsListCell: UITableViewCell {
     @IBOutlet weak var displayName: UILabel!
     @IBOutlet weak var profilePhoto: UIImageView!
     @IBOutlet weak var lastAvailable: UILabel!
+    @IBOutlet weak var characterStackView: UIStackView!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -30,6 +31,9 @@ class FriendsListCell: UITableViewCell {
         if let lastavailable = user.lastAvailable {
             lastAvailable.text = initializeTimeLabel(user.lastAvailable)
         }
+        
+        arrangeStackViewCharacters(user, characterStackView: self.characterStackView, height: 20)
+        
     }
     
     func initializeTimeLabel(lastavailable: NSTimeInterval) -> String {

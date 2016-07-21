@@ -636,13 +636,13 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ciz-QL-i6c">
                                                             <rect key="frame" x="76" y="49" width="112" height="33"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Gordon Seto" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="HQQ-us-d6w">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gordon Seto" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="HQQ-us-d6w">
                                                                     <rect key="frame" x="0.0" y="0.0" width="112" height="21"/>
                                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="17"/>
                                                                     <color key="textColor" red="1" green="0.81568627449999997" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="AVAILABLE 5 HRS AGO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="deD-g2-U7D">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AVAILABLE 5 HRS AGO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="deD-g2-U7D">
                                                                     <rect key="frame" x="0.0" y="21" width="112" height="12"/>
                                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="10"/>
                                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -650,16 +650,25 @@
                                                                 </label>
                                                             </subviews>
                                                         </stackView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="CoK-bo-40Y">
+                                                            <rect key="frame" x="484" y="49" width="108" height="20"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="20" id="5D5-no-gTM"/>
+                                                            </constraints>
+                                                        </stackView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="top" secondItem="gjF-ZF-H8D" secondAttribute="top" id="0No-mB-VZ9"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="centerY" secondItem="gjF-ZF-H8D" secondAttribute="centerY" constant="-4" id="2s1-Kj-1mn"/>
                                                         <constraint firstItem="gjF-ZF-H8D" firstAttribute="leading" secondItem="vYI-TU-a8I" secondAttribute="leading" constant="8" id="5NI-Wx-DFJ"/>
+                                                        <constraint firstItem="CoK-bo-40Y" firstAttribute="leading" secondItem="ciz-QL-i6c" secondAttribute="trailing" constant="8" id="Fhz-a4-rKm"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="leading" secondItem="gjF-ZF-H8D" secondAttribute="trailing" constant="12" id="HfI-xc-9uc"/>
+                                                        <constraint firstItem="CoK-bo-40Y" firstAttribute="centerY" secondItem="HQQ-us-d6w" secondAttribute="centerY" id="K4L-da-YO5"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="centerY" secondItem="vYI-TU-a8I" secondAttribute="centerY" id="Mym-dx-sm2"/>
                                                         <constraint firstItem="gjF-ZF-H8D" firstAttribute="centerY" secondItem="vYI-TU-a8I" secondAttribute="centerY" id="QtX-bw-HIE"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="leading" secondItem="gjF-ZF-H8D" secondAttribute="trailing" constant="12" id="RBB-wV-wYh"/>
+                                                        <constraint firstAttribute="trailing" secondItem="CoK-bo-40Y" secondAttribute="trailing" constant="8" id="RIv-GW-2Nj"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="centerX" secondItem="vYI-TU-a8I" secondAttribute="centerX" id="i84-Q7-sJR"/>
                                                     </constraints>
                                                     <variation key="default">
@@ -680,6 +689,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="characterStackView" destination="CoK-bo-40Y" id="upa-Nn-SBS"/>
                                             <outlet property="displayName" destination="HQQ-us-d6w" id="OSP-qs-sjl"/>
                                             <outlet property="lastAvailable" destination="deD-g2-U7D" id="xJi-Su-MI9"/>
                                             <outlet property="profilePhoto" destination="gjF-ZF-H8D" id="fBV-1g-ZZM"/>
@@ -703,6 +713,7 @@
                     <connections>
                         <outlet property="searchBar" destination="4Kg-LM-nBP" id="iw0-VH-kq6"/>
                         <outlet property="tableView" destination="z15-4t-DMk" id="FQG-gh-QAc"/>
+                        <segue destination="Ic4-5m-t60" kind="show" identifier="profileVCFromFriends" id="hk0-Rl-1gi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q0h-8M-Kfk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -762,7 +773,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r5o-e4-xBf">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="65"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search for people" translatesAutoresizingMaskIntoConstraints="NO" id="JOh-KF-wyu">
+                                    <searchBar contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search for conversations" translatesAutoresizingMaskIntoConstraints="NO" id="JOh-KF-wyu">
                                         <rect key="frame" x="0.0" y="21" width="600" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="zSu-vA-pba"/>
@@ -1419,7 +1430,7 @@
         <image name="settings" width="129" height="135"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="hk0-Rl-1gi"/>
         <segue reference="55E-u4-M3s"/>
-        <segue reference="j3X-Iq-QdZ"/>
     </inferredMetricsTieBreakers>
 </document>

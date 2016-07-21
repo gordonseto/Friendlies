@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseDatabase
 
-class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -18,6 +18,7 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     var currentUser: User!
     var conversationPreviews = [ConversationPreview]()
     var conversationsDownloaded = 0
+    var filteredConversationPreviews = [ConversationPreview]()
     
     var activityIndicator: UIActivityIndicatorView!
     var loadingLabel: UILabel!
@@ -28,6 +29,8 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     var uidsBeingDownloaded = [String]()
     
     var noMessagesLabel: UILabel!
+    
+    var inSearchMode: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +42,9 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        searchBar.enablesReturnKeyAutomatically = false
+        searchBar.delegate = self
         
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
         loadingLabel = UILabel(frame: CGRectMake(0, 0, 100, 30))
@@ -139,7 +145,12 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MessagesListCell", forIndexPath: indexPath) as!MessagesListCell
-        let conversationPreview = conversationPreviews[indexPath.row]
+        var conversationPreview: ConversationPreview!
+        if !inSearchMode {
+            conversationPreview = conversationPreviews[indexPath.row]
+        } else {
+            conversationPreview = filteredConversationPreviews[indexPath.row]
+        }
         getConversationPhoto(conversationPreview, indexPath: indexPath)
         cell.configureCell(conversationPreview)
         return cell
@@ -182,11 +193,28 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return conversationPreviews.count
+        if !inSearchMode {
+            return conversationPreviews.count
+        } else {
+            return filteredConversationPreviews.count
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text == nil || searchBar.text == "" {
+            inSearchMode = false
+            //view.endEditing(true)
+            tableView.reloadData()
+        } else {
+            inSearchMode = true
+            let lower = searchBar.text!.capitalizedString
+            filteredConversationPreviews = conversationPreviews.filter({$0.displayName.rangeOfString(lower) != nil})
+            tableView.reloadData()
+        }
     }
     
     func createNewConversationPreview(conversationId: String, uids: [String: String], displayNames: [String], facebookIds: [String], lastMessage: String, lastMessageTime: NSTimeInterval) -> ConversationPreview {

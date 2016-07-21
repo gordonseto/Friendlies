@@ -21,7 +21,8 @@ class CurrentUser {
         if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String{
             user = User(uid: uid)
             user.downloadUserInfo(){
-            completion()
+                print(self.user.displayName)
+                completion()
             }
         }
     }

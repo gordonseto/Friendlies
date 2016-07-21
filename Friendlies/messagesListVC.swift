@@ -267,6 +267,17 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     }
                 }
             }
+        } else {
+            if segue.identifier == "chatVCFromDeepLink" {
+                if let destinationVC = segue.destinationViewController as? chatVC {
+                    if let parameters = sender as? NSDictionary {
+                        destinationVC.senderId = "\(parameters["senderId"]!)"
+                        destinationVC.senderDisplayName = "\(parameters["senderDisplayName"]!)"
+                        destinationVC.otherUser = User(uid: "\(parameters["otherUserUid"]!)")
+                        destinationVC.conversationId = "\(parameters["conversationId"]!)"
+                    }
+                }
+            }
         }
     }
 }

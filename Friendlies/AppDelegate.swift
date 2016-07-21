@@ -56,7 +56,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        
+        if url.host == nil {
+            return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+        }
+        
+        let urlString = url.absoluteString
+        let queryArray = urlString.componentsSeparatedByString("/")
+        let queryType = queryArray[2]
+        let query = queryArray[3]
+        var queryParameter: String!
+        if queryArray.count > 4 {
+            queryParameter = queryArray[4]
+        }
+        print(query as String!)
+        
+        if queryType == "messages" {
+            if let queryParameter = queryParameter {
+                goToConversation(query, otherUserUid: queryParameter)
+            }
+        }
+        
         return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+    }
+    
+    func goToConversation(conversationId: String, otherUserUid: String) {
+        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+            tabBarController.selectedIndex = MESSAGES_INDEX
+            if let messagesNVC = tabBarController.viewControllers![MESSAGES_INDEX] as? UINavigationController {
+                if let messagesVC = messagesNVC.viewControllers[0] as? messagesListVC {
+                    if let user = FIRAuth.auth()?.currentUser {
+                        let item: NSDictionary = [
+                            "conversationId": conversationId,
+                            "otherUserUid": otherUserUid,
+                            "senderId": user.uid,
+                            "senderDisplayName": user.displayName!
+                        ]
+                        messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
+                    }
+                }
+            }
+        }
+        //messages.performSegueWithIdentifier("chatVC", sender: item)
     }
 
 }

@@ -723,7 +723,7 @@
         <!--ChatVC-->
         <scene sceneID="1xm-6O-w7J">
             <objects>
-                <viewController id="ftA-Yf-DnT" customClass="chatVC" customModule="Friendlies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="chatVC" id="ftA-Yf-DnT" customClass="chatVC" customModule="Friendlies" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="x5p-za-1Ol"/>
                         <viewControllerLayoutGuide type="bottom" id="g4b-5J-h6w"/>
@@ -899,6 +899,7 @@
                         <outlet property="searchBar" destination="JOh-KF-wyu" id="hcp-XI-WeJ"/>
                         <outlet property="tableView" destination="DcM-Hi-uo4" id="5I3-J7-erI"/>
                         <segue destination="ftA-Yf-DnT" kind="show" identifier="chatVC" id="55E-u4-M3s"/>
+                        <segue destination="ftA-Yf-DnT" kind="show" identifier="chatVCFromDeepLink" id="Wf7-u6-TVg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WQd-AV-ceS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1430,7 +1431,7 @@
         <image name="settings" width="129" height="135"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hk0-Rl-1gi"/>
-        <segue reference="55E-u4-M3s"/>
+        <segue reference="Wf7-u6-TVg"/>
+        <segue reference="j3X-Iq-QdZ"/>
     </inferredMetricsTieBreakers>
 </document>

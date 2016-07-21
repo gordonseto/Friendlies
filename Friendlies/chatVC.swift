@@ -71,16 +71,28 @@ class chatVC: JSQMessagesViewController {
         self.inputToolbar.contentView.textView.textColor = UIColor.darkGrayColor()
         self.inputToolbar.contentView.textView.placeHolderTextColor = UIColor.darkGrayColor()
         
-        currentUser = CurrentUser.sharedInstance.user
-        
-        if otherUser.displayName == nil {
-            otherUser.downloadUserInfo(){
-                self.beginSetup()
+        if let user = CurrentUser.sharedInstance.user {
+            currentUser = user
+            if otherUser.displayName == nil {
+                otherUser.downloadUserInfo(){
+                    self.beginSetup()
+                }
+            } else {
+                beginSetup()
             }
+            
         } else {
-            beginSetup()
+            CurrentUser.sharedInstance.getCurrentUser(){
+                self.currentUser = CurrentUser.sharedInstance.user
+                if self.otherUser.displayName == nil {
+                    self.otherUser.downloadUserInfo(){
+                        self.beginSetup()
+                    }
+                } else {
+                    self.beginSetup()
+                }
+            }
         }
-        
         
     }
     
@@ -209,6 +221,8 @@ class chatVC: JSQMessagesViewController {
         conversationInfoRef.child("uids").child(otherUser.uid).setValue("unseen")
         
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
+        
+        sendMessageNotification(senderDisplayName, message: text)
         
         finishSendingMessage()
         
@@ -385,6 +399,30 @@ class chatVC: JSQMessagesViewController {
             } else {
                 return nil
             }
+        }
+    }
+    
+    func sendMessageNotification(displayName: String, message: String){
+        if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
+            
+            pushClient.sandbox = false
+            pushClient.customPayload = ["aps": ["badge": 1, "content-available": 1]]
+            pushClient.groupId = "messageNotifications"
+            pushClient.message.title = "Friendlies"
+            pushClient.message.body = "\(displayName): \(message)"
+            pushClient.recipients.customIds = [otherUser.uid]
+            pushClient.deeplink = "friendlies://messages/\(conversationId)/\(currentUser.uid)"
+            
+            pushClient.send { (response, error) in
+                if let error = error {
+                    print("Something happened while sending the push: \(response) \(error.localizedDescription)")
+                } else {
+                    print("Push sent \(response)")
+                }
+            }
+            
+        } else {
+            print("Error while initializing BatchClientPush")
         }
     }
     

@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseDatabase
 
-class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, FriendsListCellDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -19,6 +19,9 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     var friends = [User]()
     var filteredUsers = [User]()
     var allUsers = [User]()
+    var wantsToBeAddedByKeys = [String]()
+    var wantsToBeAddedBy = [User]()
+    var friendsAndWantsToBeAddedBy = [User]()
     
     var activityIndicator: UIActivityIndicatorView!
     var loadingLabel: UILabel!
@@ -92,13 +95,46 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     
     func getFriendProfiles(){
         if friendsKeys.count == 0 {
-            doneGettingProfiles()
+            getCurrentUsersWantsToBeAddedBy()
         }
         for friendKey in friendsKeys {
             var user = User(uid: friendKey)
             user.downloadUserInfo(){
                 self.friends.append(user)
                 if self.friends.count == self.friendsKeys.count {
+                    self.getCurrentUsersWantsToBeAddedBy()
+                }
+            }
+        }
+    }
+    
+    func getCurrentUsersWantsToBeAddedBy(){
+        if let user = currentUser {
+            if let wantsToBeAddedByKeys = user.wantsToBeAddedBy {
+                self.wantsToBeAddedByKeys = []
+                self.wantsToBeAddedBy = []
+                
+                for wantsToBeAddedByKey in wantsToBeAddedByKeys {
+                    for (uid, value) in wantsToBeAddedByKey {
+                        if value == "unseen" {
+                            self.wantsToBeAddedByKeys.append(uid)
+                        }
+                    }
+                }
+                self.getWantsToBeAddedByProfiles()
+            }
+        }
+    }
+    
+    func getWantsToBeAddedByProfiles() {
+        if wantsToBeAddedByKeys.count == 0 {
+            doneGettingProfiles()
+        }
+        for wantsToBeAddedByKey in wantsToBeAddedByKeys {
+            var user = User(uid: wantsToBeAddedByKey)
+            user.downloadUserInfo() {
+                self.wantsToBeAddedBy.append(user)
+                if self.wantsToBeAddedBy.count == self.wantsToBeAddedByKeys.count {
                     self.doneGettingProfiles()
                 }
             }
@@ -107,11 +143,13 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     
     func doneGettingProfiles(){
         print(friends)
+        print(wantsToBeAddedBy)
+        friendsAndWantsToBeAddedBy = wantsToBeAddedBy + friends
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
         self.refreshControl.endRefreshing()
         tableView.reloadData()
         if !inSearchMode {
-            if friends.count == 0 {
+            if friendsAndWantsToBeAddedBy.count == 0 {
                 displayBackgroundMessage("You have not added any friends!", label: noFriendsLabel, viewToAdd: tableView)
             } else {
                 removeBackgroundMessage(noFriendsLabel)
@@ -119,11 +157,30 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         }
     }
     
+    func AcceptButtonPressed(uid: String) {
+        CurrentUser.sharedInstance.acceptAddRequest(uid){
+            self.getCurrentUsersFriends()
+        }
+    }
+    
+    func DeclineButtonPressed(uid: String) {
+        CurrentUser.sharedInstance.hideAddRequest(uid){
+            self.getCurrentUsersFriends()
+        }
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("FriendsListCell", forIndexPath: indexPath) as! FriendsListCell
+        cell.delegate = self
+        cell.isFriendRequest = false
+        cell.lastAvailable.text = ""
+        
         var user: User!
         if !inSearchMode {
-            user = friends[indexPath.row]
+            if indexPath.row < wantsToBeAddedBy.count {
+                cell.isFriendRequest = true
+            }
+            user = friendsAndWantsToBeAddedBy[indexPath.row]
         } else {
             user = filteredUsers[indexPath.row]
         }
@@ -168,7 +225,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         if inSearchMode{
             user = filteredUsers[indexPath.row]
         } else {
-            user = friends[indexPath.row]
+            user = friendsAndWantsToBeAddedBy[indexPath.row]
         }
         if let user = user {
             if let currentuser = CurrentUser.sharedInstance.user {
@@ -181,7 +238,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         if inSearchMode {
             return filteredUsers.count
         } else {
-            return friends.count
+            return friendsAndWantsToBeAddedBy.count
         }
     }
     
@@ -198,7 +255,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         } else {
             inSearchMode = true
             let lower = searchBar.text!.capitalizedString
-            filteredUsers = friends.filter({$0.displayName.rangeOfString(lower) != nil})
+            filteredUsers = wantsToBeAddedBy.filter({$0.displayName.rangeOfString(lower) != nil})
             tableView.reloadData()
             if !isDownloadingPeople {
                 isDownloadingPeople = true

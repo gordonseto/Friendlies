@@ -8,6 +8,7 @@
 
 import Foundation
 import FirebaseDatabase
+import Batch
 
 class CurrentUser {
     
@@ -72,6 +73,7 @@ class CurrentUser {
                         print(error.localizedDescription)
                         print("WANTS TO ADD FAILED")
                     }
+                    self.sendFriendNotification("\(self.user.displayName) has sent you a friend request.", uid: uid)
                     self.user.downloadUserInfo(){
                         completion()
                     }
@@ -163,6 +165,7 @@ class CurrentUser {
                     self.user.downloadUserInfo(){
                         completion()
                     }
+                    self.sendFriendNotification("\(self.user.displayName) has accepted your friend request.", uid: uid)
             })
         }
     }
@@ -217,6 +220,57 @@ class CurrentUser {
             })
         }
     }
+    
+    func hideAddRequest(uid: String, completion: ()->()) {
+        if let user = user {
+            firebase = FIRDatabase.database().reference()
+            firebase.child("users").child(user.uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
+                if var user = currentData.value as? [String: AnyObject] {
+                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
+                    if let index = wantsToBeAddedBy.indexOf({$0[uid] != nil}) {
+                        wantsToBeAddedBy[index][uid] = "seen"
+                    }
+                    user["wantsToBeAddedBy"] = wantsToBeAddedBy
+                    currentData.value = user
+                    return FIRTransactionResult.successWithValue(currentData)
+                }
+                return FIRTransactionResult.successWithValue(currentData)
+                }, andCompletionBlock: { (error, committed, snapshot) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                        print("WANTS TO ADD FAILED")
+                    }
+                    self.user.downloadUserInfo(){
+                        completion()
+                    }
+            })
+        }
+    }
+    
+    func sendFriendNotification(message: String, uid: String){
+        if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
+            
+            pushClient.sandbox = false
+            pushClient.customPayload = ["aps": ["badge": 1, "sound": NSNull(), "content-available": 1]]
+            pushClient.groupId = "friendNotifications"
+            pushClient.message.title = "Friendlies"
+            pushClient.message.body = message
+            pushClient.recipients.customIds = [uid]
+            pushClient.deeplink = "friendlies://friends/\(uid)"
+            
+            pushClient.send { (response, error) in
+                if let error = error {
+                    print("Something happened while sending the push: \(response) \(error.localizedDescription)")
+                } else {
+                    print("Push sent \(response)")
+                }
+            }
+            
+        } else {
+            print("Error while initializing BatchClientPush")
+        }
+    }
+    
     /*
     func addConversationToUnreadMessages(conversationId: String) {
         firebase = FIRDatabase.database().reference()

@@ -56,6 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        print(userInfo)
         if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
             tabBarController.tabBar.items?[MESSAGES_INDEX].badgeValue = "1"
         }
@@ -82,9 +83,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let queryParameter = queryParameter {
                 goToConversation(query, otherUserUid: queryParameter)
             }
+        } else if queryType == "friends" {
+            goToFriendsList()
         }
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+    }
+    
+    func goToFriendsList(){
+        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+            tabBarController.selectedIndex = FRIENDS_INDEX
+            if let friendsNVC = tabBarController.viewControllers![FRIENDS_INDEX] as? UINavigationController {
+                if let friendsVC = friendsNVC.viewControllers[0] as? friendsListVC {
+                    friendsVC.getCurrentUsersFriends()
+                }
+            }
+        }
     }
     
     func goToConversation(conversationId: String, otherUserUid: String) {

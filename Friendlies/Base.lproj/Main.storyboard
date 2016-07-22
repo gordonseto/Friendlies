@@ -656,6 +656,31 @@
                                                                 <constraint firstAttribute="height" constant="20" id="5D5-no-gTM"/>
                                                             </constraints>
                                                         </stackView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" spacing="13" translatesAutoresizingMaskIntoConstraints="NO" id="uer-hO-UtW">
+                                                            <rect key="frame" x="493" y="73" width="0.0" height="0.0"/>
+                                                            <subviews>
+                                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mmo-6r-CSG">
+                                                                    <rect key="frame" x="-584" y="-74" width="0.0" height="24"/>
+                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="10"/>
+                                                                    <state key="normal" title="ACCEPT">
+                                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    </state>
+                                                                    <connections>
+                                                                        <action selector="onAcceptButtonPressed:" destination="YaC-us-Y7A" eventType="touchUpInside" id="Qlj-IL-AhW"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="22k-sQ-Jgh">
+                                                                    <rect key="frame" x="-584" y="-74" width="0.0" height="24"/>
+                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="10"/>
+                                                                    <state key="normal" title="DECLINE">
+                                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    </state>
+                                                                    <connections>
+                                                                        <action selector="onDeclineButtonPressed:" destination="YaC-us-Y7A" eventType="touchUpInside" id="vOR-zB-5oe"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </subviews>
+                                                        </stackView>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -666,10 +691,12 @@
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="leading" secondItem="gjF-ZF-H8D" secondAttribute="trailing" constant="12" id="HfI-xc-9uc"/>
                                                         <constraint firstItem="CoK-bo-40Y" firstAttribute="centerY" secondItem="HQQ-us-d6w" secondAttribute="centerY" id="K4L-da-YO5"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="centerY" secondItem="vYI-TU-a8I" secondAttribute="centerY" id="Mym-dx-sm2"/>
+                                                        <constraint firstItem="uer-hO-UtW" firstAttribute="centerY" secondItem="deD-g2-U7D" secondAttribute="centerY" id="OGV-s8-ZQf"/>
                                                         <constraint firstItem="gjF-ZF-H8D" firstAttribute="centerY" secondItem="vYI-TU-a8I" secondAttribute="centerY" id="QtX-bw-HIE"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="leading" secondItem="gjF-ZF-H8D" secondAttribute="trailing" constant="12" id="RBB-wV-wYh"/>
                                                         <constraint firstAttribute="trailing" secondItem="CoK-bo-40Y" secondAttribute="trailing" constant="8" id="RIv-GW-2Nj"/>
                                                         <constraint firstItem="ciz-QL-i6c" firstAttribute="centerX" secondItem="vYI-TU-a8I" secondAttribute="centerX" id="i84-Q7-sJR"/>
+                                                        <constraint firstAttribute="trailing" secondItem="uer-hO-UtW" secondAttribute="trailing" constant="16" id="yJc-SJ-xQh"/>
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -689,7 +716,9 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="acceptButton" destination="Mmo-6r-CSG" id="LFA-DS-xfv"/>
                                             <outlet property="characterStackView" destination="CoK-bo-40Y" id="upa-Nn-SBS"/>
+                                            <outlet property="declineButton" destination="22k-sQ-Jgh" id="q16-bN-pOv"/>
                                             <outlet property="displayName" destination="HQQ-us-d6w" id="OSP-qs-sjl"/>
                                             <outlet property="lastAvailable" destination="deD-g2-U7D" id="xJi-Su-MI9"/>
                                             <outlet property="profilePhoto" destination="gjF-ZF-H8D" id="fBV-1g-ZZM"/>
@@ -1431,7 +1460,7 @@
         <image name="settings" width="129" height="135"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="hk0-Rl-1gi"/>
         <segue reference="Wf7-u6-TVg"/>
-        <segue reference="j3X-Iq-QdZ"/>
     </inferredMetricsTieBreakers>
 </document>

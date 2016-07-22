@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol FriendsListCellDelegate: class {
+    func AcceptButtonPressed(uid: String)
+    func DeclineButtonPressed(uid: String)
+}
+
 class FriendsListCell: UITableViewCell {
 
     
@@ -15,6 +20,12 @@ class FriendsListCell: UITableViewCell {
     @IBOutlet weak var profilePhoto: UIImageView!
     @IBOutlet weak var lastAvailable: UILabel!
     @IBOutlet weak var characterStackView: UIStackView!
+    @IBOutlet weak var acceptButton: UIButton!
+    @IBOutlet weak var declineButton: UIButton!
+    
+    var isFriendRequest: Bool = false
+    var uid: String!
+    weak var delegate: FriendsListCellDelegate!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -22,20 +33,51 @@ class FriendsListCell: UITableViewCell {
     }
 
     func configureCell(user: User){
+        
+        uid = user.uid
+        
         if let name = user.displayName {
             displayName.text = name
         }
         if let image = user.profilePhoto {
             profilePhoto.image = image
         }
-        if let lastavailable = user.lastAvailable {
-            lastAvailable.text = initializeTimeLabel(user.lastAvailable)
-        }
         
-        arrangeStackViewCharacters(user, characterStackView: self.characterStackView, height: 20)
+        if isFriendRequest {
+            lastAvailable.text = "WANTS TO ADD YOU"
+            lastAvailable.textColor = UIColor.whiteColor()
+            acceptButton.hidden = false
+            declineButton.hidden = false
+            
+            for stackView in characterStackView.subviews {
+                stackView.removeFromSuperview()
+            }
+            
+        } else {
+            lastAvailable.textColor = UIColor.darkGrayColor()
+            if let lastavailable = user.lastAvailable {
+                lastAvailable.text = initializeTimeLabel(user.lastAvailable)
+            }
+            acceptButton.hidden = true
+            declineButton.hidden = true
+            
+            arrangeStackViewCharacters(user, characterStackView: self.characterStackView, height: 20)
+        }
         
     }
     
+
+    @IBAction func onAcceptButtonPressed(sender: AnyObject) {
+        if let uid = uid {
+            delegate?.AcceptButtonPressed(uid)
+        }
+    }
+    @IBAction func onDeclineButtonPressed(sender: AnyObject) {
+        if let uid = uid {
+            delegate?.DeclineButtonPressed(uid)
+        }
+    }
+
     func initializeTimeLabel(lastavailable: NSTimeInterval) -> String {
         var timeDifference = getBroadcastTime(lastavailable)
         var suffix: String = ""

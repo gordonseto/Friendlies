@@ -109,3 +109,60 @@ class User {
     }
     
 }
+
+func addToNotifications(uid: String, notificationType: String, param1: AnyObject){
+    let firebase = FIRDatabase.database().reference()
+    firebase.child("notifications").child(uid).child(notificationType).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
+        if var notificationTypeArray = currentData.value as? [String]! ?? [] {
+            if let param1 = param1 as? String {
+                if !notificationTypeArray.contains(param1) {
+                    notificationTypeArray.append(param1)
+                }
+                currentData.value = notificationTypeArray
+                return FIRTransactionResult.successWithValue(currentData)
+            }
+        }
+        return FIRTransactionResult.successWithValue(currentData)
+        }, andCompletionBlock: { (error, committed, snapshot) in
+            if let error = error {
+                print(error.localizedDescription)
+                print("WANTS TO ADD FAILED")
+            }
+    })
+}
+
+func removeFromNotifications(uid: String, notificationType: String, param1: AnyObject){
+    let firebase = FIRDatabase.database().reference()
+    firebase.child("notifications").child(uid).child(notificationType).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
+        if var notificationTypeArray = currentData.value as? [String]! ?? [] {
+            if let param1 = param1 as? String {
+                notificationTypeArray = notificationTypeArray.filter({$0 != param1})
+                currentData.value = notificationTypeArray
+                return FIRTransactionResult.successWithValue(currentData)
+            }
+        }
+        return FIRTransactionResult.successWithValue(currentData)
+        }, andCompletionBlock: { (error, committed, snapshot) in
+            if let error = error {
+                print(error.localizedDescription)
+                print("WANTS TO ADD FAILED")
+            }
+    })
+}
+
+func removeAllNotificationsOfType(uid: String, notificationType: String){
+    let firebase = FIRDatabase.database().reference()
+    firebase.child("notifications").child(uid).child(notificationType).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
+        if var notificationTypeArray = currentData.value as? [String]! ?? [] {
+            notificationTypeArray = []
+            currentData.value = notificationTypeArray
+            return FIRTransactionResult.successWithValue(currentData)
+        }
+        return FIRTransactionResult.successWithValue(currentData)
+        }, andCompletionBlock: { (error, committed, snapshot) in
+            if let error = error {
+                print(error.localizedDescription)
+                print("WANTS TO ADD FAILED")
+            }
+    })
+}

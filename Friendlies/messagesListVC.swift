@@ -68,8 +68,6 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.tabBarController?.tabBar.hidden = false
         self.navigationController?.navigationBarHidden = true
         
-        self.tabBarController?.tabBar.items?[MESSAGES_INDEX].badgeValue = nil
-        dismissNotifications()
     }
             
 

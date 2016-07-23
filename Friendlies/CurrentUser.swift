@@ -74,6 +74,7 @@ class CurrentUser {
                         print("WANTS TO ADD FAILED")
                     }
                     self.sendFriendNotification("\(self.user.displayName) has sent you a friend request.", uid: uid)
+                    addToNotifications(uid, notificationType: "friends", param1: self.user.uid)
                     self.user.downloadUserInfo(){
                         completion()
                     }
@@ -133,7 +134,9 @@ class CurrentUser {
                     wantsToBeAddedBy = wantsToBeAddedBy.filter({$0[uid] == nil})
                     user["wantsToBeAddedBy"] = wantsToBeAddedBy
                     var friends = user["friends"] as? [String] ?? []
-                    friends.append(uid)
+                    if !friends.contains(uid){
+                        friends.append(uid)
+                    }
                     user["friends"] = friends
                     currentData.value = user
                     return FIRTransactionResult.successWithValue(currentData)
@@ -151,7 +154,9 @@ class CurrentUser {
                     wantsToAdd = wantsToAdd.filter({$0 != self.user.uid})
                     user["wantsToAdd"] = wantsToAdd
                     var friends = user["friends"] as? [String] ?? []
-                    friends.append(self.user.uid)
+                    if !friends.contains(self.user.uid) {
+                        friends.append(self.user.uid)
+                    }
                     user["friends"] = friends
                     currentData.value = user
                     return FIRTransactionResult.successWithValue(currentData)
@@ -162,10 +167,12 @@ class CurrentUser {
                         print(error.localizedDescription)
                         print("WANTS TO ADD FAILED")
                     }
+                    self.sendFriendNotification("\(self.user.displayName) has accepted your friend request.", uid: uid)
+                    addToNotifications(uid, notificationType: "friends", param1: self.user.uid)
+                    removeFromNotifications(self.user.uid, notificationType: "friends", param1: uid)
                     self.user.downloadUserInfo(){
                         completion()
                     }
-                    self.sendFriendNotification("\(self.user.displayName) has accepted your friend request.", uid: uid)
             })
         }
     }
@@ -240,6 +247,7 @@ class CurrentUser {
                         print(error.localizedDescription)
                         print("WANTS TO ADD FAILED")
                     }
+                    removeFromNotifications(uid, notificationType: "friends", param1: self.user.uid)
                     self.user.downloadUserInfo(){
                         completion()
                     }

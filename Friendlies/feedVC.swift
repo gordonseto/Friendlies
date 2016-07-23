@@ -83,6 +83,11 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             let editor = BatchUser.editor()
             editor.setIdentifier(FIRAuth.auth()?.currentUser?.uid)
             editor.save()
+            
+            updateTabBarBadge("messages")
+            updateTabBarBadge("friends")
+            
+            updateIconBadge()
         } else {
             presentLoginVC()
         }
@@ -370,6 +375,50 @@ extension UIViewController {
     func removeBackgroundMessage(label: UILabel!){
         if let label = label {
             label.removeFromSuperview()
+        }
+    }
+    
+    
+    func updateTabBarBadge(queryType: String){
+        if let user = FIRAuth.auth()?.currentUser {
+            let firebase = FIRDatabase.database().reference()
+            firebase.child("notifications").child(user.uid).child(queryType).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+                print(snapshot.childrenCount)
+                
+                var index: Int!
+                if queryType == "messages" {
+                    index = MESSAGES_INDEX
+                } else if queryType == "friends" {
+                    index = FRIENDS_INDEX
+                }
+                
+                if snapshot.childrenCount == 0 {
+                    self.tabBarController?.tabBar.items?[index].badgeValue = nil
+                } else {
+                    self.tabBarController?.tabBar.items?[index].badgeValue = "\(snapshot.childrenCount)"
+                }
+                
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func updateIconBadge(){
+        if let user = FIRAuth.auth()?.currentUser {
+            let firebase = FIRDatabase.database().reference()
+            firebase.child("notifications").child(user.uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+                var sum: Int = 0
+                
+                for child in snapshot.children {
+                    sum += Int(child.childrenCount!)
+                }
+                
+                UIApplication.sharedApplication().applicationIconBadgeNumber = sum
+                
+            }) { (error) in
+                print(error.localizedDescription)
+            }
         }
     }
     

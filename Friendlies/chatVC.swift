@@ -164,6 +164,9 @@ class chatVC: JSQMessagesViewController {
                 
                 if self.isLookingAtMessage {
                     self.conversationInfoRef.child("uids").child(self.currentUser.uid).setValue("seen")
+                    removeFromNotifications(self.currentUser.uid, notificationType: "messages", param1: self.conversationId)
+                    self.updateTabBarBadge("messages")
+                    self.updateIconBadge()
                 }
                 
                 self.finishReceivingMessage()
@@ -225,6 +228,7 @@ class chatVC: JSQMessagesViewController {
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
         
         sendMessageNotification(senderDisplayName, message: text)
+        addToNotifications(otherUser.uid, notificationType: "messages", param1: conversationId)
         
         finishSendingMessage()
         
@@ -251,6 +255,7 @@ class chatVC: JSQMessagesViewController {
         conversationInfoRef = firebase.child("conversationInfos").child(conversationId)
         conversationInfoRef.setValue(newConversation)
         conversationInfoRef.child("uids").setValue(uids)
+        addToNotifications(otherUser.uid, notificationType: "messages", param1: conversationId)
         return conversationId
     }
     /*

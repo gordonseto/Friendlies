@@ -57,10 +57,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         print(userInfo)
-        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
-            tabBarController.tabBar.items?[MESSAGES_INDEX].badgeValue = "1"
+        print(userInfo["com.batch"])
+        print(userInfo["com.batch"]!["l"])
+        if let deepLink = userInfo["com.batch"]?["l"] as? String {
+            let queryArray = deepLink.componentsSeparatedByString("/")
+            let queryType = queryArray[2]
+            
+            updateTabBarBadge(queryType)
+            
         }
         completionHandler(UIBackgroundFetchResult.NewData)
+    }
+    
+    func updateTabBarBadge(queryType: String){
+        if let user = FIRAuth.auth()?.currentUser {
+            let firebase = FIRDatabase.database().reference()
+            firebase.child("notifications").child(user.uid).child(queryType).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+                print(snapshot.childrenCount)
+                
+                var index: Int!
+                if queryType == "messages" {
+                    index = MESSAGES_INDEX
+                } else if queryType == "friends" {
+                    index = FRIENDS_INDEX
+                }
+                
+                if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+                    if snapshot.childrenCount == 0 {
+                        tabBarController.tabBar.items?[index].badgeValue = nil
+                    } else {
+                        tabBarController.tabBar.items?[index].badgeValue = "\(snapshot.childrenCount)"
+                    }
+                }
+                
+            }) { (error) in
+                print(error.localizedDescription)
+            }
+        }
     }
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {

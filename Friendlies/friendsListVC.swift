@@ -72,6 +72,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     override func viewDidAppear(animated: Bool) {
         self.tabBarController?.tabBar.hidden = false
         self.navigationController?.navigationBarHidden = true
+
     }
     
     func getCurrentUsersFriends(){
@@ -82,6 +83,11 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         CurrentUser.sharedInstance.getCurrentUser(){
             if let user = CurrentUser.sharedInstance.user {
                 self.currentUser = CurrentUser.sharedInstance.user
+                
+                removeAllNotificationsOfType(self.currentUser.uid, notificationType: "friends")
+                self.updateTabBarBadge("friends")
+                self.updateIconBadge()
+                
                 if let friendskeys = self.currentUser.friends {
                     self.friendsKeys = []
                     self.friends = []
@@ -160,13 +166,20 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     func AcceptButtonPressed(uid: String) {
         CurrentUser.sharedInstance.acceptAddRequest(uid){
             self.getCurrentUsersFriends()
+            self.friendsListAction()
         }
     }
     
     func DeclineButtonPressed(uid: String) {
         CurrentUser.sharedInstance.hideAddRequest(uid){
             self.getCurrentUsersFriends()
+            self.friendsListAction()
         }
+    }
+    
+    func friendsListAction(){
+        updateTabBarBadge("friends")
+        updateIconBadge()
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

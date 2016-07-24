@@ -404,24 +404,6 @@ extension UIViewController {
         }
     }
     
-    func updateIconBadge(){
-        if let user = FIRAuth.auth()?.currentUser {
-            let firebase = FIRDatabase.database().reference()
-            firebase.child("notifications").child(user.uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
-                var sum: Int = 0
-                
-                for child in snapshot.children {
-                    sum += Int(child.childrenCount!)
-                }
-                
-                UIApplication.sharedApplication().applicationIconBadgeNumber = sum
-                
-            }) { (error) in
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
     func dismissNotifications(){
         //let firebase = FIRDatabase.database().reference()
         //if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String  {
@@ -431,5 +413,29 @@ extension UIViewController {
             //BatchPush.dismissNotifications()
             //NSUserDefaults.standardUserDefaults().setObject(0, forKey: "NOTIFICATIONS")
         //}
+    }
+}
+
+func updateIconBadge(){
+    if let user = FIRAuth.auth()?.currentUser {
+        getNumberOfNotifications(user.uid){(sum) in
+            UIApplication.sharedApplication().applicationIconBadgeNumber = sum
+        }
+    }
+}
+
+func getNumberOfNotifications(uid: String, completion: (Int)->()) {
+    let firebase = FIRDatabase.database().reference()
+    firebase.child("notifications").child(uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+        var sum: Int = 0
+        
+        for child in snapshot.children {
+            sum += Int(child.childrenCount!)
+        }
+        
+        completion(sum)
+        
+    }) { (error) in
+        print(error.localizedDescription)
     }
 }

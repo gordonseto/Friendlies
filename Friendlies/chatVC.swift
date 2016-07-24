@@ -166,7 +166,7 @@ class chatVC: JSQMessagesViewController {
                     self.conversationInfoRef.child("uids").child(self.currentUser.uid).setValue("seen")
                     removeFromNotifications(self.currentUser.uid, notificationType: "messages", param1: self.conversationId)
                     self.updateTabBarBadge("messages")
-                    self.updateIconBadge()
+                    updateIconBadge()
                 }
                 
                 self.finishReceivingMessage()
@@ -412,21 +412,24 @@ class chatVC: JSQMessagesViewController {
     func sendMessageNotification(displayName: String, message: String){
         if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
             
-            pushClient.sandbox = false
-            pushClient.customPayload = ["aps": ["badge": 1, "content-available": 1]]
-            pushClient.groupId = "messageNotifications"
-            pushClient.message.title = "Friendlies"
-            pushClient.message.body = "\(displayName): \(message)"
-            pushClient.recipients.customIds = [otherUser.uid]
-            pushClient.deeplink = "friendlies://messages/\(conversationId)/\(currentUser.uid)"
-            
-            pushClient.send { (response, error) in
-                if let error = error {
-                    print("Something happened while sending the push: \(response) \(error.localizedDescription)")
-                } else {
-                    print("Push sent \(response)")
+            getNumberOfNotifications(otherUser.uid){(sum) in
+                pushClient.sandbox = false
+                pushClient.customPayload = ["aps": ["badge": sum, "content-available": 1]]
+                pushClient.groupId = "messageNotifications"
+                pushClient.message.title = "Friendlies"
+                pushClient.message.body = "\(displayName): \(message)"
+                pushClient.recipients.customIds = [self.otherUser.uid]
+                pushClient.deeplink = "friendlies://messages/\(self.conversationId)/\(self.currentUser.uid)"
+                
+                pushClient.send { (response, error) in
+                    if let error = error {
+                        print("Something happened while sending the push: \(response) \(error.localizedDescription)")
+                    } else {
+                        print("Push sent \(response)")
+                    }
                 }
             }
+
             
         } else {
             print("Error while initializing BatchClientPush")

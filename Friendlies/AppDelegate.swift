@@ -62,9 +62,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let deepLink = userInfo["com.batch"]?["l"] as? String {
             let queryArray = deepLink.componentsSeparatedByString("/")
             let queryType = queryArray[2]
-            
+            /*
+            if queryType == "friends" {
+                refreshFriendsList()
+            }
+            */
             updateTabBarBadge(queryType)
-            
+            updateIconBadge()
         }
         completionHandler(UIBackgroundFetchResult.NewData)
     }
@@ -95,6 +99,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    /*
+    func refreshFriendsList(){
+        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+            if let friendsNVC = tabBarController.viewControllers![FRIENDS_INDEX] as? UINavigationController {
+                if let friendsVC = friendsNVC.viewControllers[0] as? friendsListVC {
+                    friendsVC.updateNotifications = false
+                    friendsVC.getCurrentUsersFriends()
+                }
+            }
+        }
+    }*/
 
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         
@@ -133,6 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
     
     func goToConversation(conversationId: String, otherUserUid: String) {
         if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {

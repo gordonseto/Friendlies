@@ -37,6 +37,8 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     
     var noFriendsLabel: UILabel!
     
+    var updateNotifications: Bool = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -76,17 +78,26 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     }
     
     func getCurrentUsersFriends(){
-        if friends.count == 0 {
-            self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
-            removeBackgroundMessage(noFriendsLabel)
+        if friendsAndWantsToBeAddedBy.count == 0 {
+            if let activityIndicator = self.activityIndicator {
+                if let loadingLabel = self.loadingLabel {
+                    if let tableView = self.tableView {
+                        self.startLoadingAnimation(activityIndicator, loadingLabel: loadingLabel, viewToAdd: tableView)
+                        removeBackgroundMessage(noFriendsLabel)
+                    }
+                }
+            }
         }
         CurrentUser.sharedInstance.getCurrentUser(){
             if let user = CurrentUser.sharedInstance.user {
                 self.currentUser = CurrentUser.sharedInstance.user
                 
-                removeAllNotificationsOfType(self.currentUser.uid, notificationType: "friends")
-                self.updateTabBarBadge("friends")
-                self.updateIconBadge()
+               // if self.updateNotifications {
+                    removeAllNotificationsOfType(self.currentUser.uid, notificationType: "friends")
+                    self.updateTabBarBadge("friends")
+                    updateIconBadge()
+                //}
+                self.updateNotifications = true
                 
                 if let friendskeys = self.currentUser.friends {
                     self.friendsKeys = []

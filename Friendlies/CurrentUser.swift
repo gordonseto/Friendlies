@@ -258,19 +258,21 @@ class CurrentUser {
     func sendFriendNotification(message: String, uid: String){
         if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
             
-            pushClient.sandbox = false
-            pushClient.customPayload = ["aps": ["badge": 1, "sound": NSNull(), "content-available": 1]]
-            pushClient.groupId = "friendNotifications"
-            pushClient.message.title = "Friendlies"
-            pushClient.message.body = message
-            pushClient.recipients.customIds = [uid]
-            pushClient.deeplink = "friendlies://friends/\(uid)"
-            
-            pushClient.send { (response, error) in
-                if let error = error {
-                    print("Something happened while sending the push: \(response) \(error.localizedDescription)")
-                } else {
-                    print("Push sent \(response)")
+            getNumberOfNotifications(uid){ (sum) in
+                pushClient.sandbox = false
+                pushClient.customPayload = ["aps": ["badge": sum, "sound": NSNull(), "content-available": 1]]
+                pushClient.groupId = "friendNotifications"
+                pushClient.message.title = "Friendlies"
+                pushClient.message.body = message
+                pushClient.recipients.customIds = [uid]
+                pushClient.deeplink = "friendlies://friends/\(uid)"
+                
+                pushClient.send { (response, error) in
+                    if let error = error {
+                        print("Something happened while sending the push: \(response) \(error.localizedDescription)")
+                    } else {
+                        print("Push sent \(response)")
+                    }
                 }
             }
             

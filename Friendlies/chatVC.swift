@@ -35,7 +35,7 @@ class chatVC: JSQMessagesViewController {
     
     var isLookingAtMessage: Bool = true
     
-    let MESSAGE_LOAD_INCREMENT: UInt = 5
+    let MESSAGE_LOAD_INCREMENT: UInt = 15
     var currentEndingKey = "-ZZZZZZZZZZZZZZZZZZZ"
     
     /*
@@ -161,8 +161,9 @@ class chatVC: JSQMessagesViewController {
                     messagesLoaded++
                     if messagesLoaded == 1 {
                         self.currentEndingKey = snapshot.key
+                    } else {
+                        self.messages.append(message)
                     }
-                    self.messages.append(message)
                 }
                 
                 if self.isLookingAtMessage {
@@ -179,18 +180,19 @@ class chatVC: JSQMessagesViewController {
     
     func getPastMessages() {
         if let conversationId = self.conversationId {
-            firebase.child("messages").child(conversationId).queryOrderedByKey().queryEndingAtValue(currentEndingKey).queryLimitedToLast(MESSAGE_LOAD_INCREMENT).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            firebase.child("messages").child(conversationId).queryOrderedByKey().queryEndingAtValue(currentEndingKey).queryLimitedToLast(MESSAGE_LOAD_INCREMENT + 1).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
                 var temporaryMessagesArray = [JSQMessage]()
+                var skipFirst: Bool = true
                 
-                if snapshot.childrenCount < self.MESSAGE_LOAD_INCREMENT {
+                if snapshot.childrenCount <= self.MESSAGE_LOAD_INCREMENT {
                     self.showLoadEarlierMessagesHeader = false
+                    skipFirst = false
                 }
                 
                 for (index, child) in snapshot.children.enumerate() {
-                    if index == 0 {
+                    if index == 0 && skipFirst {
                         self.currentEndingKey = child.key
-                    }
-                    if UInt(index) + UInt(1) != self.MESSAGE_LOAD_INCREMENT {
+                    } else {
                         if let message = self.getMessageFromSnapshot(child as! FIRDataSnapshot){
                             temporaryMessagesArray.append(message)
                         }
@@ -508,3 +510,14 @@ extension chatVC {
         collectionView.addGestureRecognizer(tap)
     }
 }
+
+extension JSQMessagesLoadEarlierHeaderView {
+    
+    public override func awakeFromNib() {
+        super.awakeFromNib()
+        loadButton.setTitleColor(UIColor.lightGrayColor(), forState: .Normal)
+        loadButton.setTitle("Load Earlier Messages", forState: .Normal)
+    }
+    
+}
+ 

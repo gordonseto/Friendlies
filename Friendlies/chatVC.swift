@@ -35,6 +35,9 @@ class chatVC: JSQMessagesViewController {
     
     var isLookingAtMessage: Bool = true
     
+    let MESSAGE_LOAD_INCREMENT: UInt = 5
+    var currentEndingKey = "-ZZZZZZZZZZZZZZZZZZZ"
+    
     /*
     private var localTyping = false
     var isTyping: Bool {
@@ -69,6 +72,9 @@ class chatVC: JSQMessagesViewController {
         self.inputToolbar.contentView.backgroundColor = UIColor(red: 28.0/255.0, green: 28.0/255.0, blue: 28.0/255.0, alpha: 1.0)
         self.inputToolbar.contentView.textView.textColor = UIColor.darkGrayColor()
         self.inputToolbar.contentView.textView.placeHolderTextColor = UIColor.darkGrayColor()
+        
+        self.collectionView.delaysContentTouches = false
+        showLoadEarlierMessagesHeader = true
         
         if let user = CurrentUser.sharedInstance.user {
             currentUser = user
@@ -148,19 +154,16 @@ class chatVC: JSQMessagesViewController {
     func getMessages() {
         if let conversationId = self.conversationId {
             conversationInfoRef = firebase.child("conversationInfos").child(conversationId)
-            firebase.child("messages").child(conversationId).observeEventType(.ChildAdded, withBlock: { (snapshot) in
-                guard let id = snapshot.value!["senderId"] as? String else { return }
-                guard let text = snapshot.value!["text"] as? String else { return }
-                guard let time = snapshot.value!["time"] as? NSTimeInterval else { return }
+            var messagesLoaded = 0
+            firebase.child("messages").child(conversationId).queryLimitedToLast(MESSAGE_LOAD_INCREMENT).observeEventType(.ChildAdded, withBlock: { (snapshot) in
                 
-                var displayName: String!
-                if id == self.senderId {
-                    displayName = self.currentUser.displayName
-                } else {
-                    displayName = self.otherUser.displayName
+                if let message = self.getMessageFromSnapshot(snapshot) {
+                    messagesLoaded++
+                    if messagesLoaded == 1 {
+                        self.currentEndingKey = snapshot.key
+                    }
+                    self.messages.append(message)
                 }
-                
-                self.addMessage(id, displayName: displayName, text: text, time: time)
                 
                 if self.isLookingAtMessage {
                     self.conversationInfoRef.child("uids").child(self.currentUser.uid).setValue("seen")
@@ -172,6 +175,54 @@ class chatVC: JSQMessagesViewController {
                 self.finishReceivingMessage()
             })
         }
+    }
+    
+    func getPastMessages() {
+        if let conversationId = self.conversationId {
+            firebase.child("messages").child(conversationId).queryOrderedByKey().queryEndingAtValue(currentEndingKey).queryLimitedToLast(MESSAGE_LOAD_INCREMENT).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+                var temporaryMessagesArray = [JSQMessage]()
+                
+                if snapshot.childrenCount < self.MESSAGE_LOAD_INCREMENT {
+                    self.showLoadEarlierMessagesHeader = false
+                }
+                
+                for (index, child) in snapshot.children.enumerate() {
+                    if index == 0 {
+                        self.currentEndingKey = child.key
+                    }
+                    if UInt(index) + UInt(1) != self.MESSAGE_LOAD_INCREMENT {
+                        if let message = self.getMessageFromSnapshot(child as! FIRDataSnapshot){
+                            temporaryMessagesArray.append(message)
+                        }
+                    }
+                }
+                self.messages = temporaryMessagesArray + self.messages
+                self.collectionView.reloadData()
+            })
+        }
+    }
+    
+    func getMessageFromSnapshot(snapshot: FIRDataSnapshot) -> JSQMessage? {
+        guard let id = snapshot.value!["senderId"] as? String else { return nil}
+        guard let text = snapshot.value!["text"] as? String else { return nil}
+        guard let time = snapshot.value!["time"] as? NSTimeInterval else { return nil }
+        
+        var displayName: String!
+        if id == self.senderId {
+            displayName = self.currentUser.displayName
+        } else {
+            displayName = self.otherUser.displayName
+        }
+        
+        let date = NSDate(timeIntervalSince1970: time)
+        let message = JSQMessage(senderId: id, senderDisplayName: displayName, date: date, text: text)
+        
+        return message
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, header headerView: JSQMessagesLoadEarlierHeaderView!, didTapLoadEarlierMessagesButton sender: UIButton!) {
+        
+        getPastMessages()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -335,12 +386,6 @@ class chatVC: JSQMessagesViewController {
     
     func onTitleTapped(){
         performSegueWithIdentifier("profileVCFromChat", sender: nil)
-    }
-    
-    func addMessage(id: String, displayName: String, text: String, time: NSTimeInterval){
-        let date = NSDate(timeIntervalSince1970: time)
-        let message = JSQMessage(senderId: id, senderDisplayName: displayName, date: date, text: text)
-        messages.append(message)
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {

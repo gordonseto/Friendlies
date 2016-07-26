@@ -139,7 +139,7 @@ func getBroadcastTime(time: NSTimeInterval) -> (value: String, unit: String) {
                 if timeDifference < 7 { //days
                     return ("\(Int(timeDifference))", "d")
                 } else {
-                    timeDifference /= 52.0
+                    timeDifference /= 7.0
                     if timeDifference < 52.0 { //weeks
                         return ("\(Int(timeDifference))", "w")
                     } else {

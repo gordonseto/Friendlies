@@ -35,7 +35,7 @@ class chatVC: JSQMessagesViewController {
     
     var isLookingAtMessage: Bool = true
     
-    let MESSAGE_LOAD_INCREMENT: UInt = 15
+    let MESSAGE_LOAD_INCREMENT: UInt = 30
     var currentEndingKey = "-ZZZZZZZZZZZZZZZZZZZ"
     
     /*
@@ -74,8 +74,7 @@ class chatVC: JSQMessagesViewController {
         self.inputToolbar.contentView.textView.placeHolderTextColor = UIColor.darkGrayColor()
         
         self.collectionView.delaysContentTouches = false
-        showLoadEarlierMessagesHeader = true
-        
+
         if let user = CurrentUser.sharedInstance.user {
             currentUser = user
             if otherUser.displayName == nil {
@@ -148,6 +147,9 @@ class chatVC: JSQMessagesViewController {
     func setupConversation(){
         //setupAvatars()
         getMessages()
+        getPastMessages(){
+            self.scrollToBottomAnimated(true)
+        }
         //observeTyping()
     }
     
@@ -155,7 +157,7 @@ class chatVC: JSQMessagesViewController {
         if let conversationId = self.conversationId {
             conversationInfoRef = firebase.child("conversationInfos").child(conversationId)
             var messagesLoaded = 0
-            firebase.child("messages").child(conversationId).queryLimitedToLast(MESSAGE_LOAD_INCREMENT).observeEventType(.ChildAdded, withBlock: { (snapshot) in
+            firebase.child("messages").child(conversationId).queryLimitedToLast(1).observeEventType(.ChildAdded, withBlock: { (snapshot) in
                 
                 if let message = self.getMessageFromSnapshot(snapshot) {
                     messagesLoaded++
@@ -178,7 +180,7 @@ class chatVC: JSQMessagesViewController {
         }
     }
     
-    func getPastMessages() {
+    func getPastMessages(completion: ()->()) {
         if let conversationId = self.conversationId {
             firebase.child("messages").child(conversationId).queryOrderedByKey().queryEndingAtValue(currentEndingKey).queryLimitedToLast(MESSAGE_LOAD_INCREMENT + 1).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
                 var temporaryMessagesArray = [JSQMessage]()
@@ -187,6 +189,8 @@ class chatVC: JSQMessagesViewController {
                 if snapshot.childrenCount <= self.MESSAGE_LOAD_INCREMENT {
                     self.showLoadEarlierMessagesHeader = false
                     skipFirst = false
+                } else {
+                    self.showLoadEarlierMessagesHeader = true
                 }
                 
                 for (index, child) in snapshot.children.enumerate() {
@@ -200,6 +204,7 @@ class chatVC: JSQMessagesViewController {
                 }
                 self.messages = temporaryMessagesArray + self.messages
                 self.collectionView.reloadData()
+                completion()
             })
         }
     }
@@ -224,7 +229,7 @@ class chatVC: JSQMessagesViewController {
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, header headerView: JSQMessagesLoadEarlierHeaderView!, didTapLoadEarlierMessagesButton sender: UIButton!) {
         
-        getPastMessages()
+        getPastMessages(){}
     }
     
     override func viewDidAppear(animated: Bool) {

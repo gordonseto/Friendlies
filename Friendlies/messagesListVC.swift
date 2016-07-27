@@ -64,12 +64,13 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         getCurrentUserConversations()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.tabBarController?.tabBar.hidden = false
         self.navigationController?.navigationBarHidden = true
-        
     }
-            
+    
 
     func getCurrentUserConversations() {
         if self.conversationPreviews.count == 0 {

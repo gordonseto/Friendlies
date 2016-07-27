@@ -219,6 +219,13 @@ class chatVC: JSQMessagesViewController {
         isLookingAtMessage = true
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.tabBarController?.tabBar.hidden = true
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         isLookingAtMessage = false
     }
@@ -470,7 +477,6 @@ class chatVC: JSQMessagesViewController {
             if let destinationVC = segue.destinationViewController as? profileVC {
                 destinationVC.user = otherUser
                 destinationVC.notFromTabBar = true
-                destinationVC.fromChat = true
             }
         }
     }

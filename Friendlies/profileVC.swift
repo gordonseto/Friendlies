@@ -92,10 +92,8 @@ class profileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if !fromChat {
-            self.navigationController?.setNavigationBarHidden(true, animated: true)
-            self.tabBarController?.tabBar.hidden = false
-        }
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         //self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
         if let navigationcontroller = self.navigationController {
             swiper = SloppySwiper(navigationController: navigationcontroller)
@@ -138,12 +136,10 @@ class profileVC: UIViewController {
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        if !fromChat {
-            self.navigationController?.setNavigationBarHidden(true, animated: true)
-            self.tabBarController?.tabBar.hidden = false
-        }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     func downloadUserAndInitializeView() {

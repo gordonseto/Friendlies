@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseAuth
+import SloppySwiper
 
 enum FriendsStatus: Int, CustomStringConvertible {
     case Friends, NotFriends, WantsToAdd, WantsToBeAddedBy
@@ -85,6 +86,8 @@ class profileVC: UIViewController {
     var notFromTabBar: Bool = false
     
     var friendsStatus: FriendsStatus!
+    
+    var swiper: SloppySwiper!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,7 +96,11 @@ class profileVC: UIViewController {
             self.navigationController?.setNavigationBarHidden(true, animated: true)
             self.tabBarController?.tabBar.hidden = false
         }
-        self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
+        //self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
+        if let navigationcontroller = self.navigationController {
+            swiper = SloppySwiper(navigationController: navigationcontroller)
+            navigationcontroller.delegate = swiper
+        }
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: Selector("refreshView:"), forControlEvents: UIControlEvents.ValueChanged)

@@ -43,7 +43,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         super.viewDidLoad()
 
         self.navigationController?.navigationBarHidden = true
-        self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
+        //self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
         
         self.hideKeyboardWhenTappedAround()
         

@@ -75,11 +75,7 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
     
     func findDistanceFrom(userLocation: CLLocation) {
         let distance = userLocation.distanceFromLocation(broadcast.geolocation)
-        if distance < 1000 {
-            distanceLabel.text = "\(Int(distance))m away"
-        } else {
-            distanceLabel.text = "\(Int(distance/1000.0))km away"
-        }
+        distanceLabel.text = "\(Int(distance/1000.0)) km away"
     }
     
     func textViewDidBeginEditing(textView: UITextView) {

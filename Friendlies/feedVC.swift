@@ -12,6 +12,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import GeoFire
 import Batch
+import SloppySwiper
 
 class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, BroadcastCellDelegate {
 
@@ -45,11 +46,17 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     
     var noBroadcastsLabel: UILabel!
     
+    var swiper: SloppySwiper!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationController?.navigationBarHidden = true
-        self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
+        //self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
+        if let navigationcontroller = self.navigationController {
+            swiper = SloppySwiper(navigationController: navigationcontroller)
+            navigationcontroller.delegate = swiper
+        }
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -321,6 +328,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
 }
 
 extension UIViewController {
+    
     func hideKeyboardWhenTappedAround() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         tap.cancelsTouchesInView = false

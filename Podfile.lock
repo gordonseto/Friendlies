@@ -48,6 +48,7 @@ PODS:
   - JSQMessagesViewController (7.3.3):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
+  - SloppySwiper (0.5)
 
 DEPENDENCIES:
   - Batch
@@ -59,6 +60,7 @@ DEPENDENCIES:
   - Firebase/Database
   - GeoFire (from `https://github.com/firebase/geofire-objc.git`)
   - JSQMessagesViewController (~> 7.3)
+  - SloppySwiper
 
 EXTERNAL SOURCES:
   GeoFire:
@@ -87,7 +89,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
   JSQMessagesViewController: 0ee3f80237268192a3e8337fd0d787f1a1bf5a7a
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  SloppySwiper: 7fdffc91062af8fb80574dee80082cb9e0cee507
 
-PODFILE CHECKSUM: e182c4d0bdbcce76f80df4b2c9a60154d922cdb7
+PODFILE CHECKSUM: 0f83457a3edb4b687f0659e9a03138b17497e9ae
 
 COCOAPODS: 1.0.1

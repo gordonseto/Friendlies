@@ -36,7 +36,7 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
 
         self.navigationController?.navigationBarHidden = true
-        self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
+        //self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
         
         self.hideKeyboardWhenTappedAround()
         

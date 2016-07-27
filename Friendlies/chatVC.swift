@@ -125,25 +125,6 @@ class chatVC: JSQMessagesViewController {
     }
     
     
-    /*
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(true)
-        
-        self.tabBarController?.tabBar.hidden = true
-        self.navigationController?.navigationBarHidden = false
-        
-        if currentUser != nil {
-            if otherUser != nil {
-                setupBubbles()
-                getConversation() {
-                    self.setupConversation()
-                }
-            }
-        }
- 
-        
-    }
-    */
     func setupConversation(){
         //setupAvatars()
         getMessages()
@@ -367,18 +348,6 @@ class chatVC: JSQMessagesViewController {
         if let otheruserpic = otherUser.profilePhoto {
             avatars[otherUser.uid] = JSQMessagesAvatarImageFactory.avatarImageWithImage(otherUser.profilePhoto, diameter: 30)
         }
-    }
-    
-    override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        let message = messages[indexPath.item]
-        /*
-        if let avatar = avatars[message.senderId] {
-            return avatar
-        } else {
-            return nil
-        }
-         */
-        return nil
     }
 
     func addTitleButton(){

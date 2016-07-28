@@ -72,6 +72,8 @@ class chatVC: JSQMessagesViewController {
         self.inputToolbar.contentView.backgroundColor = UIColor(red: 28.0/255.0, green: 28.0/255.0, blue: 28.0/255.0, alpha: 1.0)
         self.inputToolbar.contentView.textView.textColor = UIColor.darkGrayColor()
         self.inputToolbar.contentView.textView.placeHolderTextColor = UIColor.darkGrayColor()
+        self.inputToolbar.contentView.leftBarButtonItem = nil
+        self.inputToolbar.contentView.leftBarButtonItemWidth = self.inputToolbar.contentView.rightBarButtonItemWidth * 0.25
         
         self.collectionView.delaysContentTouches = false
 
@@ -107,7 +109,7 @@ class chatVC: JSQMessagesViewController {
         otherUserConversationRef = firebase.child("users").child(otherUser.uid).child("conversations")
         
         if otherUser != nil {
-            addTitleButton()
+            addNavigationButtons()
         }
         
         if currentUser != nil {
@@ -357,7 +359,7 @@ class chatVC: JSQMessagesViewController {
         }
     }
 
-    func addTitleButton(){
+    func addNavigationButtons(){
         var titleButton = UIButton()
         titleButton.setTitle(otherUser.displayName, forState: .Normal)
         titleButton.titleLabel!.font = UIFont(name: "HelveticaNeue-Bold", size: 17)
@@ -365,10 +367,33 @@ class chatVC: JSQMessagesViewController {
         titleButton.frame = CGRectMake(0, 0, 100, 44)
         titleButton.addTarget(self, action: "onTitleTapped", forControlEvents: UIControlEvents.TouchUpInside)
         self.navigationItem.titleView = titleButton
+        
+        var image = UIImage(named: "mapMarker")
+        //image = imageWithImage(image!, scaledToSize: CGSizeMake(97.0/7.0, 160.0/7.0))
+        var hereButton = UIBarButtonItem(image: image, style: UIBarButtonItemStyle.Plain, target: self, action: "onHereButtonPressed")
+        self.navigationItem.rightBarButtonItem = hereButton
+    }
+    
+    func onHereButtonPressed() {
+        let date = NSDate()
+        guard let currentUser = currentUser else { return }
+        guard let otherUser = otherUser else { return }
+        
+        didPressSendButton(nil, withMessageText: "Here", senderId: self.senderId, senderDisplayName: self.senderDisplayName, date: date)
+        currentUser.addActivity(otherUser.uid)
+        otherUser.addActivity(currentUser.uid)
     }
     
     func onTitleTapped(){
         performSegueWithIdentifier("profileVCFromChat", sender: nil)
+    }
+    
+    func imageWithImage(image:UIImage, scaledToSize newSize:CGSize) -> UIImage{
+        UIGraphicsBeginImageContextWithOptions(newSize, false, image.scale);
+        image.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+        let newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {

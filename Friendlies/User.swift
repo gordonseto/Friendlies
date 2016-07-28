@@ -108,6 +108,17 @@ class User {
             }.resume()
     }
     
+    func addActivity(uid: String){
+        let firebase = FIRDatabase.database().reference()
+        
+        if let uid = self.uid {
+            let newActivityRef = firebase.child("activity").child(self.uid).childByAutoId()
+            let time = NSDate().timeIntervalSince1970
+            let activity = ["uid": uid, "time": time]
+            newActivityRef.setValue(activity)
+        }
+    }
+    
 }
 
 func addToNotifications(uid: String, notificationType: String, param1: AnyObject){

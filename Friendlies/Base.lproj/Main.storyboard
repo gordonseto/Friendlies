@@ -1460,7 +1460,7 @@
         <image name="settings" width="129" height="135"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Wf7-u6-TVg"/>
         <segue reference="hk0-Rl-1gi"/>
+        <segue reference="3hv-uT-Y7D"/>
     </inferredMetricsTieBreakers>
 </document>

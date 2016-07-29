@@ -6,6 +6,7 @@ PODS:
   - Bolts/AppLinks (1.7.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.7.0)
+  - BubbleTransition (1.0.3)
   - FBSDKCoreKit (4.13.1):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.13.1):
@@ -52,6 +53,7 @@ PODS:
 
 DEPENDENCIES:
   - Batch
+  - BubbleTransition
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
@@ -74,6 +76,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Batch: 13083f81837fe1da9ea84b0533a2965c73ff74c6
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
+  BubbleTransition: a7ae6678721406d60f604cbbea1ace505563119d
   FBSDKCoreKit: 2807fe0da2ddb49a1469da6d6ff597f99912980f
   FBSDKLoginKit: 6d350cb6a22d6956e9d078885de6ee8a0ebc51b4
   FBSDKShareKit: c9438df7573b33780ac8c3451201c5ebb260ffca
@@ -91,6 +94,6 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   SloppySwiper: 7fdffc91062af8fb80574dee80082cb9e0cee507
 
-PODFILE CHECKSUM: 0f83457a3edb4b687f0659e9a03138b17497e9ae
+PODFILE CHECKSUM: 1d333faa897dc2c06bcd7d5b85dfe8958d5dc290
 
 COCOAPODS: 1.0.1

@@ -16,4 +16,5 @@ target 'Friendlies' do
   pod 'JSQMessagesViewController', '~> 7.3'
   pod 'Batch'
   pod 'SloppySwiper'
+  pod 'BubbleTransition'
 end

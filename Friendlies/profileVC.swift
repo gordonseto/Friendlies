@@ -51,7 +51,7 @@ enum FriendsStatus: Int, CustomStringConvertible {
     }
 }
 
-class profileVC: UIViewController {
+class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
 
     @IBOutlet weak var userPhoto: profilePhoto!
     @IBOutlet weak var displayName: UILabel!
@@ -203,6 +203,7 @@ class profileVC: UIViewController {
     func updateButtonLabels(){
         blueButton.setTitle(friendsStatus.blueButtonLabel, forState: .Normal)
         yellowButton.setTitle("SEND A MESSAGE", forState: .Normal)
+        redButton.setTitle("SEE USER'S ACTIVITY", forState: .Normal)
     }
 
     @IBAction func onYellowPressed(sender: AnyObject) {
@@ -245,6 +246,7 @@ class profileVC: UIViewController {
             destinationVC.senderDisplayName = currentUser.displayName
         }
     }
+    
     
     func refreshView(sender: AnyObject){
         downloadUserAndInitializeView()

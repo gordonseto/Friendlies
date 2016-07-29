@@ -119,6 +119,9 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             user.downloadUserInfo(){
                 self.friends.append(user)
                 if self.friends.count == self.friendsKeys.count {
+                    self.friends.sortInPlace {(friend1: User, friend2: User) -> Bool in
+                        friend1.lastAvailable > friend2.lastAvailable
+                    }
                     self.getCurrentUsersWantsToBeAddedBy()
                 }
             }
@@ -289,9 +292,14 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                         if let child = child as? FIRDataSnapshot {
                             if let uid = child.value!["uid"] as? String {
                                 if let facebookid = child.value!["facebookId"] as? String {
-                                    let user = User(uid: uid)
-                                    user.displayName = child.key
-                                    user.facebookId = facebookid
+                                    var user: User!
+                                    if let index = self.friends.indexOf({$0.uid == uid}){
+                                        user = self.friends[index]
+                                    } else {
+                                        user = User(uid: uid)
+                                        user.displayName = child.key
+                                        user.facebookId = facebookid
+                                    }
                                     self.allUsers.append(user)
                                 }
                             }

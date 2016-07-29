@@ -108,6 +108,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     
     override func viewDidAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
+        self.tabBarController?.tabBar.hidden = false
     }
     
     @IBAction func onHexagonTapped(sender: AnyObject) {

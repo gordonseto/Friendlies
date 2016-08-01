@@ -176,29 +176,18 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     func getCurrentUser(){
         CurrentUser.sharedInstance.getCurrentUser(){
-            CurrentUser.sharedInstance.user.getFriendsInfo(){
-                self.currentUser = CurrentUser.sharedInstance.user
-                self.checkFriendsStatus()
-            }
+            self.checkFriendsStatus(){}
         }
     }
     
-    func checkFriendsStatus() {
-        if let friends = currentUser.friends {
-            if let wantsToAdd = currentUser.wantsToAdd {
-                if let wantsToBeAddedBy = currentUser.wantsToBeAddedBy {
-                    if friends[user.uid] != nil {
-                        friendsStatus = FriendsStatus.Friends
-                    } else if wantsToAdd[user.uid] != nil {
-                        friendsStatus = FriendsStatus.WantsToAdd
-                    } else if wantsToBeAddedBy[user.uid] != nil {
-                        friendsStatus = FriendsStatus.WantsToBeAddedBy
-                    } else {
-                        friendsStatus = FriendsStatus.NotFriends
-                    }
-                    updateButtonLabels()
-                }
-            }
+    func checkFriendsStatus(completion: ()->()){
+        if let uid = self.user.uid {
+            CurrentUser.sharedInstance.checkFriendStatus(uid, completion: {(friendsStatus) in
+                self.currentUser = CurrentUser.sharedInstance.user
+                self.friendsStatus = friendsStatus
+                self.updateButtonLabels()
+                completion()
+            })
         }
     }
     
@@ -216,8 +205,9 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         if let friendsStatus = friendsStatus {
             blueButton.userInteractionEnabled = false
             friendsStatus.addInteraction(self.user.uid){
-                self.checkFriendsStatus()
-                self.blueButton.userInteractionEnabled = true
+                self.checkFriendsStatus(){
+                    self.blueButton.userInteractionEnabled = true
+                }
             }
         }
     }

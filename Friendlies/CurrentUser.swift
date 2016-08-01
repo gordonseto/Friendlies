@@ -28,19 +28,52 @@ class CurrentUser {
         }
     }
     
-    func sendAddRequestToUser(uid: String, completion: ()->()){
+    func checkFriendStatus(uid: String, completion: (FriendsStatus)->()){
         if let user = user {
-            firebase = FIRDatabase.database().reference()
-            let time = NSDate().timeIntervalSince1970
-            firebase.child("friendsInfo").child(user.uid).child("wantsToAdd").child(uid).setValue(true)
-            firebase.child("friendsInfo").child(uid).child("wantsToBeAddedBy").child(user.uid).setValue("unseen")
-            self.sendFriendNotification("\(self.user.displayName) has sent you a friend request.", uid: uid)
-            addToNotifications(uid, notificationType: "friends", param1: self.user.uid)
-            self.user.downloadUserInfo(){
-                self.user.getFriendsInfo(){
-                    completion()
+            user.getFriendsInfo(){
+                self.user = user
+                var friendsStatus: FriendsStatus!
+                if let friends = user.friends {
+                    if let wantsToAdd = user.wantsToAdd {
+                        if let wantsToBeAddedBy = user.wantsToBeAddedBy {
+                            if friends[uid] != nil {
+                                friendsStatus = FriendsStatus.Friends
+                            } else if wantsToAdd[uid] != nil {
+                                friendsStatus = FriendsStatus.WantsToAdd
+                            } else if wantsToBeAddedBy[uid] != nil {
+                                friendsStatus = FriendsStatus.WantsToBeAddedBy
+                            } else {
+                                friendsStatus = FriendsStatus.NotFriends
+                            }
+                            completion(friendsStatus)
+                        }
+                    }
                 }
             }
+        }
+    }
+    
+    func sendAddRequestToUser(uid: String, completion: ()->()){
+        if let user = user {
+            checkFriendStatus(uid, completion: {(friendsStatus) in
+                if friendsStatus == FriendsStatus.WantsToBeAddedBy {
+                    self.acceptAddRequest(uid){
+                        completion()
+                    }
+                } else {
+                    self.firebase = FIRDatabase.database().reference()
+                    let time = NSDate().timeIntervalSince1970
+                    self.firebase.child("friendsInfo").child(user.uid).child("wantsToAdd").child(uid).setValue(true)
+                    self.firebase.child("friendsInfo").child(uid).child("wantsToBeAddedBy").child(user.uid).setValue("unseen")
+                    self.sendFriendNotification("\(self.user.displayName) has sent you a friend request.", uid: uid)
+                    addToNotifications(uid, notificationType: "friends", param1: self.user.uid)
+                    self.user.downloadUserInfo(){
+                        self.user.getFriendsInfo(){
+                            completion()
+                        }
+                    }
+                }
+            })
         }
     }
     

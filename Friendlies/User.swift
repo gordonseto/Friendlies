@@ -19,9 +19,9 @@ class User {
     private var _gamerTag: String!
     private var _characters: [String]!
     private var _lastAvailable: NSTimeInterval!
-    private var _friends: [String]!
-    private var _wantsToAdd: [String]!
-    private var _wantsToBeAddedBy: [[String: String]]!
+    private var _friends: [String: Bool]!
+    private var _wantsToAdd: [String: Bool]!
+    private var _wantsToBeAddedBy: [String: String]!
     private var _conversations: [String: Bool]!
     
     var uid: String! {
@@ -40,15 +40,15 @@ class User {
         return _lastAvailable
     }
     
-    var friends: [String]! {
+    var friends: [String: Bool]! {
         return _friends
     }
     
-    var wantsToAdd: [String]! {
+    var wantsToAdd: [String: Bool]! {
         return _wantsToAdd
     }
     
-    var wantsToBeAddedBy: [[String: String]]! {
+    var wantsToBeAddedBy: [String: String]! {
         return _wantsToBeAddedBy
     }
     
@@ -63,14 +63,12 @@ class User {
     func downloadUserInfo(completion: () -> ()) {
         let firebase = FIRDatabase.database().reference()
         firebase.child("users").child(_uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+            print(snapshot)
             self.displayName = snapshot.value!["displayName"] as? String ?? ""
             self._gamerTag = snapshot.value!["gamerTag"] as? String ?? ""
             self._characters = snapshot.value!["characters"] as? [String] ?? []
             self.facebookId = snapshot.value!["facebookId"] as? String ?? ""
             self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? nil
-            self._friends = snapshot.value!["friends"] as? [String] ?? []
-            self._wantsToAdd = snapshot.value!["wantsToAdd"] as? [String] ?? []
-            self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [[String: String]] ?? [[:]]
             self._conversations = snapshot.value!["conversations"] as? [String: Bool] ?? [:]
             print("downloaded \(self.displayName)")
             completion()
@@ -78,6 +76,17 @@ class User {
             print("error retreiving user")
             completion()
         }
+    }
+    
+    func getFriendsInfo(completion: () -> ()) {
+        let firebase = FIRDatabase.database().reference()
+        firebase.child("friendsInfo").child(_uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+            print(snapshot)
+            self._friends = snapshot.value!["friends"] as? [String: Bool] ?? [:]
+            self._wantsToAdd = snapshot.value!["wantsToAdd"] as? [String: Bool] ?? [:]
+            self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [String: String] ?? [:]
+            completion()
+        })
     }
     
     func getUserProfilePhoto(completion: () -> ()) {

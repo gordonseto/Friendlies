@@ -176,8 +176,10 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     func getCurrentUser(){
         CurrentUser.sharedInstance.getCurrentUser(){
-            self.currentUser = CurrentUser.sharedInstance.user
-            self.checkFriendsStatus()
+            CurrentUser.sharedInstance.user.getFriendsInfo(){
+                self.currentUser = CurrentUser.sharedInstance.user
+                self.checkFriendsStatus()
+            }
         }
     }
     
@@ -185,11 +187,11 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         if let friends = currentUser.friends {
             if let wantsToAdd = currentUser.wantsToAdd {
                 if let wantsToBeAddedBy = currentUser.wantsToBeAddedBy {
-                    if friends.contains(user.uid) {
+                    if friends[user.uid] != nil {
                         friendsStatus = FriendsStatus.Friends
-                    } else if wantsToAdd.contains(user.uid) {
+                    } else if wantsToAdd[user.uid] != nil {
                         friendsStatus = FriendsStatus.WantsToAdd
-                    } else if wantsToBeAddedBy.contains({$0[user.uid] != nil}) {
+                    } else if wantsToBeAddedBy[user.uid] != nil {
                         friendsStatus = FriendsStatus.WantsToBeAddedBy
                     } else {
                         friendsStatus = FriendsStatus.NotFriends

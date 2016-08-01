@@ -98,7 +98,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                     updateIconBadge()
                 //}
                 self.updateNotifications = true
-                
+                /*
                 if let friendskeys = self.currentUser.friends {
                     self.friendsKeys = []
                     self.friends = []
@@ -106,6 +106,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                     self.friendsKeys = friendskeys
                     self.getFriendProfiles()
                 }
+ */
             }
         }
     }
@@ -133,7 +134,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             if let wantsToBeAddedByKeys = user.wantsToBeAddedBy {
                 self.wantsToBeAddedByKeys = []
                 self.wantsToBeAddedBy = []
-                
+                /*
                 for wantsToBeAddedByKey in wantsToBeAddedByKeys {
                     for (uid, value) in wantsToBeAddedByKey {
                         if value == "unseen" {
@@ -141,6 +142,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                         }
                     }
                 }
+ */
                 self.getWantsToBeAddedByProfiles()
             }
         }

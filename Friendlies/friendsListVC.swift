@@ -15,7 +15,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     @IBOutlet weak var tableView: UITableView!
     
     var currentUser: User!
-    var friendsKeys = [String]()
+    var friendsKeys = [String: Bool]()
     var friends = [User]()
     var filteredUsers = [User]()
     var allUsers = [User]()
@@ -89,24 +89,25 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             }
         }
         CurrentUser.sharedInstance.getCurrentUser(){
-            if let user = CurrentUser.sharedInstance.user {
-                self.currentUser = CurrentUser.sharedInstance.user
+            CurrentUser.sharedInstance.user.getFriendsInfo(){
+                if let user = CurrentUser.sharedInstance.user {
+                    self.currentUser = CurrentUser.sharedInstance.user
                 
                // if self.updateNotifications {
                     removeAllNotificationsOfType(self.currentUser.uid, notificationType: "friends")
                     self.updateTabBarBadge("friends")
                     updateIconBadge()
                 //}
-                self.updateNotifications = true
-                /*
-                if let friendskeys = self.currentUser.friends {
-                    self.friendsKeys = []
-                    self.friends = []
+                    self.updateNotifications = true
                 
-                    self.friendsKeys = friendskeys
-                    self.getFriendProfiles()
+                    if let friendskeys = self.currentUser.friends {
+                        self.friendsKeys = [:]
+                        self.friends = []
+                
+                        self.friendsKeys = friendskeys
+                        self.getFriendProfiles()
+                    }
                 }
- */
             }
         }
     }
@@ -115,7 +116,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         if friendsKeys.count == 0 {
             getCurrentUsersWantsToBeAddedBy()
         }
-        for friendKey in friendsKeys {
+        for (friendKey, _) in friendsKeys {
             var user = User(uid: friendKey)
             user.downloadUserInfo(){
                 self.friends.append(user)
@@ -134,15 +135,12 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             if let wantsToBeAddedByKeys = user.wantsToBeAddedBy {
                 self.wantsToBeAddedByKeys = []
                 self.wantsToBeAddedBy = []
-                /*
-                for wantsToBeAddedByKey in wantsToBeAddedByKeys {
-                    for (uid, value) in wantsToBeAddedByKey {
-                        if value == "unseen" {
-                            self.wantsToBeAddedByKeys.append(uid)
-                        }
+                
+                for (wantsToBeAddedByKey, value) in wantsToBeAddedByKeys {
+                    if value == "unseen" {
+                        self.wantsToBeAddedByKeys.append(wantsToBeAddedByKey)
                     }
                 }
- */
                 self.getWantsToBeAddedByProfiles()
             }
         }

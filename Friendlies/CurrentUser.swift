@@ -91,27 +91,8 @@ class CurrentUser {
     func hideAddRequest(uid: String, completion: ()->()) {
         if let user = user {
             firebase = FIRDatabase.database().reference()
-            firebase.child("users").child(user.uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
-                if var user = currentData.value as? [String: AnyObject] {
-                    var wantsToBeAddedBy = user["wantsToBeAddedBy"] as? [[String: String]] ?? [[String:String]]()
-                    if let index = wantsToBeAddedBy.indexOf({$0[uid] != nil}) {
-                        wantsToBeAddedBy[index][uid] = "seen"
-                    }
-                    user["wantsToBeAddedBy"] = wantsToBeAddedBy
-                    currentData.value = user
-                    return FIRTransactionResult.successWithValue(currentData)
-                }
-                return FIRTransactionResult.successWithValue(currentData)
-                }, andCompletionBlock: { (error, committed, snapshot) in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        print("WANTS TO ADD FAILED")
-                    }
-                    removeFromNotifications(uid, notificationType: "friends", param1: self.user.uid)
-                    self.user.downloadUserInfo(){
-                        completion()
-                    }
-            })
+            firebase.child("friendsInfo").child(user.uid).child("wantsToBeAddedBy").child(uid).setValue("seen")
+            completion()
         }
     }
     

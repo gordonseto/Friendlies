@@ -48,6 +48,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     
     var swiper: SloppySwiper!
     
+    var uid: String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -115,6 +117,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if let user = FIRAuth.auth()?.currentUser {
             if let firebase = firebase {
                 if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+                    self.uid = uid
                     if let currentLocation = currentLocation {
                         hexagonButton.userInteractionEnabled = false
                         let key = firebase.child("broadcasts").childByAutoId().key
@@ -146,6 +149,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                                     self.progressView.progress = 0.5
                                     self.queryBroadcasts()
                                 }
+                                
+                                self.notifyFollowers()
                             }
                             self.hexagonButton.userInteractionEnabled = true
                         })
@@ -154,6 +159,16 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             }
         } else {
             presentLoginVC()
+        }
+    }
+    
+    func notifyFollowers(){
+        guard let uid = self.uid else { return }
+        let currentUser = User(uid: uid)
+        currentUser.getFollowers(){
+            if let followers = currentUser.followers {
+                let followersArray = Array(followers.keys)
+            }
         }
     }
     

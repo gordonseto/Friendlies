@@ -23,6 +23,7 @@ class User {
     private var _wantsToAdd: [String: Bool]!
     private var _wantsToBeAddedBy: [String: String]!
     private var _conversations: [String: Bool]!
+    private var _followers: [String: Bool]!
     
     var uid: String! {
         return _uid
@@ -56,13 +57,18 @@ class User {
         return _conversations
     }
     
+    var followers: [String: Bool]! {
+        return _followers
+    }
+    
     init(uid: String) {
         _uid = uid
     }
     
     func downloadUserInfo(completion: () -> ()) {
+        guard let uid = _uid else { return }
         let firebase = FIRDatabase.database().reference()
-        firebase.child("users").child(_uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+        firebase.child("users").child(uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
             print(snapshot)
             self.displayName = snapshot.value!["displayName"] as? String ?? ""
             self._gamerTag = snapshot.value!["gamerTag"] as? String ?? ""
@@ -79,12 +85,23 @@ class User {
     }
     
     func getFriendsInfo(completion: () -> ()) {
+        guard let uid = _uid else { return }
         let firebase = FIRDatabase.database().reference()
-        firebase.child("friendsInfo").child(_uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
+        firebase.child("friendsInfo").child(uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
             print(snapshot)
             self._friends = snapshot.value!["friends"] as? [String: Bool] ?? [:]
             self._wantsToAdd = snapshot.value!["wantsToAdd"] as? [String: Bool] ?? [:]
             self._wantsToBeAddedBy = snapshot.value!["wantsToBeAddedBy"] as? [String: String] ?? [:]
+            completion()
+        })
+    }
+    
+    func getFollowers(completion: ()->()){
+        guard let uid = _uid else { return }
+        let firebase = FIRDatabase.database().reference()
+        firebase.child("followInfo").child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            print(snapshot)
+            self._followers = snapshot.value!["followers"] as? [String: Bool] ?? [:]
             completion()
         })
     }

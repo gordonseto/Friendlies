@@ -463,30 +463,7 @@ class chatVC: JSQMessagesViewController {
     }
     
     func sendMessageNotification(displayName: String, message: String){
-        if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
-            
-            getNumberOfNotifications(otherUser.uid){(sum) in
-                pushClient.sandbox = false
-                pushClient.customPayload = ["aps": ["badge": sum, "content-available": 1]]
-                pushClient.groupId = "messageNotifications"
-                pushClient.message.title = "Friendlies"
-                pushClient.message.body = "\(displayName): \(message)"
-                pushClient.recipients.customIds = [self.otherUser.uid]
-                pushClient.deeplink = "friendlies://messages/\(self.conversationId)/\(self.currentUser.uid)"
-                
-                pushClient.send { (response, error) in
-                    if let error = error {
-                        print("Something happened while sending the push: \(response) \(error.localizedDescription)")
-                    } else {
-                        print("Push sent \(response)")
-                    }
-                }
-            }
-
-            
-        } else {
-            print("Error while initializing BatchClientPush")
-        }
+        sendNotification(otherUser.uid, hasSound: true, groupId: "messageNotifications", message: "\(displayName): \(message)", deeplink: "friendlies://messages/\(self.conversationId)/\(self.currentUser.uid)")
     }
     
     private func setupBubbles() {

@@ -129,64 +129,56 @@ class CurrentUser {
         }
     }
     
-    func sendFriendNotification(message: String, uid: String){
-        if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
-            
-            getNumberOfNotifications(uid){ (sum) in
-                pushClient.sandbox = false
-                pushClient.customPayload = ["aps": ["badge": sum, "sound": NSNull(), "content-available": 1]]
-                pushClient.groupId = "friendNotifications"
-                pushClient.message.title = "Friendlies"
-                pushClient.message.body = message
-                pushClient.recipients.customIds = [uid]
-                pushClient.deeplink = "friendlies://friends/\(uid)"
-                
-                pushClient.send { (response, error) in
-                    if let error = error {
-                        print("Something happened while sending the push: \(response) \(error.localizedDescription)")
-                    } else {
-                        print("Push sent \(response)")
-                    }
-                }
-            }
-            
-        } else {
-            print("Error while initializing BatchClientPush")
+    func followUser(uid: String, completion: ()->()){
+        if let user = user {
+            guard self.user.uid != nil else { return }
+            firebase = FIRDatabase.database().reference()
+            firebase.child("followInfo").child(uid).child("followers").child(user.uid).setValue(true)
+            completion()
         }
     }
     
-    /*
-    func addConversationToUnreadMessages(conversationId: String) {
-        firebase = FIRDatabase.database().reference()
-        if let uid = user.uid {
-            firebase.child("userInfos").child(uid).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
-            if var userInfo = currentData.value as? [String: AnyObject] {
-                var unreadConversations = user["unreadConversations"] as? [String] ?? []
-                if wantsToBeAddedBy.contains(uid) {
-                    self.acceptAddRequest(uid){
-                        self.user.downloadUserInfo(){
-                            completion()
-                        }
-                    }
-                } else {
-                    var wantsToAdd = user["wantsToAdd"] as? [String] ?? []
-                    print(wantsToAdd)
-                    wantsToAdd.append(uid)
-                    user["wantsToAdd"] = wantsToAdd
-                    print("wants to add after: \(user["wantsToAdd"])")
-                    currentData.value = user
-                    return FIRTransactionResult.successWithValue(currentData)
-                }
-            }
-            return FIRTransactionResult.successWithValue(currentData)
-            }, andCompletionBlock: { (error, committed, snapshot) in
-                if let error = error {
-                    print(error.localizedDescription)
-                    print("WANTS TO ADD FAILED")
-                }
-            })
+    func unFollowUser(uid: String, completion: ()->()) {
+        if let user = user {
+            guard self.user.uid != nil else { return }
+            firebase = FIRDatabase.database().reference()
+            firebase.child("followInfo").child(uid).child("followers").child(user.uid).setValue(nil)
+            completion()
         }
     }
- */
+    
+    func sendFriendNotification(message: String, uid: String){
+        sendNotification(uid, hasSound: false, groupId: "friendNotifications", message: message, deeplink: "friendlies://friends/\(self.user.uid)")
+    }
+    
+}
 
+func sendNotification(toUserUid: String, hasSound: Bool, groupId: String, message: String, deeplink: String){
+    if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
+        
+        getNumberOfNotifications(toUserUid){ (sum) in
+            pushClient.sandbox = false
+            if hasSound {
+                pushClient.customPayload = ["aps": ["badge": sum, "content-available": 1]]
+            } else {
+                pushClient.customPayload = ["aps": ["badge": sum, "sound": NSNull(), "content-available": 1]]
+            }
+            pushClient.groupId = groupId
+            pushClient.message.title = "Friendlies"
+            pushClient.message.body = message
+            pushClient.recipients.customIds = [toUserUid]
+            pushClient.deeplink = deeplink
+            
+            pushClient.send { (response, error) in
+                if let error = error {
+                    print("Something happened while sending the push: \(response) \(error.localizedDescription)")
+                } else {
+                    print("Push sent \(response)")
+                }
+            }
+        }
+        
+    } else {
+        print("Error while initializing BatchClientPush")
+    }
 }

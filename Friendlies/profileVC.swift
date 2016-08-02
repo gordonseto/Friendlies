@@ -51,6 +51,37 @@ enum FriendsStatus: Int, CustomStringConvertible {
     }
 }
 
+enum FollowStatus: Int, CustomStringConvertible {
+    case Follower, NotFollower
+    
+    var redButtonLabel: String {
+        let labels = [
+            "UNFOLLOW USER",
+            "FOLLOW USER"
+        ]
+        
+        return labels[rawValue]
+    }
+    
+    var description: String {
+        return redButtonLabel
+    }
+    
+    func followInteraction(uid: String, completion: ()->()){
+        switch rawValue {
+        case 0:
+            CurrentUser.sharedInstance.unFollowUser(uid){
+                completion()
+            }
+        case 1:
+            CurrentUser.sharedInstance.followUser(uid){
+                completion()
+            }
+        default: break
+        }
+    }
+}
+
 class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
 
     @IBOutlet weak var userPhoto: profilePhoto!
@@ -86,6 +117,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     var notFromTabBar: Bool = false
     
     var friendsStatus: FriendsStatus!
+    var followStatus: FollowStatus!
     
     var swiper: SloppySwiper!
 
@@ -140,6 +172,12 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         super.viewWillAppear(animated)
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tabBarController?.tabBar.hidden = false
     }
     
     func downloadUserAndInitializeView() {
@@ -176,7 +214,14 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     func getCurrentUser(){
         CurrentUser.sharedInstance.getCurrentUser(){
-            self.checkFriendsStatus(){}
+            guard let user = CurrentUser.sharedInstance.user else { return }
+            self.currentUser = user
+            self.checkFriendsStatus(){
+                self.updateButtonLabels()
+            }
+            self.checkFollowStatus(){
+                self.updateButtonLabels()
+            }
         }
     }
     
@@ -185,16 +230,39 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             CurrentUser.sharedInstance.checkFriendStatus(uid, completion: {(friendsStatus) in
                 self.currentUser = CurrentUser.sharedInstance.user
                 self.friendsStatus = friendsStatus
-                self.updateButtonLabels()
                 completion()
             })
         }
     }
     
+    func checkFollowStatus(completion: ()->()){
+        if let uid = self.user.uid {
+            self.user.getFollowers(){
+                if let followers = self.user.followers {
+                    guard let uid = self.currentUser.uid else { return }
+                    if followers[uid] != nil {
+                        self.followStatus = FollowStatus.Follower
+                    } else {
+                        self.followStatus = FollowStatus.NotFollower
+                    }
+                    completion()
+                }
+            }
+        }
+    }
+    
     func updateButtonLabels(){
-        blueButton.setTitle(friendsStatus.blueButtonLabel, forState: .Normal)
+        if let friendsStatus = self.friendsStatus {
+            blueButton.setTitle(friendsStatus.blueButtonLabel, forState: .Normal)
+        } else {
+            blueButton.setTitle("", forState: .Normal)
+        }
+        if let followStatus = self.followStatus {
+            redButton.setTitle(followStatus.redButtonLabel, forState: .Normal)
+        } else {
+            redButton.setTitle("", forState: .Normal)
+        }
         yellowButton.setTitle("SEND A MESSAGE", forState: .Normal)
-        redButton.setTitle("SEE USER'S ACTIVITY", forState: .Normal)
     }
 
     @IBAction func onYellowPressed(sender: AnyObject) {
@@ -206,6 +274,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             blueButton.userInteractionEnabled = false
             friendsStatus.addInteraction(self.user.uid){
                 self.checkFriendsStatus(){
+                    self.updateButtonLabels()
                     self.blueButton.userInteractionEnabled = true
                 }
             }
@@ -213,6 +282,15 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     }
     
     @IBAction func onRedPressed(sender: AnyObject) {
+        if let followStatus = followStatus {
+            redButton.userInteractionEnabled = false
+            followStatus.followInteraction(self.user.uid){
+                self.checkFollowStatus(){
+                    self.updateButtonLabels()
+                    self.redButton.userInteractionEnabled = true
+                }
+            }
+        }
     }
     
     @IBAction func onSettingsPressed(sender: AnyObject) {

@@ -84,13 +84,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     index = MESSAGES_INDEX
                 } else if queryType == "friends" {
                     index = FRIENDS_INDEX
+                } else if queryType == "follows" {
+                    index = FEED_INDEX
                 }
-                
-                if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
-                    if snapshot.childrenCount == 0 {
-                        tabBarController.tabBar.items?[index].badgeValue = nil
-                    } else {
-                        tabBarController.tabBar.items?[index].badgeValue = "\(snapshot.childrenCount)"
+                if index != nil {
+                    if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+                        if snapshot.childrenCount == 0 {
+                            tabBarController.tabBar.items?[index].badgeValue = nil
+                        } else {
+                            tabBarController.tabBar.items?[index].badgeValue = "\(snapshot.childrenCount)"
+                        }
                     }
                 }
                 

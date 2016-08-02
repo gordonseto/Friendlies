@@ -189,17 +189,5 @@ func removeFromNotifications(uid: String, notificationType: String, param1: AnyO
 
 func removeAllNotificationsOfType(uid: String, notificationType: String){
     let firebase = FIRDatabase.database().reference()
-    firebase.child("notifications").child(uid).child(notificationType).runTransactionBlock({ (currentData: FIRMutableData) -> FIRTransactionResult in
-        if var notificationTypeArray = currentData.value as? [String]! ?? [] {
-            notificationTypeArray = []
-            currentData.value = notificationTypeArray
-            return FIRTransactionResult.successWithValue(currentData)
-        }
-        return FIRTransactionResult.successWithValue(currentData)
-        }, andCompletionBlock: { (error, committed, snapshot) in
-            if let error = error {
-                print(error.localizedDescription)
-                print("WANTS TO ADD FAILED")
-            }
-    })
+    firebase.child("notifications").child(uid).child(notificationType).setValue(nil)
 }

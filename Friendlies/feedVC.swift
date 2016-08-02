@@ -48,7 +48,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     
     var swiper: SloppySwiper!
     
-    var uid: String!
+    var currentUser: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,7 +117,6 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if let user = FIRAuth.auth()?.currentUser {
             if let firebase = firebase {
                 if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
-                    self.uid = uid
                     if let currentLocation = currentLocation {
                         hexagonButton.userInteractionEnabled = false
                         let key = firebase.child("broadcasts").childByAutoId().key
@@ -163,11 +162,24 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func notifyFollowers(){
-        guard let uid = self.uid else { return }
-        let currentUser = User(uid: uid)
-        currentUser.getFollowers(){
-            if let followers = currentUser.followers {
-                let followersArray = Array(followers.keys)
+        if currentUser == nil {
+            CurrentUser.sharedInstance.getCurrentUser(){
+                if let user = CurrentUser.sharedInstance.user {
+                    self.currentUser = user
+                    self.sendNotificationToFollowers()
+                }
+            }
+        } else {
+            sendNotificationToFollowers()
+        }
+    }
+    
+    func sendNotificationToFollowers(){
+        self.currentUser.getFollowers(){
+            if let followers = self.currentUser.followers {
+                for (key, _) in followers {
+                    sendNotification(key, hasSound: false, groupId: "followNotifications", message: "\(self.currentUser.displayName) is available to play", deeplink: "friendlies://follows/\(self.currentUser.uid)")
+                }
             }
         }
     }

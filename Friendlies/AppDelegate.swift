@@ -136,9 +136,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         } else if queryType == "friends" {
             goToFriendsList()
+        } else if queryType == "follows" {
+            goToFeed()
         }
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+    }
+    
+    func goToFeed(){
+        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+            tabBarController.selectedIndex = FEED_INDEX
+            if let feedNVC = tabBarController.viewControllers![FEED_INDEX] as? UINavigationController {
+                if let feedVC = feedNVC.viewControllers[0] as? feedVC {
+                    feedVC.queryBroadcasts()
+                }
+            }
+        }
     }
     
     func goToFriendsList(){

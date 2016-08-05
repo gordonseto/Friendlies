@@ -8,6 +8,7 @@
 
 import UIKit
 import FirebaseDatabase
+import FirebaseAuth
 
 class editProfileVC: UIViewController, UITextFieldDelegate {
 
@@ -55,7 +56,7 @@ class editProfileVC: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func onDonePressed(sender: AnyObject) {
-        if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
             let firebase = FIRDatabase.database().reference()
             if let tag = gamerTag.text {
                 firebase.child("users").child(uid).child("gamerTag").setValue(tag)

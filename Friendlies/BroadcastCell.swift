@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import FirebaseDatabase
+import FirebaseAuth
 
 protocol BroadcastCellDelegate: class {
     func onTextViewEditing(textView: UITextView)
@@ -62,15 +63,30 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
             setupSwitch.on = broadcast.hasSetup
             setupSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5)
             
-            if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+            if let uid = FIRAuth.auth()?.currentUser?.uid {
                 if uid == broadcast.authorUid {
-                    setupSwitch.userInteractionEnabled = true
-                    broadcastDesc.userInteractionEnabled = true
-                    broadcastDesc.editable = true
-                    setupSwitch.enabled = true
+                    enableEditing()
+                } else {
+                    disableEditing()
                 }
+            } else {
+                disableEditing()
             }
         }
+    }
+    
+    func enableEditing(){
+        setupSwitch.userInteractionEnabled = true
+        broadcastDesc.userInteractionEnabled = true
+        broadcastDesc.editable = true
+        setupSwitch.enabled = true
+    }
+    
+    func disableEditing(){
+        setupSwitch.userInteractionEnabled = false
+        broadcastDesc.userInteractionEnabled = false
+        broadcastDesc.editable = false
+        setupSwitch.enabled = false
     }
     
     func findDistanceFrom(userLocation: CLLocation) {

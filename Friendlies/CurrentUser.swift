@@ -9,6 +9,7 @@
 import Foundation
 import FirebaseDatabase
 import Batch
+import FirebaseAuth
 
 class CurrentUser {
     
@@ -19,7 +20,7 @@ class CurrentUser {
     private init() {}
     
     func getCurrentUser(completion: ()->()){
-        if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String{
+        if let uid = FIRAuth.auth()?.currentUser?.uid {
             user = User(uid: uid)
             user.downloadUserInfo(){
                 print(self.user.displayName)

@@ -49,6 +49,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     var swiper: SloppySwiper!
     
     var currentUser: User!
+    var uid: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,7 +117,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     @IBAction func onHexagonTapped(sender: AnyObject) {
         if let user = FIRAuth.auth()?.currentUser {
             if let firebase = firebase {
-                if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+                if let uid = FIRAuth.auth()?.currentUser?.uid {
+                    self.uid = uid
                     if let currentLocation = currentLocation {
                         hexagonButton.userInteractionEnabled = false
                         let key = firebase.child("broadcasts").childByAutoId().key
@@ -179,6 +181,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             if let followers = self.currentUser.followers {
                 for (key, _) in followers {
                     sendNotification(key, hasSound: false, groupId: "followNotifications", message: "\(self.currentUser.displayName) is available to play", deeplink: "friendlies://follows/\(self.currentUser.uid)")
+                    addToNotifications(key, notificationType: "follows", param1: self.currentUser.uid)
                 }
             }
         }
@@ -261,6 +264,20 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             displayBackgroundMessage("There are no broadcasts near this area!", label: noBroadcastsLabel, viewToAdd: tableView)
         } else {
             removeBackgroundMessage(noBroadcastsLabel)
+        }
+        removeFeedNotifications()
+    }
+    
+    func removeFeedNotifications(){
+        if let uid = self.uid {
+            removeAllNotificationsOfType(uid, notificationType: "follows")
+            self.updateTabBarBadge("follows")
+            updateIconBadge()
+        } else if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+            self.uid = uid
+            removeAllNotificationsOfType(uid, notificationType: "follows")
+            self.updateTabBarBadge("follows")
+            updateIconBadge()
         }
     }
 
@@ -426,9 +443,11 @@ extension UIViewController {
                     index = MESSAGES_INDEX
                 } else if queryType == "friends" {
                     index = FRIENDS_INDEX
+                } else if queryType == "follows" {
+                    index = FEED_INDEX
                 }
                 
-                if snapshot.childrenCount == 0 {
+                if snapshot.childrenCount == 0 && index != nil {
                     self.tabBarController?.tabBar.items?[index].badgeValue = nil
                 } else {
                     self.tabBarController?.tabBar.items?[index].badgeValue = "\(snapshot.childrenCount)"

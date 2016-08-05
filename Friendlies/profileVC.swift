@@ -103,6 +103,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     @IBOutlet weak var settingsButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var moreButton: UIButton!
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -142,14 +143,14 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         scrollView.delaysContentTouches = false
         
         if let user = user {
-            if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+            if let uid = FIRAuth.auth()?.currentUser?.uid {
                 if user.uid == uid {
                     ownProfile = true
                 }
             }
             initializeView()
         } else {
-            if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
+            if let uid = FIRAuth.auth()?.currentUser?.uid {
                 CurrentUser.sharedInstance.getCurrentUser(){
                     self.user = CurrentUser.sharedInstance.user
                     self.ownProfile = true
@@ -159,13 +160,6 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         
-        if ownProfile {
-            settingsButton.hidden = false
-        }
-        
-        if notFromTabBar {
-            backButton.hidden = false
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -188,6 +182,19 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     }
     
     func initializeView(){
+        
+        if ownProfile {
+            settingsButton.hidden = false
+            moreButton.hidden = true
+        } else {
+            settingsButton.hidden = true
+            moreButton.hidden = false
+        }
+        
+        if notFromTabBar {
+            backButton.hidden = false
+        }
+        
         if let name = self.user.displayName {
             self.displayName.text = name
         }
@@ -305,6 +312,10 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         }
     }
     
+    @IBAction func onMoreButtonPressed(sender: AnyObject) {
+        openAlertController()
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "editProfileVC" {
             var destinationVC = segue.destinationViewController as! editProfileVC
@@ -321,6 +332,22 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     func refreshView(sender: AnyObject){
         downloadUserAndInitializeView()
         self.refreshControl.endRefreshing()
+    }
+    
+    func openAlertController(){
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        
+        let reportAction = UIAlertAction(title: "Report", style: .Destructive) { action -> Void in
+            let reportVC = UIStoryboard(name: "Main", bundle:nil).instantiateViewControllerWithIdentifier("ReportVC") as! ReportVC
+            reportVC.userUid = self.user.uid
+            self.presentViewController(reportVC, animated: true, completion: nil)
+        }
+        alertController.addAction(reportAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
     func initializeTimeLabel(lastavailable: NSTimeInterval) -> String {

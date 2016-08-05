@@ -355,11 +355,38 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func refreshView(sender: AnyObject){
-        hasLoadedBroadcasts = false
+        queryBroadcasts()
     }
     
     func onTextViewEditing(textView: UITextView) {
         //tableView.setContentOffset(CGPointMake(0, textView.center.y-60), animated: true)
+    }
+    
+    func deleteBroadcast(broadcast: Broadcast) {
+        self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
+        firebase = FIRDatabase.database().reference()
+        firebase.child("broadcasts").child(broadcast.key).setValue(nil)
+        firebase.child("geolocations").child(broadcast.key).setValue(nil)
+        queryBroadcasts()
+    }
+    
+    func onRemoveButtonPressed(broadcast: Broadcast, button: UIButton) {
+        removeAlert(broadcast, button: button)
+    }
+    
+    func removeAlert(broadcast: Broadcast, button: UIButton){
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        
+        let removeAction = UIAlertAction(title: "Delete", style: .Destructive) { action -> Void in
+            button.userInteractionEnabled = false
+            self.deleteBroadcast(broadcast)
+        }
+        alertController.addAction(removeAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

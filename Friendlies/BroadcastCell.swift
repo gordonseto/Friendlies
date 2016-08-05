@@ -13,7 +13,7 @@ import FirebaseAuth
 
 protocol BroadcastCellDelegate: class {
     func onTextViewEditing(textView: UITextView)
-    func onRemoveButtonPressed(broadcast: Broadcast)
+    func onRemoveButtonPressed(broadcast: Broadcast, button: UIButton)
 }
 
 class BroadcastCell: UITableViewCell, UITextViewDelegate {
@@ -79,12 +79,16 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
             if broadcast.hasSetup {
                 setupLabel.textColor = UIColor(red: 38.0/255.0, green: 255.0/255.0, blue: 60.0/255.0, alpha: 1.0)
             } else {
-                if isAuthor {
-                    setupLabel.textColor = UIColor.lightGrayColor()
-                } else {
-                    setupLabel.textColor = UIColor.darkGrayColor()
-                }
+                setupLabel.textColor = UIColor.lightGrayColor()
             }
+            
+            if !isAuthor {
+                setupLabel.alpha = 0.6
+            } else {
+                setupLabel.alpha = 1.0
+            }
+            
+            removeButton.userInteractionEnabled = true
         }
     }
     
@@ -138,18 +142,21 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
         if broadcast.hasSetup {
             setupLabel.textColor = UIColor(red: 38.0/255.0, green: 255.0/255.0, blue: 60.0/255.0, alpha: 1.0)
         } else {
-            if isAuthor {
-                setupLabel.textColor = UIColor.lightGrayColor()
-            } else {
-                setupLabel.textColor = UIColor.darkGrayColor()
-            }
+            setupLabel.textColor = UIColor.lightGrayColor()
         }
+        
+        if !isAuthor {
+            setupLabel.alpha = 0.6
+        } else {
+            setupLabel.alpha = 1.0
+        }
+        
         firebase = FIRDatabase.database().reference()
         firebase.child("broadcasts").child(broadcast.key).child("hasSetup").setValue(broadcast.hasSetup)
     }
     
-    @IBAction func onRemovePressed(sender: AnyObject){
-        delegate?.onRemoveButtonPressed(broadcast)
+    @IBAction func onRemovePressed(sender: UIButton){
+        delegate?.onRemoveButtonPressed(broadcast, button: sender)
     }
 
 }

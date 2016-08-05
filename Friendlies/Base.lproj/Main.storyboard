@@ -202,6 +202,17 @@
                                                                 <action selector="onSwitchChanged:" destination="fXv-GH-59P" eventType="valueChanged" id="04T-u3-ONf"/>
                                                             </connections>
                                                         </switch>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDk-8X-lME">
+                                                            <rect key="frame" x="102" y="118" width="37" height="28"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="37" id="dIJ-lF-9jl"/>
+                                                                <constraint firstAttribute="height" constant="28" id="h5X-G0-lRn"/>
+                                                            </constraints>
+                                                            <state key="normal" image="trash"/>
+                                                            <connections>
+                                                                <action selector="onRemovePressed:" destination="fXv-GH-59P" eventType="touchUpInside" id="xQR-gl-Kel"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.1102964744" green="0.1102964744" blue="0.1102964744" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
@@ -215,6 +226,7 @@
                                                         <constraint firstAttribute="bottom" secondItem="SG3-nN-Tjt" secondAttribute="bottom" constant="8" id="Hpz-0w-Yyl"/>
                                                         <constraint firstItem="ZTH-T7-KoB" firstAttribute="centerY" secondItem="fB8-hR-eAY" secondAttribute="centerY" id="J7E-1x-Mkq"/>
                                                         <constraint firstItem="aiF-rk-aZp" firstAttribute="centerY" secondItem="fB8-hR-eAY" secondAttribute="centerY" id="Js4-v6-JXT"/>
+                                                        <constraint firstItem="MdC-m9-MYY" firstAttribute="centerY" secondItem="TDk-8X-lME" secondAttribute="centerY" id="MUm-2n-6W0"/>
                                                         <constraint firstAttribute="bottom" secondItem="986-Gt-ZWh" secondAttribute="bottom" constant="20" id="O7o-SB-OE8"/>
                                                         <constraint firstAttribute="trailing" secondItem="SG3-nN-Tjt" secondAttribute="trailing" constant="8" id="PMs-XU-YZg"/>
                                                         <constraint firstItem="fbm-bB-xkw" firstAttribute="top" secondItem="46W-Ks-WPZ" secondAttribute="top" constant="12" id="UzH-LD-1WA"/>
@@ -226,8 +238,10 @@
                                                         <constraint firstItem="MdC-m9-MYY" firstAttribute="centerX" secondItem="46W-Ks-WPZ" secondAttribute="centerX" constant="-25" id="fat-tb-aYC"/>
                                                         <constraint firstItem="aiF-rk-aZp" firstAttribute="centerX" secondItem="fB8-hR-eAY" secondAttribute="centerX" id="gdw-5a-YYo"/>
                                                         <constraint firstItem="986-Gt-ZWh" firstAttribute="top" secondItem="aiF-rk-aZp" secondAttribute="bottom" constant="8" id="geU-CR-cLy"/>
+                                                        <constraint firstItem="MdC-m9-MYY" firstAttribute="leading" secondItem="TDk-8X-lME" secondAttribute="trailing" constant="20" id="iZn-4j-11o"/>
                                                         <constraint firstItem="aiF-rk-aZp" firstAttribute="top" secondItem="fB8-hR-eAY" secondAttribute="bottom" id="ldo-I6-f05"/>
                                                         <constraint firstItem="fbm-bB-xkw" firstAttribute="leading" secondItem="46W-Ks-WPZ" secondAttribute="leading" constant="8" id="mSN-Mw-8cH"/>
+                                                        <constraint firstItem="TDk-8X-lME" firstAttribute="leading" secondItem="ZN7-ky-dRf" secondAttribute="trailing" constant="52" id="pb2-bp-dnu"/>
                                                         <constraint firstItem="fB8-hR-eAY" firstAttribute="leading" secondItem="fbm-bB-xkw" secondAttribute="trailing" constant="8" id="qC4-yu-hZJ"/>
                                                         <constraint firstAttribute="trailing" secondItem="ZTH-T7-KoB" secondAttribute="trailing" constant="8" id="rgP-D2-5Ae"/>
                                                         <constraint firstItem="986-Gt-ZWh" firstAttribute="leading" secondItem="fB8-hR-eAY" secondAttribute="leading" constant="-4" id="v4P-jX-67Z"/>
@@ -237,6 +251,7 @@
                                                         <mask key="constraints">
                                                             <exclude reference="Js4-v6-JXT"/>
                                                             <exclude reference="O7o-SB-OE8"/>
+                                                            <exclude reference="pb2-bp-dnu"/>
                                                             <exclude reference="7El-NE-PaN"/>
                                                             <exclude reference="7c4-1j-brQ"/>
                                                             <exclude reference="dbO-yP-rIO"/>
@@ -258,6 +273,7 @@
                                             <outlet property="displayName" destination="fB8-hR-eAY" id="ZVa-or-s88"/>
                                             <outlet property="distanceLabel" destination="SG3-nN-Tjt" id="tUO-Aa-LU9"/>
                                             <outlet property="gamerTag" destination="aiF-rk-aZp" id="Xke-36-6bW"/>
+                                            <outlet property="removeButton" destination="TDk-8X-lME" id="qaQ-UO-NcV"/>
                                             <outlet property="setupLabel" destination="MdC-m9-MYY" id="Sqa-FX-ilK"/>
                                             <outlet property="setupSwitch" destination="igE-R2-sa5" id="OIi-Vb-jwd"/>
                                             <outlet property="timeLabel" destination="ZN7-ky-dRf" id="dRx-QG-vFu"/>
@@ -485,11 +501,46 @@
                                             </mask>
                                         </variation>
                                     </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LtJ-on-WhX" customClass="friendliesButton" customModule="Friendlies" customModuleProvider="target">
+                                        <rect key="frame" x="188" y="495" width="225" height="40"/>
+                                        <color key="backgroundColor" red="0.69803921568627447" green="0.69803921568627447" blue="0.69803921568627447" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="225" id="9Ao-wo-fzx"/>
+                                            <constraint firstAttribute="width" constant="200" id="B3V-qu-SPt"/>
+                                            <constraint firstAttribute="height" constant="40" id="BHv-T6-IGH"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="c2N-mY-8jV"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
+                                        <state key="normal" title="EDIT PROFILE">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="B3V-qu-SPt"/>
+                                                <exclude reference="c2N-mY-8jV"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <action selector="onEditProfilePressed:" destination="Ic4-5m-t60" eventType="touchUpInside" id="jfa-BP-dXW"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="LtJ-on-WhX" firstAttribute="top" secondItem="Ta8-tL-lbJ" secondAttribute="top" constant="379" id="6Dz-jE-zPo"/>
+                                    <constraint firstItem="LtJ-on-WhX" firstAttribute="top" secondItem="MSw-zC-qWV" secondAttribute="bottom" constant="25" id="Ce5-2r-PbG"/>
+                                    <constraint firstAttribute="bottom" secondItem="LtJ-on-WhX" secondAttribute="bottom" constant="200" id="QuL-4n-cn6"/>
                                     <constraint firstItem="MSw-zC-qWV" firstAttribute="centerX" secondItem="Ta8-tL-lbJ" secondAttribute="centerX" id="SzM-3l-l2l"/>
                                     <constraint firstItem="MSw-zC-qWV" firstAttribute="top" secondItem="Ta8-tL-lbJ" secondAttribute="top" constant="45" id="cAz-vh-l84"/>
+                                    <constraint firstAttribute="bottom" secondItem="LtJ-on-WhX" secondAttribute="bottom" constant="181" id="ndf-CV-VGk"/>
+                                    <constraint firstItem="LtJ-on-WhX" firstAttribute="centerX" secondItem="Ta8-tL-lbJ" secondAttribute="centerX" id="rPY-Or-I6g"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6Dz-jE-zPo"/>
+                                        <exclude reference="QuL-4n-cn6"/>
+                                        <exclude reference="ndf-CV-VGk"/>
+                                    </mask>
+                                </variation>
                             </scrollView>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yFm-aU-BBo">
                                 <rect key="frame" x="12" y="28" width="37" height="37"/>
@@ -556,6 +607,7 @@
                         <outlet property="blueButton" destination="pQ9-Ef-VIP" id="lp5-FO-LwK"/>
                         <outlet property="characterStackView" destination="T1L-kE-iww" id="u2V-99-Hee"/>
                         <outlet property="displayName" destination="2bl-1l-0m8" id="iMx-Ly-hbA"/>
+                        <outlet property="editProfileButton" destination="LtJ-on-WhX" id="FAo-fH-PZJ"/>
                         <outlet property="gamerTag" destination="d0y-kn-BIs" id="IDw-Rb-XGT"/>
                         <outlet property="lastAvailable" destination="6aN-RU-i4z" id="E2U-7c-Dfd"/>
                         <outlet property="moreButton" destination="CPt-7P-bWr" id="Fgw-cw-nnP"/>
@@ -1625,9 +1677,10 @@
         <image name="hexagon" width="54" height="61"/>
         <image name="moreButton" width="197" height="46"/>
         <image name="settings" width="129" height="135"/>
+        <image name="trash" width="14" height="17"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hk0-Rl-1gi"/>
+        <segue reference="QMB-5h-5Qh"/>
         <segue reference="3hv-uT-Y7D"/>
     </inferredMetricsTieBreakers>
 </document>

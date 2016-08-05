@@ -101,6 +101,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet weak var blueButton: friendliesButton!
     @IBOutlet weak var redButton: friendliesButton!
     
+    @IBOutlet weak var editProfileButton: friendliesButton!
     @IBOutlet weak var settingsButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var moreButton: UIButton!
@@ -142,6 +143,9 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         
         scrollView.delaysContentTouches = false
         
+        hideColoredButtons()
+        editProfileButton.hidden = true
+        
         if let user = user {
             if let uid = FIRAuth.auth()?.currentUser?.uid {
                 if user.uid == uid {
@@ -181,14 +185,31 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         }
     }
     
+    func hideColoredButtons(){
+        yellowButton.hidden = true
+        redButton.hidden = true
+        blueButton.hidden = true
+    }
+    
+    func showColoredButtons(){
+        yellowButton.hidden = false
+        blueButton.hidden = false
+        redButton.hidden = false
+    }
+    
     func initializeView(){
         
         if ownProfile {
             settingsButton.hidden = false
             moreButton.hidden = true
+            hideColoredButtons()
+            editProfileButton.center.y += 30
+            editProfileButton.hidden = false
         } else {
             settingsButton.hidden = true
             moreButton.hidden = false
+            showColoredButtons()
+            editProfileButton.hidden = true
         }
         
         if notFromTabBar {
@@ -304,6 +325,12 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         }
     }
     
+    @IBAction func onEditProfilePressed(sender: AnyObject) {
+        if user != nil {
+            performSegueWithIdentifier("editProfileVC", sender: nil)
+        }
+    }
+    
     @IBAction func onSettingsPressed(sender: AnyObject) {
         if user != nil {
             performSegueWithIdentifier("editProfileVC", sender: nil)
@@ -356,10 +383,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     func confirmRemoveFriend(){
         let alert = UIAlertController(title: "Are you sure you want to remove this user as a friend?", message: "", preferredStyle: .Alert)
-        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
-            self.blueButton.userInteractionEnabled = true
-        }
-        alert.addAction(cancel)
+        
         let delete = UIAlertAction(title: "Remove", style: UIAlertActionStyle.Destructive) { action -> Void in
             self.friendsStatus.addInteraction(self.user.uid){
                 self.checkFriendsStatus(){
@@ -369,6 +393,11 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         alert.addAction(delete)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
+            self.blueButton.userInteractionEnabled = true
+        }
+        alert.addAction(cancel)
                 
         self.presentViewController(alert, animated: true, completion: nil)
     }

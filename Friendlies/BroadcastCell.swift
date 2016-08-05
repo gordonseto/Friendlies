@@ -13,6 +13,7 @@ import FirebaseAuth
 
 protocol BroadcastCellDelegate: class {
     func onTextViewEditing(textView: UITextView)
+    func onRemoveButtonPressed(broadcast: Broadcast)
 }
 
 class BroadcastCell: UITableViewCell, UITextViewDelegate {
@@ -26,6 +27,7 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var setupLabel: UILabel!
     @IBOutlet weak var setupSwitch: UISwitch!
+    @IBOutlet weak var removeButton: UIButton!
     
     var broadcast: Broadcast!
     
@@ -34,6 +36,8 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
     weak var delegate: BroadcastCellDelegate!
     
     let MAX_TEXT = 80
+    
+    var isAuthor: Bool = false
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -54,23 +58,32 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
             
             arrangeStackViewCharacters(author, characterStackView: self.characterStackView, height: 20)
         
-            if broadcast.hasSetup {
-                setupLabel.textColor = UIColor(red: 38.0/255.0, green: 255.0/255.0, blue: 60.0/255.0, alpha: 1.0)
-            } else {
-                setupLabel.textColor = UIColor.darkGrayColor()
-            }
-        
             setupSwitch.on = broadcast.hasSetup
             setupSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5)
             
             if let uid = FIRAuth.auth()?.currentUser?.uid {
                 if uid == broadcast.authorUid {
+                    isAuthor = true
                     enableEditing()
+                    removeButton.hidden = false
                 } else {
+                    isAuthor = false
                     disableEditing()
+                    removeButton.hidden = true
                 }
             } else {
+                isAuthor = false
                 disableEditing()
+            }
+            
+            if broadcast.hasSetup {
+                setupLabel.textColor = UIColor(red: 38.0/255.0, green: 255.0/255.0, blue: 60.0/255.0, alpha: 1.0)
+            } else {
+                if isAuthor {
+                    setupLabel.textColor = UIColor.lightGrayColor()
+                } else {
+                    setupLabel.textColor = UIColor.darkGrayColor()
+                }
             }
         }
     }
@@ -125,10 +138,18 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
         if broadcast.hasSetup {
             setupLabel.textColor = UIColor(red: 38.0/255.0, green: 255.0/255.0, blue: 60.0/255.0, alpha: 1.0)
         } else {
-            setupLabel.textColor = UIColor.darkGrayColor()
+            if isAuthor {
+                setupLabel.textColor = UIColor.lightGrayColor()
+            } else {
+                setupLabel.textColor = UIColor.darkGrayColor()
+            }
         }
         firebase = FIRDatabase.database().reference()
         firebase.child("broadcasts").child(broadcast.key).child("hasSetup").setValue(broadcast.hasSetup)
+    }
+    
+    @IBAction func onRemovePressed(sender: AnyObject){
+        delegate?.onRemoveButtonPressed(broadcast)
     }
 
 }

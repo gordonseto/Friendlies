@@ -503,11 +503,12 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AFQ-EQ-syc">
-                                <rect key="frame" x="548" y="36" width="24" height="25"/>
+                                <rect key="frame" x="548" y="31" width="24" height="35"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="HcU-AL-FsN"/>
+                                    <constraint firstAttribute="height" constant="35" id="HcU-AL-FsN"/>
                                     <constraint firstAttribute="width" constant="24" id="PPC-fR-cLz"/>
                                 </constraints>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="5" maxX="0.0" maxY="5"/>
                                 <state key="normal" image="settings"/>
                                 <connections>
                                     <action selector="onSettingsPressed:" destination="Ic4-5m-t60" eventType="touchUpInside" id="lDS-js-sf5"/>

@@ -279,10 +279,14 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     @IBAction func onBluePressed(sender: AnyObject) {
         if let friendsStatus = friendsStatus {
             blueButton.userInteractionEnabled = false
-            friendsStatus.addInteraction(self.user.uid){
-                self.checkFriendsStatus(){
-                    self.updateButtonLabels()
-                    self.blueButton.userInteractionEnabled = true
+            if friendsStatus == FriendsStatus.Friends {
+                confirmRemoveFriend()
+            } else {
+                friendsStatus.addInteraction(self.user.uid){
+                    self.checkFriendsStatus(){
+                        self.updateButtonLabels()
+                        self.blueButton.userInteractionEnabled = true
+                    }
                 }
             }
         }
@@ -348,6 +352,25 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         alertController.addAction(cancelAction)
         
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func confirmRemoveFriend(){
+        let alert = UIAlertController(title: "Are you sure you want to remove this user as a friend?", message: "", preferredStyle: .Alert)
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
+            self.blueButton.userInteractionEnabled = true
+        }
+        alert.addAction(cancel)
+        let delete = UIAlertAction(title: "Remove", style: UIAlertActionStyle.Destructive) { action -> Void in
+            self.friendsStatus.addInteraction(self.user.uid){
+                self.checkFriendsStatus(){
+                    self.updateButtonLabels()
+                    self.blueButton.userInteractionEnabled = true
+                }
+            }
+        }
+        alert.addAction(delete)
+                
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func initializeTimeLabel(lastavailable: NSTimeInterval) -> String {

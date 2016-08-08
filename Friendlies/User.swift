@@ -286,6 +286,8 @@ class User {
         firebase = FIRDatabase.database().reference()
         firebase.child("blockInfo").child(_uid).child("isBlocking").child(uid).setValue(true)
         firebase.child("blockInfo").child(uid).child("isBlockedBy").child(_uid).setValue(true)
+        unFollowUser(uid){}
+        removeUsersNotificationsWith(uid)
         completion()
     }
     
@@ -295,6 +297,31 @@ class User {
         firebase.child("blockInfo").child(uid).child("isBlockedBy").child(_uid).setValue(nil)
     }
     
+    func removeUsersNotificationsWith(uid: String){
+        getConversationWith(uid){ (conversationId) in
+            removeFromNotifications(self._uid, notificationType: "messages", param1: conversationId)
+            removeFromNotifications(uid, notificationType: "messages", param1: conversationId)
+        }
+        removeFromNotifications(self._uid, notificationType: "friends", param1: uid)
+        removeFromNotifications(uid, notificationType: "friends", param1: self._uid)
+    }
+    
+    func getConversationWith(uid: String, completion: (conversationId: String) -> ()){
+        downloadUserInfo(){
+            let otherUser = User(uid: uid)
+            otherUser.downloadUserInfo(){
+                if let currentUserConversations = self._conversations {
+                    if let otherUserConversations = otherUser.conversations {
+                        for (conversationId, _) in currentUserConversations {
+                            if otherUserConversations[conversationId] == true {
+                                completion(conversationId: conversationId)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 func addToNotifications(uid: String, notificationType: String, param1: String){

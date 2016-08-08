@@ -153,6 +153,8 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
         
         firebase = FIRDatabase.database().reference()
         firebase.child("broadcasts").child(broadcast.key).child("hasSetup").setValue(broadcast.hasSetup)
+        
+        NSUserDefaults.standardUserDefaults().setObject(setupSwitch.on, forKey: "HAS_SETUP")
     }
     
     @IBAction func onRemovePressed(sender: UIButton){

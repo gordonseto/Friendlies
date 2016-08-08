@@ -207,6 +207,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             hideColoredButtons()
             editProfileButton.hidden = false
             blockedLabel.hidden = true
+            moreButton.hidden = true
         } else {
             if isBlocked {
                 hideColoredButtons()
@@ -215,11 +216,14 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
                 showColoredButtons()
                 blockedLabel.hidden = true
             }
+            moreButton.hidden = false
             editProfileButton.hidden = true
         }
         
         if notFromTabBar {
             backButton.hidden = false
+        } else {
+            backButton.hidden = true
         }
         
         if let name = self.user.displayName {
@@ -371,9 +375,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     }
     
     @IBAction func onSettingsPressed(sender: AnyObject) {
-        if user != nil {
-            performSegueWithIdentifier("editProfileVC", sender: nil)
-        }
+        performSegueWithIdentifier("SettingsVC", sender: nil)
     }
     
     @IBAction func onBackButtonPressed(sender: AnyObject) {

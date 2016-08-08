@@ -79,6 +79,8 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         CurrentUser.sharedInstance.getCurrentUser(){
             if let user = CurrentUser.sharedInstance.user {
+                self.updateTabBarBadge("messages")
+                updateIconBadge()
                 user.getBlockedInfo(){
                     self.currentUser = user
                     self.conversationsDownloaded = 0
@@ -140,9 +142,13 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
         filterBlockedUsers()
         self.refreshControl.endRefreshing()
+        loadTable()
+    }
+    
+    func loadTable(){
         tableView.reloadData()
         if conversationPreviews.count == 0 {
-            displayBackgroundMessage("You have no messages!", label: noMessagesLabel, viewToAdd: tableView)
+                displayBackgroundMessage("You have no messages!", label: noMessagesLabel, viewToAdd: tableView)
         } else {
             removeBackgroundMessage(noMessagesLabel)
         }
@@ -224,13 +230,13 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             inSearchMode = false
             //view.endEditing(true)
             filterBlockedUsers()
-            tableView.reloadData()
+            loadTable()
         } else {
             inSearchMode = true
             let lower = searchBar.text!.capitalizedString
             filteredConversationPreviews = conversationPreviews.filter({$0.displayName.rangeOfString(lower) != nil})
             filterBlockedUsers()
-            tableView.reloadData()
+            loadTable()
         }
     }
     

@@ -170,14 +170,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         filterBlockedUsers()
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
         self.refreshControl.endRefreshing()
-        tableView.reloadData()
-        if !inSearchMode {
-            if friendsAndWantsToBeAddedBy.count == 0 {
-                displayBackgroundMessage("You have not added any friends!", label: noFriendsLabel, viewToAdd: tableView)
-            } else {
-                removeBackgroundMessage(noFriendsLabel)
-            }
-        }
+        loadTable()
     }
     
     func filterBlockedUsers(){
@@ -286,18 +279,31 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         return 1
     }
     
+    func loadTable(){
+        tableView.reloadData()
+        if !inSearchMode {
+            if friendsAndWantsToBeAddedBy.count == 0 {
+                displayBackgroundMessage("You have not added any friends!", label: noFriendsLabel, viewToAdd: tableView)
+            } else {
+                removeBackgroundMessage(noFriendsLabel)
+            }
+        } else {
+            removeBackgroundMessage(noFriendsLabel)
+        }
+    }
+    
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text == nil || searchBar.text == "" {
             inSearchMode = false
             //view.endEditing(true)
             filterBlockedUsers()
-            tableView.reloadData()
+            loadTable()
         } else {
             inSearchMode = true
             let lower = searchBar.text!.capitalizedString
             filteredUsers = wantsToBeAddedBy.filter({$0.displayName.rangeOfString(lower) != nil})
             filterBlockedUsers()
-            tableView.reloadData()
+            loadTable()
             if !isDownloadingPeople {
                 isDownloadingPeople = true
                 self.firebase.child("displayNames").observeSingleEventOfType(.Value, withBlock: {(snapshot) in
@@ -321,13 +327,13 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                     }
                     self.filteredUsers = self.allUsers.filter({$0.displayName.rangeOfString(lower) != nil})
                     self.filterBlockedUsers()
-                    self.tableView.reloadData()
+                    self.loadTable()
                 })
             } else {
                 if allUsers.count != 0 {
                     self.filteredUsers = self.allUsers.filter({$0.displayName.rangeOfString(lower) != nil})
                     filterBlockedUsers()
-                    self.tableView.reloadData()
+                    self.loadTable()
                 }
             }
         }

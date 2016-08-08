@@ -85,6 +85,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         self.tableView.delaysContentTouches = false
         
         noBroadcastsLabel = UILabel(frame: CGRectMake(0, 0, 220, 120))
+        noBroadcastsLabel.numberOfLines = 2
         
         firebase = FIRDatabase.database().reference()
 
@@ -144,6 +145,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                                 self.progressView.hidden = false
                                 self.progressView.progress = 0.75
                                 self.progressView.setProgress(1, animated: true)
+                                
                                 let delay = 0.5 * Double(NSEC_PER_SEC)
                                 let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
                                 dispatch_after(time, dispatch_get_main_queue()) {
@@ -263,7 +265,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             self.broadcastContentView.hidden = false
             self.tableView.reloadData()
             if self.broadcasts.count == 0 {
-                self.displayBackgroundMessage("There are no broadcasts near this area!", label: self.noBroadcastsLabel, viewToAdd: self.tableView)
+                self.displayBackgroundMessage("There are no broadcasts in your area. Be the first to post one!", label: self.noBroadcastsLabel, viewToAdd: self.tableView)
             } else {
                 self.removeBackgroundMessage(self.noBroadcastsLabel)
             }
@@ -351,7 +353,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                     for (index, uid) in self.pendingDownloads {
                         if uid == user.uid {
                             let indexPath = NSIndexPath(forRow: index, inSection: 0)
-                            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+                            if indexPath.row < self.tableView.numberOfRowsInSection(0) {
+                                self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+                            }
                         }
                     }
                     if let index = self.uidsBeingDownloaded.indexOf(user.uid) {

@@ -73,6 +73,14 @@ class User {
         return _isBlockedBy
     }
     
+    var totalBlocked: [String: Bool]! {
+        var totalBlocked = _isBlockedBy
+        for key in _isBlocking.keys {
+            totalBlocked[key] = _isBlocking[key]
+        }
+        return totalBlocked
+    }
+    
     init(uid: String) {
         _uid = uid
     }

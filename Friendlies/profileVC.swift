@@ -204,12 +204,18 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     func initializeView(){
         
         if ownProfile {
-            settingsButton.hidden = false
-            moreButton.hidden = true
+            hideColoredButtons()
+            editProfileButton.hidden = false
+            blockedLabel.hidden = true
         } else {
-            settingsButton.hidden = true
-            moreButton.hidden = false
-            showColoredButtons()
+            if isBlocked {
+                hideColoredButtons()
+                blockedLabel.hidden = false
+            } else {
+                showColoredButtons()
+                blockedLabel.hidden = true
+            }
+            editProfileButton.hidden = true
         }
         
         if notFromTabBar {

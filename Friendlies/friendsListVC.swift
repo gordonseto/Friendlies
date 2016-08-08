@@ -99,13 +99,15 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                     updateIconBadge()
                 //}
                     self.updateNotifications = true
+                    
+                    CurrentUser.sharedInstance.user.getBlockedInfo(){
+                        if let friendskeys = self.currentUser.friends {
+                            self.friendsKeys = [:]
+                            self.friends = []
                 
-                    if let friendskeys = self.currentUser.friends {
-                        self.friendsKeys = [:]
-                        self.friends = []
-                
-                        self.friendsKeys = friendskeys
-                        self.getFriendProfiles()
+                            self.friendsKeys = friendskeys
+                            self.getFriendProfiles()
+                        }
                     }
                 }
             }
@@ -165,6 +167,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         print(friends)
         print(wantsToBeAddedBy)
         friendsAndWantsToBeAddedBy = wantsToBeAddedBy + friends
+        filterBlockedUsers()
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
         self.refreshControl.endRefreshing()
         tableView.reloadData()
@@ -173,6 +176,16 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                 displayBackgroundMessage("You have not added any friends!", label: noFriendsLabel, viewToAdd: tableView)
             } else {
                 removeBackgroundMessage(noFriendsLabel)
+            }
+        }
+    }
+    
+    func filterBlockedUsers(){
+        if let totalBlocked = self.currentUser.totalBlocked {
+            if inSearchMode {
+                filteredUsers = filteredUsers.filter({totalBlocked[$0.uid] == nil})
+            } else {
+                friendsAndWantsToBeAddedBy = friendsAndWantsToBeAddedBy.filter({totalBlocked[$0.uid] == nil})
             }
         }
     }
@@ -273,16 +286,17 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         return 1
     }
     
-    
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text == nil || searchBar.text == "" {
             inSearchMode = false
             //view.endEditing(true)
+            filterBlockedUsers()
             tableView.reloadData()
         } else {
             inSearchMode = true
             let lower = searchBar.text!.capitalizedString
             filteredUsers = wantsToBeAddedBy.filter({$0.displayName.rangeOfString(lower) != nil})
+            filterBlockedUsers()
             tableView.reloadData()
             if !isDownloadingPeople {
                 isDownloadingPeople = true
@@ -306,11 +320,13 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                         }
                     }
                     self.filteredUsers = self.allUsers.filter({$0.displayName.rangeOfString(lower) != nil})
+                    self.filterBlockedUsers()
                     self.tableView.reloadData()
                 })
             } else {
                 if allUsers.count != 0 {
                     self.filteredUsers = self.allUsers.filter({$0.displayName.rangeOfString(lower) != nil})
+                    filterBlockedUsers()
                     self.tableView.reloadData()
                 }
             }

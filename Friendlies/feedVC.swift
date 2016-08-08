@@ -257,16 +257,39 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             broadcast1.time > broadcast2.time
         }
         print(broadcasts)
-        self.refreshControl.endRefreshing()
-        stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
-        broadcastContentView.hidden = false
-        tableView.reloadData()
-        if broadcasts.count == 0 {
-            displayBackgroundMessage("There are no broadcasts near this area!", label: noBroadcastsLabel, viewToAdd: tableView)
-        } else {
-            removeBackgroundMessage(noBroadcastsLabel)
+        filterBlockedBroadcasts(){
+            self.refreshControl.endRefreshing()
+            self.stopLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel)
+            self.broadcastContentView.hidden = false
+            self.tableView.reloadData()
+            if self.broadcasts.count == 0 {
+                self.displayBackgroundMessage("There are no broadcasts near this area!", label: self.noBroadcastsLabel, viewToAdd: self.tableView)
+            } else {
+                self.removeBackgroundMessage(self.noBroadcastsLabel)
+            }
+            self.removeFeedNotifications()
         }
-        removeFeedNotifications()
+    }
+    
+    func filterBlockedBroadcasts(completion: ()->()){
+        if currentUser == nil {
+            CurrentUser.sharedInstance.getCurrentUser(){
+                self.currentUser = CurrentUser.sharedInstance.user
+                self.currentUser.getBlockedInfo(){
+                    if let totalBlocked = self.currentUser.totalBlocked {
+                        self.broadcasts = self.broadcasts.filter({totalBlocked[$0.authorUid] == nil})
+                        completion()
+                    }
+                }
+            }
+        } else {
+            self.currentUser.getBlockedInfo(){
+                if let totalBlocked = self.currentUser.totalBlocked {
+                    self.broadcasts = self.broadcasts.filter({totalBlocked[$0.authorUid] == nil})
+                    completion()
+                }
+            }
+        }
     }
     
     func removeFeedNotifications(){

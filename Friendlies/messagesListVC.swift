@@ -79,18 +79,20 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         CurrentUser.sharedInstance.getCurrentUser(){
             if let user = CurrentUser.sharedInstance.user {
-                self.currentUser = user
-                self.conversationsDownloaded = 0
-                self.conversationPreviews = []
-                if let conversations = self.currentUser.conversations {
-                    if conversations.count == 0 {
-                        self.doneRetreivingConversations()
-                    } else {
-                        for (conversationId, value) in conversations {
-                            self.downloadConversationInfo(conversationId) {
-                                self.conversationsDownloaded++
-                                if self.conversationsDownloaded == conversations.count {
-                                    self.doneRetreivingConversations()
+                user.getBlockedInfo(){
+                    self.currentUser = user
+                    self.conversationsDownloaded = 0
+                    self.conversationPreviews = []
+                    if let conversations = self.currentUser.conversations {
+                        if conversations.count == 0 {
+                            self.doneRetreivingConversations()
+                        } else {
+                            for (conversationId, value) in conversations {
+                                self.downloadConversationInfo(conversationId) {
+                                    self.conversationsDownloaded++
+                                    if self.conversationsDownloaded == conversations.count {
+                                        self.doneRetreivingConversations()
+                                    }
                                 }
                             }
                         }
@@ -136,12 +138,23 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             preview1.lastMessageTime > preview2.lastMessageTime
         }
         stopLoadingAnimation(activityIndicator, loadingLabel: loadingLabel)
+        filterBlockedUsers()
         self.refreshControl.endRefreshing()
         tableView.reloadData()
         if conversationPreviews.count == 0 {
             displayBackgroundMessage("You have no messages!", label: noMessagesLabel, viewToAdd: tableView)
         } else {
             removeBackgroundMessage(noMessagesLabel)
+        }
+    }
+    
+    func filterBlockedUsers(){
+        if let totalBlocked = self.currentUser.totalBlocked {
+            if inSearchMode {
+                filteredConversationPreviews = filteredConversationPreviews.filter({totalBlocked[$0.uid] == nil})
+            } else {
+                conversationPreviews = conversationPreviews.filter({totalBlocked[$0.uid] == nil})
+            }
         }
     }
     
@@ -210,11 +223,13 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         if searchBar.text == nil || searchBar.text == "" {
             inSearchMode = false
             //view.endEditing(true)
+            filterBlockedUsers()
             tableView.reloadData()
         } else {
             inSearchMode = true
             let lower = searchBar.text!.capitalizedString
             filteredConversationPreviews = conversationPreviews.filter({$0.displayName.rangeOfString(lower) != nil})
+            filterBlockedUsers()
             tableView.reloadData()
         }
     }

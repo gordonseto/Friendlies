@@ -178,14 +178,14 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     }
     
     func AcceptButtonPressed(uid: String) {
-        CurrentUser.sharedInstance.acceptAddRequest(uid){
+        CurrentUser.sharedInstance.user.acceptAddRequest(uid){
             self.getCurrentUsersFriends()
             self.friendsListAction()
         }
     }
     
     func DeclineButtonPressed(uid: String) {
-        CurrentUser.sharedInstance.hideAddRequest(uid){
+        CurrentUser.sharedInstance.user.hideAddRequest(uid){
             self.getCurrentUsersFriends()
             self.friendsListAction()
         }

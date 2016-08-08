@@ -60,12 +60,13 @@ class chatVC: JSQMessagesViewController {
         
         self.navigationController?.navigationBarHidden = false
         
-        self.view.backgroundColor = UIColor.blackColor()
+        self.view.backgroundColor = UIColor(red: 17.0/255.0, green: 17.0/255.0, blue: 17.0/255.0, alpha: 7.0)
         
-        self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor(red: 15.0/255.0, green: 15.0/255.0, blue: 15.0/255.0, alpha: 1.0)
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.collectionView.backgroundColor = UIColor.blackColor()
+        
+        self.collectionView.backgroundColor = UIColor(red: 17.0/255.0, green: 17.0/255.0, blue: 17.0/255.0, alpha: 1.0)
         self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero
         self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero
         self.inputToolbar.contentView.textView.keyboardAppearance = UIKeyboardAppearance.Dark

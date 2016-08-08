@@ -31,19 +31,19 @@ enum FriendsStatus: Int, CustomStringConvertible {
     func addInteraction(uid: String, completion: ()->()) {
         switch rawValue {
         case 0:
-            CurrentUser.sharedInstance.removeUser(uid){
+            CurrentUser.sharedInstance.user.removeUser(uid){
                 completion()
             }
         case 1:
-            CurrentUser.sharedInstance.sendAddRequestToUser(uid){
+            CurrentUser.sharedInstance.user.sendAddRequestToUser(uid){
                 completion()
             }
         case 2:
-            CurrentUser.sharedInstance.cancelAddRequest(uid){
+            CurrentUser.sharedInstance.user.cancelAddRequest(uid){
                 completion()
             }
         case 3:
-            CurrentUser.sharedInstance.acceptAddRequest(uid){
+            CurrentUser.sharedInstance.user.acceptAddRequest(uid){
                 completion()
             }
         default: break
@@ -70,11 +70,11 @@ enum FollowStatus: Int, CustomStringConvertible {
     func followInteraction(uid: String, completion: ()->()){
         switch rawValue {
         case 0:
-            CurrentUser.sharedInstance.unFollowUser(uid){
+            CurrentUser.sharedInstance.user.unFollowUser(uid){
                 completion()
             }
         case 1:
-            CurrentUser.sharedInstance.followUser(uid){
+            CurrentUser.sharedInstance.user.followUser(uid){
                 completion()
             }
         default: break
@@ -255,7 +255,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     func checkFriendsStatus(completion: ()->()){
         if let uid = self.user.uid {
-            CurrentUser.sharedInstance.checkFriendStatus(uid, completion: {(friendsStatus) in
+            CurrentUser.sharedInstance.user.checkFriendStatus(uid, completion: {(friendsStatus) in
                 self.currentUser = CurrentUser.sharedInstance.user
                 self.friendsStatus = friendsStatus
                 completion()
@@ -374,6 +374,13 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             self.presentViewController(reportVC, animated: true, completion: nil)
         }
         alertController.addAction(reportAction)
+        
+        if let currentUser = self.currentUser {
+            let blockAction = UIAlertAction(title: "Block", style: .Destructive) { action -> Void in
+                guard let user = self.user else { return }
+                
+            }
+        }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         alertController.addAction(cancelAction)

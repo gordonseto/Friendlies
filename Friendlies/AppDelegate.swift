@@ -178,7 +178,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             "senderId": user.uid,
                             "senderDisplayName": user.displayName!
                         ]
-                        messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
+                        if let topVC = messagesNVC.topViewController as? chatVC {
+                            if !(topVC.conversationId == conversationId) {
+                                messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
+                            }
+                        } else {
+                            messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
+                        }
                     }
                 }
             }

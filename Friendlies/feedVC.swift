@@ -66,7 +66,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         tableView.allowsSelection = true
         
         let tbc = self.tabBarController
-        tbc?.tabBar.barStyle = UIBarStyle.BlackOpaque
+        tbc?.tabBar.barStyle = UIBarStyle.Black
+        tbc?.tabBar.translucent = true
         tbc?.tabBar.selectedImageTintColor = UIColor.whiteColor()
         
         self.hideKeyboardWhenTappedAround()

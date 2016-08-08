@@ -24,6 +24,8 @@ class User {
     private var _wantsToBeAddedBy: [String: String]!
     private var _conversations: [String: Bool]!
     private var _followers: [String: Bool]!
+    private var _isBlockedBy: [String: Bool]!
+    private var _isBlocking: [String: Bool]!
     
     var firebase: FIRDatabaseReference!
     
@@ -61,6 +63,14 @@ class User {
     
     var followers: [String: Bool]! {
         return _followers
+    }
+    
+    var isBlocking: [String: Bool]! {
+        return _isBlocking
+    }
+
+    var isBlockedBy: [String: Bool]! {
+        return _isBlockedBy
     }
     
     init(uid: String) {
@@ -104,6 +114,17 @@ class User {
         firebase.child("followInfo").child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
             print(snapshot)
             self._followers = snapshot.value!["followers"] as? [String: Bool] ?? [:]
+            completion()
+        })
+    }
+    
+    func getBlockedInfo(completion: ()->()){
+        guard let uid = _uid else { return }
+        firebase = FIRDatabase.database().reference()
+        firebase.child("blockInfo").child(uid).observeSingleEventOfType(.Value, withBlock: { (snapshot) in
+            print(snapshot)
+            self._isBlockedBy = snapshot.value!["isBlockedBy"] as? [String: Bool] ?? [:]
+            self._isBlocking = snapshot.value!["isBlocking"] as? [String: Bool] ?? [:]
             completion()
         })
     }
@@ -254,7 +275,16 @@ class User {
     }
     
     func blockUser(uid: String, completion: ()->()) {
-        
+        firebase = FIRDatabase.database().reference()
+        firebase.child("blockInfo").child(_uid).child("isBlocking").child(uid).setValue(true)
+        firebase.child("blockInfo").child(uid).child("isBlockedBy").child(_uid).setValue(true)
+        completion()
+    }
+    
+    func unBlockUser(uid: String, completion: ()->()){
+        firebase = FIRDatabase.database().reference()
+        firebase.child("blockInfo").child(_uid).child("isBlocking").child(uid).setValue(nil)
+        firebase.child("blockInfo").child(uid).child("isBlockedBy").child(_uid).setValue(nil)
     }
     
 }

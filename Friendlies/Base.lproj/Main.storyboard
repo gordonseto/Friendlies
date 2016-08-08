@@ -16,6 +16,7 @@
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
+            <string>HelveticaNeue</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -501,7 +502,7 @@
                                             </mask>
                                         </variation>
                                     </stackView>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yFm-aU-BBo">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yFm-aU-BBo">
                                         <rect key="frame" x="8" y="12" width="37" height="37"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="37" id="OUj-6V-pjA"/>
@@ -512,7 +513,7 @@
                                             <action selector="onBackButtonPressed:" destination="Ic4-5m-t60" eventType="touchUpInside" id="eMO-IJ-Xfv"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AFQ-EQ-syc">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AFQ-EQ-syc">
                                         <rect key="frame" x="550" y="0.0" width="24" height="35"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="HcU-AL-FsN"/>
@@ -524,7 +525,7 @@
                                             <action selector="onSettingsPressed:" destination="Ic4-5m-t60" eventType="touchUpInside" id="lDS-js-sf5"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPt-7P-bWr">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CPt-7P-bWr">
                                         <rect key="frame" x="547" y="7" width="30" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="38" id="5U5-W9-6Ec"/>
@@ -567,6 +568,12 @@
                                             <action selector="onEditProfilePressed:" destination="Ic4-5m-t60" eventType="touchUpInside" id="jfa-BP-dXW"/>
                                         </connections>
                                     </button>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You have blocked this user." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bdY-tf-c0y">
+                                        <rect key="frame" x="190" y="477" width="221" height="16"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="AFQ-EQ-syc" firstAttribute="centerY" secondItem="CPt-7P-bWr" secondAttribute="centerY" id="2PT-FY-1X6"/>
@@ -584,6 +591,8 @@
                                     <constraint firstAttribute="trailing" secondItem="AFQ-EQ-syc" secondAttribute="trailing" constant="26" id="V18-QR-vEY"/>
                                     <constraint firstItem="CPt-7P-bWr" firstAttribute="centerY" secondItem="yFm-aU-BBo" secondAttribute="centerY" id="YPO-FY-08t"/>
                                     <constraint firstItem="AFQ-EQ-syc" firstAttribute="centerX" secondItem="CPt-7P-bWr" secondAttribute="centerX" id="YdQ-Vh-mHd"/>
+                                    <constraint firstItem="bdY-tf-c0y" firstAttribute="centerX" secondItem="Ta8-tL-lbJ" secondAttribute="centerX" id="bhN-La-TBp"/>
+                                    <constraint firstItem="bdY-tf-c0y" firstAttribute="top" secondItem="MSw-zC-qWV" secondAttribute="bottom" constant="1" id="bzX-iY-Ltf"/>
                                     <constraint firstItem="MSw-zC-qWV" firstAttribute="top" secondItem="Ta8-tL-lbJ" secondAttribute="top" constant="45" id="cAz-vh-l84"/>
                                     <constraint firstAttribute="trailing" secondItem="CPt-7P-bWr" secondAttribute="trailing" constant="20" id="ece-u0-APQ"/>
                                     <constraint firstItem="AFQ-EQ-syc" firstAttribute="centerY" secondItem="yFm-aU-BBo" secondAttribute="centerY" id="fN1-3F-mas"/>
@@ -635,6 +644,7 @@
                     <navigationItem key="navigationItem" id="8Av-Vf-qsE"/>
                     <connections>
                         <outlet property="backButton" destination="yFm-aU-BBo" id="Zs1-SV-bJP"/>
+                        <outlet property="blockedLabel" destination="bdY-tf-c0y" id="vMD-f5-Wn8"/>
                         <outlet property="blueButton" destination="pQ9-Ef-VIP" id="lp5-FO-LwK"/>
                         <outlet property="characterStackView" destination="T1L-kE-iww" id="u2V-99-Hee"/>
                         <outlet property="displayName" destination="2bl-1l-0m8" id="iMx-Ly-hbA"/>

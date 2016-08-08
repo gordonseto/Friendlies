@@ -106,6 +106,8 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var moreButton: UIButton!
     
+    @IBOutlet weak var blockedLabel: UILabel!
+    
     @IBOutlet weak var scrollView: UIScrollView!
     
     var ownProfile: Bool = false
@@ -122,6 +124,8 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     var followStatus: FollowStatus!
     
     var swiper: SloppySwiper!
+    
+    var isBlocked: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -152,7 +156,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
                     ownProfile = true
                 }
             }
-            initializeView()
+            self.initializeView()
         } else {
             if let uid = FIRAuth.auth()?.currentUser?.uid {
                 CurrentUser.sharedInstance.getCurrentUser(){
@@ -202,14 +206,10 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         if ownProfile {
             settingsButton.hidden = false
             moreButton.hidden = true
-            hideColoredButtons()
-            editProfileButton.center.y += 30
-            editProfileButton.hidden = false
         } else {
             settingsButton.hidden = true
             moreButton.hidden = false
             showColoredButtons()
-            editProfileButton.hidden = true
         }
         
         if notFromTabBar {
@@ -237,6 +237,8 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         
         if !ownProfile {
             getCurrentUser()
+        } else {
+            editProfileButton.hidden = false
         }
     }
     
@@ -244,6 +246,9 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         CurrentUser.sharedInstance.getCurrentUser(){
             guard let user = CurrentUser.sharedInstance.user else { return }
             self.currentUser = user
+            self.checkBlockedStatus(){
+                self.updateButtonLabels()
+            }
             self.checkFriendsStatus(){
                 self.updateButtonLabels()
             }
@@ -279,7 +284,35 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         }
     }
     
+    func checkBlockedStatus(completion: ()->()){
+        guard let uid = self.user.uid else { return }
+        if let currentUser = self.currentUser {
+            currentUser.getBlockedInfo(){
+                if let isBlocking = currentUser.isBlocking {
+                    if isBlocking[uid] != nil {
+                        self.isBlocked = true
+                    }
+                    completion()
+                }
+            }
+        }
+    }
+    
     func updateButtonLabels(){
+        if ownProfile {
+            hideColoredButtons()
+            editProfileButton.hidden = false
+            blockedLabel.hidden = true
+        } else {
+            if isBlocked {
+                hideColoredButtons()
+                blockedLabel.hidden = false
+            } else {
+                showColoredButtons()
+                blockedLabel.hidden = true
+            }
+            editProfileButton.hidden = true
+        }
         if let friendsStatus = self.friendsStatus {
             blueButton.setTitle(friendsStatus.blueButtonLabel, forState: .Normal)
         } else {
@@ -376,16 +409,37 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         alertController.addAction(reportAction)
         
         if let currentUser = self.currentUser {
-            let blockAction = UIAlertAction(title: "Block", style: .Destructive) { action -> Void in
+            let blockAction = UIAlertAction(title: "Block User", style: .Destructive) { action -> Void in
                 guard let user = self.user else { return }
-                
+                self.confirmBlockUser()
             }
+            alertController.addAction(blockAction)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         alertController.addAction(cancelAction)
         
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func confirmBlockUser(){
+        let alert = UIAlertController(title: "Are you sure you want to block this user?", message: "", preferredStyle: .Alert)
+        
+        let block = UIAlertAction(title: "Block", style: UIAlertActionStyle.Destructive) { action -> Void in
+            self.currentUser.blockUser(self.user.uid) {
+                self.checkBlockedStatus(){
+                    self.updateButtonLabels()
+                }
+            }
+        }
+        alert.addAction(block)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
+            self.blueButton.userInteractionEnabled = true
+        }
+        alert.addAction(cancel)
+        
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func confirmRemoveFriend(){
@@ -438,6 +492,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         return "AVAILABLE \(timeDifference.0) \(suffix)\(plural) AGO"
     }
 }
+
 
 func arrangeStackViewCharacters(user: User, characterStackView: UIStackView, height: CGFloat){
     for stackView in characterStackView.subviews {

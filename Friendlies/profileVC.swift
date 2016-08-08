@@ -301,6 +301,8 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
                 if let isBlocking = currentUser.isBlocking {
                     if isBlocking[uid] != nil {
                         self.isBlocked = true
+                    } else {
+                        self.isBlocked = false
                     }
                     completion()
                 }

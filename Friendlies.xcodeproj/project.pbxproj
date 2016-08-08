@@ -24,6 +24,8 @@
 		8E765D441D55120F004F47F6 /* ReportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E765D431D55120E004F47F6 /* ReportVC.swift */; };
 		8E765D461D5925D1004F47F6 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E765D451D5925D1004F47F6 /* SettingsVC.swift */; };
 		8E765D481D592842004F47F6 /* friendliesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E765D471D592842004F47F6 /* friendliesView.swift */; };
+		8E765D4A1D593315004F47F6 /* BlockingSettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E765D491D593315004F47F6 /* BlockingSettingsVC.swift */; };
+		8E765D4C1D59340E004F47F6 /* BlockingSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E765D4B1D59340E004F47F6 /* BlockingSettingsCell.swift */; };
 		8E9648F91D3ABDE90048B3B3 /* Broadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9648F81D3ABDE90048B3B3 /* Broadcast.swift */; };
 		8E9648FC1D3AC9CF0048B3B3 /* BroadcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E9648FB1D3AC9CF0048B3B3 /* BroadcastCell.swift */; };
 		8EA99A481D3D6727001DB679 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A471D3D6727001DB679 /* CurrentUser.swift */; };
@@ -59,6 +61,8 @@
 		8E765D431D55120E004F47F6 /* ReportVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportVC.swift; sourceTree = "<group>"; };
 		8E765D451D5925D1004F47F6 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		8E765D471D592842004F47F6 /* friendliesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = friendliesView.swift; sourceTree = "<group>"; };
+		8E765D491D593315004F47F6 /* BlockingSettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockingSettingsVC.swift; sourceTree = "<group>"; };
+		8E765D4B1D59340E004F47F6 /* BlockingSettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockingSettingsCell.swift; sourceTree = "<group>"; };
 		8E9648F81D3ABDE90048B3B3 /* Broadcast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Broadcast.swift; sourceTree = "<group>"; };
 		8E9648FB1D3AC9CF0048B3B3 /* BroadcastCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BroadcastCell.swift; sourceTree = "<group>"; };
 		8EA99A471D3D6727001DB679 /* CurrentUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
@@ -149,6 +153,7 @@
 				8E629CF51D3969F2001E8EC3 /* profilePhoto.swift */,
 				8E756A501D39C22E00B8A0EB /* friendliesTextField.swift */,
 				8E765D471D592842004F47F6 /* friendliesView.swift */,
+				8E765D4B1D59340E004F47F6 /* BlockingSettingsCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -175,6 +180,7 @@
 				8EA99A581D3FDE8B001DB679 /* messagesListVC.swift */,
 				8E765D431D55120E004F47F6 /* ReportVC.swift */,
 				8E765D451D5925D1004F47F6 /* SettingsVC.swift */,
+				8E765D491D593315004F47F6 /* BlockingSettingsVC.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -325,6 +331,7 @@
 				8E756A511D39C22E00B8A0EB /* friendliesTextField.swift in Sources */,
 				8E629CDC1D394FCB001E8EC3 /* loginVC.swift in Sources */,
 				8EA99A5B1D3FE705001DB679 /* conversationPreview.swift in Sources */,
+				8E765D4A1D593315004F47F6 /* BlockingSettingsVC.swift in Sources */,
 				8EA99A481D3D6727001DB679 /* CurrentUser.swift in Sources */,
 				8E765D441D55120F004F47F6 /* ReportVC.swift in Sources */,
 				8E629CDA1D394FCB001E8EC3 /* AppDelegate.swift in Sources */,
@@ -339,6 +346,7 @@
 				8EA99A4A1D3D870B001DB679 /* friendsListVC.swift in Sources */,
 				8E629CF81D3974F8001E8EC3 /* profileVC.swift in Sources */,
 				8E629CFF1D39A400001E8EC3 /* editProfileVC.swift in Sources */,
+				8E765D4C1D59340E004F47F6 /* BlockingSettingsCell.swift in Sources */,
 				8E9648FC1D3AC9CF0048B3B3 /* BroadcastCell.swift in Sources */,
 				8E629CF61D3969F2001E8EC3 /* profilePhoto.swift in Sources */,
 				8E629CFB1D397ED7001E8EC3 /* User.swift in Sources */,

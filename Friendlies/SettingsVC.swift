@@ -27,4 +27,14 @@ class SettingsVC: UIViewController {
             navController.popViewControllerAnimated(true)
         }
     }
+    
+    @IBAction func onBroadcastSettingsPressed(sender: UITapGestureRecognizer) {
+    }
+    
+    @IBAction func onBlockingSettingsPressed(sender: UITapGestureRecognizer) {
+        performSegueWithIdentifier("blockingSettingsVC", sender: nil)
+    }
+    
+    @IBAction func onViewTutorialPressed(sender: UITapGestureRecognizer) {
+    }
 }

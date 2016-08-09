@@ -113,7 +113,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         
         updateIconBadge()
         
-        locationAuthStatus()
+        getCurrentUser(){
+            self.locationAuthStatus()
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -229,6 +231,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func getBroadcastsFromKeys(){
+        var receivedBroadcasts = 0
         for broadcastKey in broadcastKeys {
             if let key = broadcastKey["key"] as? String {
                 if let location = broadcastKey["location"] as? CLLocation {
@@ -238,10 +241,15 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                         guard let hasSetup = snapshot.value!["hasSetup"] as? Bool else { return }
                         guard let time = snapshot.value!["time"] as? NSTimeInterval else { return }
                         let broadcast = Broadcast(key: key, authorUid: authorUid, broadcastDesc: broadcastDesc, hasSetup: hasSetup, geolocation: location, time: time)
+                        
+                        receivedBroadcasts += 1
+                        
                         broadcast.getUser() {
-                            self.broadcasts.append(broadcast)
-                            if let _ = broadcast.user {
-                                if self.broadcasts.count == self.broadcastKeys.count {
+                            self.currentUser.checkIfShouldBeAbleToSeeUserDetails(broadcast.user){ (should) in
+                                if should {
+                                    self.broadcasts.append(broadcast)
+                                }
+                                if receivedBroadcasts == self.broadcastKeys.count {
                                     self.sortBroadcasts()
                                 }
                             }
@@ -279,23 +287,29 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func filterBlockedBroadcasts(completion: ()->()){
-        if currentUser == nil {
-            CurrentUser.sharedInstance.getCurrentUser(){
-                self.currentUser = CurrentUser.sharedInstance.user
-                self.currentUser.getBlockedInfo(){
-                    if let totalBlocked = self.currentUser.totalBlocked {
-                        self.broadcasts = self.broadcasts.filter({totalBlocked[$0.authorUid] == nil})
-                        completion()
-                    }
-                }
-            }
-        } else {
+        getCurrentUser(){
             self.currentUser.getBlockedInfo(){
                 if let totalBlocked = self.currentUser.totalBlocked {
                     self.broadcasts = self.broadcasts.filter({totalBlocked[$0.authorUid] == nil})
                     completion()
                 }
             }
+        }
+    }
+    
+    func getCurrentUser(completion: ()->()){
+        if currentUser == nil {
+            if CurrentUser.sharedInstance.user == nil {
+                CurrentUser.sharedInstance.getCurrentUser(){
+                    self.currentUser = CurrentUser.sharedInstance.user
+                    completion()
+                }
+            } else {
+                currentUser = CurrentUser.sharedInstance.user
+                completion()
+            }
+        } else {
+            completion()
         }
     }
     

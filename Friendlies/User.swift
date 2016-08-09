@@ -26,6 +26,7 @@ class User {
     private var _followers: [String: Bool]!
     private var _isBlockedBy: [String: Bool]!
     private var _isBlocking: [String: Bool]!
+    private var _onlyFriends: Bool!
     
     var firebase: FIRDatabaseReference!
     
@@ -81,6 +82,11 @@ class User {
         return totalBlocked
     }
     
+    var onlyFriends: Bool! {
+        if _onlyFriends == nil { return false }
+        return _onlyFriends
+    }
+    
     init(uid: String) {
         _uid = uid
     }
@@ -96,6 +102,7 @@ class User {
             self.facebookId = snapshot.value!["facebookId"] as? String ?? ""
             self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? nil
             self._conversations = snapshot.value!["conversations"] as? [String: Bool] ?? [:]
+            self._onlyFriends = snapshot.value!["onlyFriends"] as? Bool ?? false
             print("downloaded \(self.displayName)")
             completion()
         }) { (error) in
@@ -145,6 +152,22 @@ class User {
                 print("downloaded \(self.displayName)'s photo")
                 completion()
             }
+        }
+    }
+    
+    func checkIfShouldBeAbleToSeeUserDetails(user: User, completion: (Bool)->()) {
+        if user.uid == self._uid {
+            completion(true)
+        } else if user.onlyFriends! {
+            user.getFriendsInfo(){
+                if user.friends[self._uid] != nil {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            }
+        } else {
+            completion(true)
         }
     }
     

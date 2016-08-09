@@ -90,6 +90,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         firebase = FIRDatabase.database().reference()
 
         if let displayName = FIRAuth.auth()?.currentUser?.displayName {
+            uid = FIRAuth.auth()?.currentUser?.uid
             print(displayName)
             print(FIRAuth.auth()?.currentUser?.uid)
             let editor = BatchUser.editor()
@@ -255,22 +256,26 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func sortBroadcasts(){
-        broadcasts.sortInPlace {(broadcast1:Broadcast, broadcast2:Broadcast) -> Bool in
-            broadcast1.time > broadcast2.time
-        }
         print(broadcasts)
         filterBlockedBroadcasts(){
-            self.refreshControl.endRefreshing()
-            self.stopLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel)
-            self.broadcastContentView.hidden = false
-            self.tableView.reloadData()
-            if self.broadcasts.count == 0 {
-                self.displayBackgroundMessage("There are no broadcasts in your area. Be the first to post one!", label: self.noBroadcastsLabel, viewToAdd: self.tableView)
-            } else {
-                self.removeBackgroundMessage(self.noBroadcastsLabel)
+            self.broadcasts.sortInPlace {(broadcast1:Broadcast, broadcast2:Broadcast) -> Bool in
+                broadcast1.time > broadcast2.time
             }
-            self.removeFeedNotifications()
+            self.finishedManipulatingBroadcasts()
         }
+    }
+    
+    func finishedManipulatingBroadcasts(){
+        self.refreshControl.endRefreshing()
+        self.stopLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel)
+        self.broadcastContentView.hidden = false
+        self.tableView.reloadData()
+        if self.broadcasts.count == 0 {
+            self.displayBackgroundMessage("There are no broadcasts in your area. Be the first to post one!", label: self.noBroadcastsLabel, viewToAdd: self.tableView)
+        } else {
+            self.removeBackgroundMessage(self.noBroadcastsLabel)
+        }
+        self.removeFeedNotifications()
     }
     
     func filterBlockedBroadcasts(completion: ()->()){

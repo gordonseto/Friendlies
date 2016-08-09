@@ -241,14 +241,13 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         
-        if let lastavailable = self.user.lastAvailable {
-            lastAvailable.text = self.initializeTimeLabel(lastavailable)
-        }
-        
         if !ownProfile {
             getCurrentUser()
         } else {
             editProfileButton.hidden = false
+            if let lastavailable = self.user.lastAvailable {
+                lastAvailable.text = self.initializeTimeLabel(lastavailable)
+            }
         }
     }
     
@@ -264,6 +263,15 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
             self.checkFollowStatus(){
                 self.updateButtonLabels()
+            }
+            self.currentUser.checkIfShouldBeAbleToSeeUserDetails(self.user){ (should) in
+                if should {
+                    if let lastavailable = self.user.lastAvailable {
+                        self.lastAvailable.text = self.initializeTimeLabel(lastavailable)
+                    }
+                } else {
+                    self.lastAvailable.text = ""
+                }
             }
         }
     }
@@ -435,6 +443,11 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     func confirmBlockUser(){
         let alert = UIAlertController(title: "Are you sure you want to block this user?", message: "", preferredStyle: .Alert)
         
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
+            self.blueButton.userInteractionEnabled = true
+        }
+        alert.addAction(cancel)
+        
         let block = UIAlertAction(title: "Block", style: UIAlertActionStyle.Destructive) { action -> Void in
             self.currentUser.blockUser(self.user.uid) {
                 self.checkBlockedStatus(){
@@ -444,16 +457,16 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         }
         alert.addAction(block)
         
-        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
-            self.blueButton.userInteractionEnabled = true
-        }
-        alert.addAction(cancel)
-        
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func confirmRemoveFriend(){
         let alert = UIAlertController(title: "Are you sure you want to remove this user as a friend?", message: "", preferredStyle: .Alert)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
+            self.blueButton.userInteractionEnabled = true
+        }
+        alert.addAction(cancel)
         
         let delete = UIAlertAction(title: "Remove", style: UIAlertActionStyle.Destructive) { action -> Void in
             self.friendsStatus.addInteraction(self.user.uid){
@@ -464,11 +477,6 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         alert.addAction(delete)
-        
-        let cancel = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default) { action -> Void in
-            self.blueButton.userInteractionEnabled = true
-        }
-        alert.addAction(cancel)
                 
         self.presentViewController(alert, animated: true, completion: nil)
     }

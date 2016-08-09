@@ -29,6 +29,7 @@ class SettingsVC: UIViewController {
     }
     
     @IBAction func onBroadcastSettingsPressed(sender: UITapGestureRecognizer) {
+        performSegueWithIdentifier("broadcastSettingsVC", sender: nil)
     }
     
     @IBAction func onBlockingSettingsPressed(sender: UITapGestureRecognizer) {

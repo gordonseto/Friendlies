@@ -14,7 +14,7 @@ import GeoFire
 import Batch
 import SloppySwiper
 
-class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, BroadcastCellDelegate {
+class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, BroadcastCellDelegate, loginVCDelegate {
 
     @IBOutlet weak var hexagonButton: UIButton!
     
@@ -89,18 +89,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         
         firebase = FIRDatabase.database().reference()
 
-        if let displayName = FIRAuth.auth()?.currentUser?.displayName {
-            uid = FIRAuth.auth()?.currentUser?.uid
-            print(displayName)
-            print(FIRAuth.auth()?.currentUser?.uid)
-            let editor = BatchUser.editor()
-            editor.setIdentifier(FIRAuth.auth()?.currentUser?.uid)
-            editor.save()
-            
-            updateTabBarBadge("messages")
-            updateTabBarBadge("friends")
-            
-            updateIconBadge()
+        if let _ = FIRAuth.auth()?.currentUser?.displayName {
+            beginFeedVC()
         } else {
             presentLoginVC()
         }
@@ -108,6 +98,20 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         broadcastContentView.hidden = true
         
         locationManager.delegate = self
+        
+    }
+    
+    func beginFeedVC(){
+        uid = FIRAuth.auth()?.currentUser?.uid
+        print(FIRAuth.auth()?.currentUser?.uid)
+        let editor = BatchUser.editor()
+        editor.setIdentifier(FIRAuth.auth()?.currentUser?.uid)
+        editor.save()
+        
+        updateTabBarBadge("messages")
+        updateTabBarBadge("friends")
+        
+        updateIconBadge()
         
         locationAuthStatus()
     }
@@ -118,7 +122,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     @IBAction func onHexagonTapped(sender: AnyObject) {
-        if let user = FIRAuth.auth()?.currentUser {
+        if let _ = FIRAuth.auth()?.currentUser {
             if let firebase = firebase {
                 if let uid = FIRAuth.auth()?.currentUser?.uid {
                     self.uid = uid
@@ -132,7 +136,6 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                         } else {
                             hasSetup = false
                         }
-                        let geolocation = currentLocation
                         let time = NSDate().timeIntervalSince1970
                         let broadcast: [String: AnyObject] = ["authorUid": uid, "broadcastDesc": broadcastDesc, "hasSetup": hasSetup, "time": time]
                         firebase.child("broadcasts").child(key).setValue(broadcast)
@@ -162,8 +165,6 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                     }
                 }
             }
-        } else {
-            presentLoginVC()
         }
     }
     
@@ -214,7 +215,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             broadcasts = []
             
             let circleQuery = geofire.queryAtLocation(currentloc, withRadius: radius)
-            let queryHandle = circleQuery.observeEventType(.KeyEntered, withBlock: { (key: String!, location: CLLocation! ) in
+            circleQuery.observeEventType(.KeyEntered, withBlock: { (key: String!, location: CLLocation! ) in
                 let broadcastKey = ["key": key, "location": location]
                 self.broadcastKeys.append(broadcastKey)
             })
@@ -228,7 +229,6 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func getBroadcastsFromKeys(){
-        var broadcastsRetrieved = 0
         for broadcastKey in broadcastKeys {
             if let key = broadcastKey["key"] as? String {
                 if let location = broadcastKey["location"] as? CLLocation {
@@ -240,7 +240,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                         let broadcast = Broadcast(key: key, authorUid: authorUid, broadcastDesc: broadcastDesc, hasSetup: hasSetup, geolocation: location, time: time)
                         broadcast.getUser() {
                             self.broadcasts.append(broadcast)
-                            if let author = broadcast.user {
+                            if let _ = broadcast.user {
                                 if self.broadcasts.count == self.broadcastKeys.count {
                                     self.sortBroadcasts()
                                 }
@@ -391,6 +391,20 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         queryBroadcasts()
     }
     
+    func presentLoginVC() {
+        let delay = 0.01 * Double(NSEC_PER_SEC)
+        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        dispatch_after(time, dispatch_get_main_queue()) {
+            let lvc: loginVC = self.generateLoginVC()
+            lvc.delegate = self
+            self.presentViewController(lvc, animated: true, completion: nil)
+        }
+    }
+    
+    func loginVCWillDismiss() {
+        beginFeedVC()
+    }
+    
     func onTextViewEditing(textView: UITextView) {
         //tableView.setContentOffset(CGPointMake(0, textView.center.y-60), animated: true)
     }
@@ -435,7 +449,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
 extension UIViewController {
     
     func hideKeyboardWhenTappedAround() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
@@ -448,16 +462,6 @@ extension UIViewController {
         let lvc = self.storyboard?.instantiateViewControllerWithIdentifier("loginVC") as! loginVC
         return lvc
     }
-    
-    func presentLoginVC() {
-        let delay = 0.01 * Double(NSEC_PER_SEC)
-        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-        dispatch_after(time, dispatch_get_main_queue()) {
-            let lvc: loginVC = self.generateLoginVC()
-            self.presentViewController(lvc, animated: true, completion: nil)
-        }
-    }
-    
     
     func startLoadingAnimation(activityIndicator: UIActivityIndicatorView, loadingLabel: UILabel, viewToAdd: UIView){
         activityIndicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)

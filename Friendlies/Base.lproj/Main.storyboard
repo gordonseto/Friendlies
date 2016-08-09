@@ -24,6 +24,7 @@
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
+            <string>HelveticaNeue</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -1623,7 +1624,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hz8-7q-dll">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hz8-7q-dll">
                                 <rect key="frame" x="0.0" y="106" width="600" height="230"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cq-UA-8Hh" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
@@ -1668,7 +1669,7 @@
                                             <outletCollection property="gestureRecognizers" destination="FnM-7Y-Elu" appends="YES" id="t5K-PF-saB"/>
                                         </connections>
                                     </view>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fHy-X0-yka" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fHy-X0-yka" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="60" width="600" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Search Radius" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XHA-Bf-rci">
@@ -1697,7 +1698,7 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hm6-Xy-Lp3" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hm6-Xy-Lp3" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="120" width="600" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Blocking" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xaa-Wz-mtc">
@@ -1729,17 +1730,17 @@
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
-                                                <exclude reference="q8t-q3-ZZ9"/>
                                                 <exclude reference="JYe-Sf-yeC"/>
-                                                <exclude reference="cMB-CR-qul"/>
                                                 <exclude reference="bit-YE-Q7a"/>
+                                                <exclude reference="cMB-CR-qul"/>
+                                                <exclude reference="q8t-q3-ZZ9"/>
                                             </mask>
                                         </variation>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="Woj-Uw-2gm" appends="YES" id="jMC-pB-OwZ"/>
                                         </connections>
                                     </view>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OVU-cb-4gW" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVU-cb-4gW" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="180" width="600" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="View Tutorial" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1s1-hI-jSr">
@@ -1772,9 +1773,9 @@
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="5n8-oI-07r"/>
-                                                <exclude reference="mpe-QI-aNN"/>
                                                 <exclude reference="BfC-aG-Mbg"/>
                                                 <exclude reference="XcH-Sq-3MH"/>
+                                                <exclude reference="mpe-QI-aNN"/>
                                             </mask>
                                         </variation>
                                         <connections>
@@ -1783,16 +1784,48 @@
                                     </view>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yx2-hw-97y">
+                                <rect key="frame" x="0.0" y="501" width="600" height="40"/>
+                                <color key="backgroundColor" red="0.1225560897" green="0.1225560897" blue="0.1225560897" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Mkc-mM-fJP"/>
+                                    <constraint firstAttribute="width" constant="200" id="hYo-3D-Rtp"/>
+                                    <constraint firstAttribute="width" constant="225" id="zwm-1g-hZe"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Logout">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="hYo-3D-Rtp"/>
+                                        <exclude reference="zwm-1g-hZe"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="onLogoutPressed:" destination="yqg-JV-kjm" eventType="touchUpInside" id="0Fm-jw-4dC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.068008814099999995" green="0.068008814099999995" blue="0.068008814099999995" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Hz8-7q-dll" firstAttribute="top" secondItem="l9G-si-Wwc" secondAttribute="bottom" constant="41" id="1cb-95-Xvf"/>
+                            <constraint firstItem="yx2-hw-97y" firstAttribute="centerX" secondItem="rkv-uT-Us2" secondAttribute="centerX" id="1hX-4E-jtr"/>
+                            <constraint firstItem="3t5-3q-nCo" firstAttribute="top" secondItem="yx2-hw-97y" secondAttribute="bottom" constant="10" id="H5k-0B-Nm3"/>
                             <constraint firstItem="l9G-si-Wwc" firstAttribute="leading" secondItem="rkv-uT-Us2" secondAttribute="leading" id="JEw-kk-RxR"/>
+                            <constraint firstItem="yx2-hw-97y" firstAttribute="leading" secondItem="rkv-uT-Us2" secondAttribute="leading" id="Jhj-PR-Jw7"/>
                             <constraint firstAttribute="trailing" secondItem="l9G-si-Wwc" secondAttribute="trailing" id="KyI-WQ-Ne3"/>
                             <constraint firstItem="l9G-si-Wwc" firstAttribute="top" secondItem="rkv-uT-Us2" secondAttribute="top" id="Lqu-JX-dNx"/>
+                            <constraint firstItem="3t5-3q-nCo" firstAttribute="top" secondItem="yx2-hw-97y" secondAttribute="bottom" id="eoI-zG-ES8"/>
                             <constraint firstAttribute="trailing" secondItem="Hz8-7q-dll" secondAttribute="trailing" id="gyA-wD-rT7"/>
+                            <constraint firstAttribute="trailing" secondItem="yx2-hw-97y" secondAttribute="trailing" id="uNW-Od-2D4"/>
                             <constraint firstItem="Hz8-7q-dll" firstAttribute="leading" secondItem="rkv-uT-Us2" secondAttribute="leading" id="zpJ-eD-quc"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="eoI-zG-ES8"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <segue destination="V3D-mL-WA7" kind="show" identifier="blockingSettingsVC" id="z8g-J6-DcC"/>
@@ -1988,8 +2021,8 @@
                                                 <state key="normal" image="backbutton"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
-                                                        <exclude reference="lek-YQ-Hxs"/>
                                                         <exclude reference="UAw-Xx-Yew"/>
+                                                        <exclude reference="lek-YQ-Hxs"/>
                                                     </mask>
                                                 </variation>
                                                 <connections>
@@ -2025,8 +2058,8 @@
                                                 <exclude reference="9Xb-p7-Qiu"/>
                                                 <exclude reference="V94-H5-6j0"/>
                                                 <exclude reference="ETT-XJ-eHV"/>
-                                                <exclude reference="i2x-YR-J0C"/>
                                                 <exclude reference="Pgp-k3-bu7"/>
+                                                <exclude reference="i2x-YR-J0C"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -2185,9 +2218,9 @@
                                     <mask key="constraints">
                                         <exclude reference="4CG-3V-dsI"/>
                                         <exclude reference="r2C-Bm-NNa"/>
-                                        <exclude reference="wRp-iR-FOd"/>
-                                        <exclude reference="mTB-g2-taS"/>
                                         <exclude reference="XeG-dS-giO"/>
+                                        <exclude reference="mTB-g2-taS"/>
+                                        <exclude reference="wRp-iR-FOd"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -2311,7 +2344,7 @@
         <image name="trash" width="14" height="17"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Wf7-u6-TVg"/>
         <segue reference="hk0-Rl-1gi"/>
+        <segue reference="3hv-uT-Y7D"/>
     </inferredMetricsTieBreakers>
 </document>

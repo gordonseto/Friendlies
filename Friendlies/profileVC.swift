@@ -241,13 +241,14 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         
+        if let lastavailable = self.user.lastAvailable {
+            lastAvailable.text = self.initializeTimeLabel(lastavailable)
+        }
+        
         if !ownProfile {
             getCurrentUser()
         } else {
             editProfileButton.hidden = false
-            if let lastavailable = self.user.lastAvailable {
-                lastAvailable.text = self.initializeTimeLabel(lastavailable)
-            }
         }
     }
     
@@ -264,6 +265,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             self.checkFollowStatus(){
                 self.updateButtonLabels()
             }
+            /*
             self.currentUser.checkIfShouldBeAbleToSeeUserDetails(self.user){ (should) in
                 if should {
                     if let lastavailable = self.user.lastAvailable {
@@ -273,6 +275,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
                     self.lastAvailable.text = ""
                 }
             }
+ */
         }
     }
     

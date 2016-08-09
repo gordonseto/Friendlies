@@ -8,6 +8,7 @@
 
 import UIKit
 import SloppySwiper
+import FirebaseAuth
 
 class SettingsVC: UIViewController {
 
@@ -37,5 +38,36 @@ class SettingsVC: UIViewController {
     }
     
     @IBAction func onViewTutorialPressed(sender: UITapGestureRecognizer) {
+    }
+    
+    @IBAction func onLogoutPressed(sender: AnyObject) {
+        confirmLogout()
+    }
+    
+    func confirmLogout(){
+        let alertController = UIAlertController(title: "Are you sure you want to logout?", message: nil, preferredStyle: .ActionSheet)
+        
+        let logoutAction = UIAlertAction(title: "Logout", style: .Destructive) { action -> Void in
+            self.logoutUser()
+        }
+        alertController.addAction(logoutAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func logoutUser(){
+        CurrentUser.sharedInstance.user = nil
+        try! FIRAuth.auth()!.signOut()
+        if let tabBarController: UITabBarController = self.view.window?.rootViewController as? UITabBarController {
+            tabBarController.selectedIndex = FEED_INDEX
+            if let feedNVC = tabBarController.viewControllers![FEED_INDEX] as? UINavigationController {
+                if let feedVC = feedNVC.viewControllers[0] as? feedVC {
+                    feedVC.presentLoginVC()
+                }
+            }
+        }
     }
 }

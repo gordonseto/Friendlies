@@ -16,6 +16,14 @@ class CurrentUser {
     var user: User!
     var firebase: FIRDatabaseReference!
     
+    var isLoggedIn: Bool {
+        if let _ = FIRAuth.auth()?.currentUser?.uid {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     static let sharedInstance = CurrentUser()
     private init() {}
     

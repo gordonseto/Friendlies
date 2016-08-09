@@ -12,8 +12,14 @@ import FirebaseAuth
 import FirebaseDatabase
 import Batch
 
+protocol loginVCDelegate: class {
+    func loginVCWillDismiss()
+}
+
 class loginVC: UIViewController {
 
+    weak var delegate: loginVCDelegate!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -56,6 +62,7 @@ class loginVC: UIViewController {
                             editor.save()
                             
                             self.dismissViewControllerAnimated(true, completion: nil)
+                            self.delegate?.loginVCWillDismiss()
                         } else {
                             print("error with FIR authorization")
                         }

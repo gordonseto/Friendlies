@@ -49,6 +49,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         
         searchBar.enablesReturnKeyAutomatically = false
         searchBar.delegate = self
+        searchBar.keyboardAppearance = UIKeyboardAppearance.Dark
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -76,8 +77,11 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         self.navigationController?.navigationBarHidden = true
 
     }
-    
+
     func getCurrentUsersFriends(){
+        downloadedImages = [:]
+        pendingDownloads = [:]
+        uidsBeingDownloaded = []
         if friendsAndWantsToBeAddedBy.count == 0 {
             if let activityIndicator = self.activityIndicator {
                 if let loadingLabel = self.loadingLabel {
@@ -119,7 +123,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             getCurrentUsersWantsToBeAddedBy()
         }
         for (friendKey, _) in friendsKeys {
-            var user = User(uid: friendKey)
+            let user = User(uid: friendKey)
             user.downloadUserInfo(){
                 self.friends.append(user)
                 if self.friends.count == self.friendsKeys.count {
@@ -153,7 +157,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             doneGettingProfiles()
         }
         for wantsToBeAddedByKey in wantsToBeAddedByKeys {
-            var user = User(uid: wantsToBeAddedByKey)
+            let user = User(uid: wantsToBeAddedByKey)
             user.downloadUserInfo() {
                 self.wantsToBeAddedBy.append(user)
                 if self.wantsToBeAddedBy.count == self.wantsToBeAddedByKeys.count {
@@ -218,6 +222,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             user = filteredUsers[indexPath.row]
         }
         getUser(user, indexPath: indexPath)
+        print("\(user.displayName) \(user.shouldSeeLastAvailable)")
         cell.configureCell(user)
         return cell
     }
@@ -233,17 +238,20 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                 pendingDownloads[indexPath.row] = user.uid
                 user.getUserProfilePhoto() {
                     user.downloadUserInfo(){
-                        self.downloadedImages[user.uid] = user.profilePhoto
-                        for (index, uid) in self.pendingDownloads {
-                            if uid == user.uid {
-                                let indexPath = NSIndexPath(forRow: index, inSection: 0)
-                                if indexPath.row < self.tableView.numberOfRowsInSection(0) {
-                                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+                        self.currentUser.checkIfShouldBeAbleToSeeUserDetails(user){ (should) in
+                            user.shouldSeeLastAvailable = should
+                            self.downloadedImages[user.uid] = user.profilePhoto
+                            for (index, uid) in self.pendingDownloads {
+                                if uid == user.uid {
+                                    let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                                    if indexPath.row < self.tableView.numberOfRowsInSection(0) {
+                                        self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+                                    }
                                 }
                             }
-                        }
-                        if let index = self.uidsBeingDownloaded.indexOf(user.uid) {
-                            self.uidsBeingDownloaded.removeAtIndex(index)
+                            if let index = self.uidsBeingDownloaded.indexOf(user.uid) {
+                                self.uidsBeingDownloaded.removeAtIndex(index)
+                            }
                         }
                     }
                 }

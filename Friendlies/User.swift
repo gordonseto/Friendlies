@@ -87,6 +87,8 @@ class User {
         return _onlyFriends
     }
     
+    var shouldSeeLastAvailable: Bool = false
+    
     init(uid: String) {
         _uid = uid
     }

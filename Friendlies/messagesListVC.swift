@@ -45,6 +45,7 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         searchBar.enablesReturnKeyAutomatically = false
         searchBar.delegate = self
+        searchBar.keyboardAppearance = UIKeyboardAppearance.Dark
         
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
         loadingLabel = UILabel(frame: CGRectMake(0, 0, 100, 30))

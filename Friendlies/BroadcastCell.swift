@@ -57,6 +57,8 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
             userPhoto.image = broadcast.user.profilePhoto
             
             arrangeStackViewCharacters(author, characterStackView: self.characterStackView, height: 20)
+            
+            broadcastDesc.keyboardAppearance = UIKeyboardAppearance.Dark
         
             setupSwitch.on = broadcast.hasSetup
             setupSwitch.transform = CGAffineTransformMakeScale(0.5, 0.5)

@@ -55,8 +55,12 @@ class FriendsListCell: UITableViewCell {
             
         } else {
             lastAvailable.textColor = UIColor.darkGrayColor()
-            if let lastavailable = user.lastAvailable {
-                lastAvailable.text = initializeTimeLabel(user.lastAvailable)
+            if user.shouldSeeLastAvailable {
+                if let lastavailable = user.lastAvailable {
+                    lastAvailable.text = initializeTimeLabel(user.lastAvailable)
+                }
+            } else {
+                lastAvailable.text = ""
             }
             
             acceptButton.hidden = true

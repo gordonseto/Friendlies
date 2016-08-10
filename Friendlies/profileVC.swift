@@ -241,11 +241,13 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         
-        if !ownProfile {
-            getCurrentUser()
-        } else {
+        if ownProfile {
             editProfileButton.hidden = false
-            displayLastAvailable()
+            if let lastavailable = self.user.lastAvailable {
+                self.lastAvailable.text = self.initializeTimeLabel(lastavailable)
+            }
+        } else {
+            getCurrentUser()
         }
     }
     

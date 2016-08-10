@@ -17,4 +17,5 @@ target 'Friendlies' do
   pod 'Batch'
   pod 'SloppySwiper'
   pod 'DLRadioButton'
+  pod 'IQKeyboardManagerSwift'
 end

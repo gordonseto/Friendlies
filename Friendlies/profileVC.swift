@@ -241,14 +241,11 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             }
         }
         
-        if let lastavailable = self.user.lastAvailable {
-            lastAvailable.text = self.initializeTimeLabel(lastavailable)
-        }
-        
         if !ownProfile {
             getCurrentUser()
         } else {
             editProfileButton.hidden = false
+            displayLastAvailable()
         }
     }
     
@@ -265,17 +262,19 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             self.checkFollowStatus(){
                 self.updateButtonLabels()
             }
-            /*
-            self.currentUser.checkIfShouldBeAbleToSeeUserDetails(self.user){ (should) in
-                if should {
-                    if let lastavailable = self.user.lastAvailable {
-                        self.lastAvailable.text = self.initializeTimeLabel(lastavailable)
-                    }
-                } else {
-                    self.lastAvailable.text = ""
+            self.displayLastAvailable()
+        }
+    }
+    
+    func displayLastAvailable(){
+        self.currentUser.checkIfShouldBeAbleToSeeUserDetails(self.user){ (should) in
+            if should {
+                if let lastavailable = self.user.lastAvailable {
+                    self.lastAvailable.text = self.initializeTimeLabel(lastavailable)
                 }
+            } else {
+                self.lastAvailable.text = " "
             }
- */
         }
     }
     

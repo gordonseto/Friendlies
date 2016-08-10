@@ -741,7 +741,7 @@
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="z15-4t-DMk">
                                 <rect key="frame" x="0.0" y="80" width="600" height="520"/>
-                                <color key="backgroundColor" red="0.071053685899999997" green="0.071053685899999997" blue="0.071053685899999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="FriendsListCell" rowHeight="80" id="YaC-us-Y7A" customClass="FriendsListCell" customModule="Friendlies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="600" height="80"/>
@@ -948,7 +948,7 @@
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DcM-Hi-uo4">
                                 <rect key="frame" x="0.0" y="85" width="600" height="515"/>
-                                <color key="backgroundColor" red="0.071053685899999997" green="0.071053685899999997" blue="0.071053685899999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MessagesListCell" rowHeight="90" id="Q6i-ml-nUa" customClass="MessagesListCell" customModule="Friendlies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="600" height="90"/>
@@ -2344,7 +2344,7 @@
         <image name="trash" width="14" height="17"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Wf7-u6-TVg"/>
         <segue reference="hk0-Rl-1gi"/>
-        <segue reference="3hv-uT-Y7D"/>
     </inferredMetricsTieBreakers>
 </document>

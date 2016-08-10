@@ -58,6 +58,7 @@ class FriendsListCell: UITableViewCell {
             if let lastavailable = user.lastAvailable {
                 lastAvailable.text = initializeTimeLabel(user.lastAvailable)
             }
+            
             acceptButton.hidden = true
             declineButton.hidden = true
             
@@ -65,7 +66,6 @@ class FriendsListCell: UITableViewCell {
         }
         
     }
-    
 
     @IBAction func onAcceptButtonPressed(sender: AnyObject) {
         if let uid = uid {

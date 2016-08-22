@@ -113,7 +113,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         
         updateIconBadge()
         
+        hexagonButton.userInteractionEnabled = false
         getCurrentUser(){
+            self.hexagonButton.userInteractionEnabled = true
             self.locationAuthStatus()
         }
     }
@@ -151,6 +153,11 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                                 self.progressView.hidden = false
                                 self.progressView.progress = 0.75
                                 self.progressView.setProgress(1, animated: true)
+                                
+                                firebase.child("broadcasts").child(self.currentUser.lastBroadcast).setValue(nil)
+                                firebase.child("geolocations").child(self.currentUser.lastBroadcast).setValue(nil)
+                                CurrentUser.sharedInstance.user.lastBroadcast = key
+                                firebase.child("users").child(uid).child("lastBroadcast").setValue(key)
                                 
                                 let delay = 0.5 * Double(NSEC_PER_SEC)
                                 let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))

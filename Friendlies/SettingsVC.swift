@@ -9,6 +9,7 @@
 import UIKit
 import SloppySwiper
 import FirebaseAuth
+import FBSDKLoginKit
 
 class SettingsVC: UIViewController {
 

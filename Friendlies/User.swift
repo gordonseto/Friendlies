@@ -89,6 +89,8 @@ class User {
     
     var shouldSeeLastAvailable: Bool = false
     
+    var lastBroadcast: String!
+    
     init(uid: String) {
         _uid = uid
     }
@@ -105,6 +107,7 @@ class User {
             self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? nil
             self._conversations = snapshot.value!["conversations"] as? [String: Bool] ?? [:]
             self._onlyFriends = snapshot.value!["onlyFriends"] as? Bool ?? false
+            self.lastBroadcast = snapshot.value!["lastBroadcast"] as? String ?? "123"
             print("downloaded \(self.displayName)")
             completion()
         }) { (error) in

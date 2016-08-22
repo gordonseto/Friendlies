@@ -147,8 +147,20 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         
         scrollView.delaysContentTouches = false
         
+//        print(self.view.bounds.width)
+//        print(settingsButton.bounds.width)
+//        print(settingsButton.center.y)
+//        //settingsButton.center = CGPointMake(self.view.bounds.width - settingsButton.bounds.width - 8, settingsButton.center.y)
+//        settingsButton.bounds = CGRectMake(100, 100, 24, 35)
+        
         hideColoredButtons()
         editProfileButton.hidden = true
+        
+        if notFromTabBar {
+            backButton.hidden = false
+        } else {
+            backButton.hidden = true
+        }
         
         if let user = user {
             if let uid = FIRAuth.auth()?.currentUser?.uid {
@@ -163,9 +175,10 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
                     self.user = CurrentUser.sharedInstance.user
                     self.ownProfile = true
                     self.settingsButton.hidden = false
+                    print("showing settingsButton")
                     self.initializeView()
                 }
-            }
+            } 
         }
         
     }
@@ -208,6 +221,8 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
             editProfileButton.hidden = false
             blockedLabel.hidden = true
             moreButton.hidden = true
+            settingsButton.hidden = false
+            print("hiding more button")
         } else {
             if isBlocked {
                 hideColoredButtons()
@@ -217,13 +232,8 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
                 blockedLabel.hidden = true
             }
             moreButton.hidden = false
+            print("showing more button")
             editProfileButton.hidden = true
-        }
-        
-        if notFromTabBar {
-            backButton.hidden = false
-        } else {
-            backButton.hidden = true
         }
         
         if let name = self.user.displayName {

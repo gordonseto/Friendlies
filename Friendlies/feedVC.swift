@@ -156,6 +156,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
                                 
                                 firebase.child("broadcasts").child(self.currentUser.lastBroadcast).setValue(nil)
                                 firebase.child("geolocations").child(self.currentUser.lastBroadcast).setValue(nil)
+                                self.currentUser.lastBroadcast = key
                                 CurrentUser.sharedInstance.user.lastBroadcast = key
                                 firebase.child("users").child(uid).child("lastBroadcast").setValue(key)
                                 
@@ -435,6 +436,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         firebase = FIRDatabase.database().reference()
         firebase.child("broadcasts").child(broadcast.key).setValue(nil)
         firebase.child("geolocations").child(broadcast.key).setValue(nil)
+        firebase.child("users").child(broadcast.authorUid).child("lastAvailable").setValue(nil)
+        firebase.child("users").child(broadcast.authorUid).child("lastBroadcast").setValue(nil)
         queryBroadcasts()
     }
     

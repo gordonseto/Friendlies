@@ -102,13 +102,16 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     @IBOutlet weak var redButton: friendliesButton!
     
     @IBOutlet weak var editProfileButton: friendliesButton!
-    @IBOutlet weak var settingsButton: UIButton!
+   // @IBOutlet weak var settingsButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var moreButton: UIButton!
+   // @IBOutlet weak var moreButton: UIButton!
     
     @IBOutlet weak var blockedLabel: UILabel!
     
     @IBOutlet weak var scrollView: UIScrollView!
+    
+    var settingsButton: UIButton!
+    var moreButton: UIButton!
     
     var ownProfile: Bool = false
     var user: User!
@@ -147,11 +150,23 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         
         scrollView.delaysContentTouches = false
         
-//        print(self.view.bounds.width)
-//        print(settingsButton.bounds.width)
-//        print(settingsButton.center.y)
-//        //settingsButton.center = CGPointMake(self.view.bounds.width - settingsButton.bounds.width - 8, settingsButton.center.y)
-//        settingsButton.bounds = CGRectMake(100, 100, 24, 35)
+        settingsButton = UIButton()
+        settingsButton.setImage(UIImage(named:"settings"), forState: .Normal)
+        settingsButton.frame = CGRectMake(self.view.bounds.width - 35.0 - 12, backButton.center.y - 45.0/2.0 + 4, 35, 45)
+        settingsButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+        settingsButton.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+        settingsButton.hidden = true
+        settingsButton.addTarget(self, action: Selector("onSettingsPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
+        scrollView.addSubview(settingsButton)
+        
+        moreButton = UIButton()
+        moreButton.setImage(UIImage(named: "moreButton"), forState: .Normal)
+        moreButton.frame = CGRectMake(self.view.bounds.width - 40.0 - 12, backButton.center.y - 31.0/2.0 + 4, 40, 31)
+        moreButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+        moreButton.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+        moreButton.hidden = true
+        moreButton.addTarget(self, action: Selector("onMoreButtonPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
+        scrollView.addSubview(moreButton)
         
         hideColoredButtons()
         editProfileButton.hidden = true

@@ -66,7 +66,7 @@ class BlockingSettingsVC: UIViewController, UITableViewDelegate, UITableViewData
         blockedUsers = []
         for (uid, _) in isBlocking {
             let user = User(uid: uid)
-            user.downloadUserInfo(){
+            user.downloadUserInfo(){_ in 
                 self.blockedUsers.append(user)
                 if self.blockedUsers.count == self.isBlocking.count {
                     self.doneRetreivingUsers()

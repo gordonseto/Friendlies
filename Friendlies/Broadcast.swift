@@ -52,7 +52,7 @@ class Broadcast {
     func getUser(completion: ()->()){
         if let authoruid = _authorUid {
             user = User(uid: authoruid)
-            user.downloadUserInfo() {
+            user.downloadUserInfo() {_ in 
                 completion()
             }
         }

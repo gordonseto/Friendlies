@@ -30,9 +30,11 @@ class CurrentUser {
     func getCurrentUser(completion: ()->()){
         if let uid = FIRAuth.auth()?.currentUser?.uid {
             user = User(uid: uid)
-            user.downloadUserInfo(){
-                print(self.user.displayName)
-                completion()
+            user.downloadUserInfo(){ user in
+                if let _ = user.displayName {
+                    print(user.displayName)
+                    completion()
+                }
             }
         }
     }

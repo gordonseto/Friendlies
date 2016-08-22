@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wBn-6R-q36">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wBn-6R-q36">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -7,8 +7,6 @@
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="HelveticaNeue.ttc">
-            <string>HelveticaNeue</string>
-            <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
             <string>HelveticaNeue</string>
@@ -1706,8 +1704,8 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hz8-7q-dll">
-                                <rect key="frame" x="0.0" y="106" width="600" height="230"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hz8-7q-dll">
+                                <rect key="frame" x="0.0" y="106" width="600" height="110"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cq-UA-8Hh" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
@@ -1751,37 +1749,8 @@
                                             <outletCollection property="gestureRecognizers" destination="FnM-7Y-Elu" appends="YES" id="t5K-PF-saB"/>
                                         </connections>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fHy-X0-yka" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="60" width="600" height="50"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Search Radius" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XHA-Bf-rci">
-                                                <rect key="frame" x="8" y="15" width="350" height="20"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.1225560897" green="0.1225560897" blue="0.1225560897" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="80" id="6hU-R9-O8Q"/>
-                                            <constraint firstItem="XHA-Bf-rci" firstAttribute="leading" secondItem="fHy-X0-yka" secondAttribute="leading" constant="8" id="Ge8-h1-mBZ"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="55" id="OUM-aj-v0z"/>
-                                            <constraint firstAttribute="height" constant="65" id="Woe-cP-ano"/>
-                                            <constraint firstItem="XHA-Bf-rci" firstAttribute="centerY" secondItem="fHy-X0-yka" secondAttribute="centerY" id="a8p-V3-a05"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="55" id="kR2-Rh-rdD"/>
-                                            <constraint firstAttribute="height" constant="50" id="zlX-8f-mao"/>
-                                        </constraints>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="6hU-R9-O8Q"/>
-                                                <exclude reference="OUM-aj-v0z"/>
-                                                <exclude reference="Woe-cP-ano"/>
-                                                <exclude reference="kR2-Rh-rdD"/>
-                                            </mask>
-                                        </variation>
-                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hm6-Xy-Lp3" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="120" width="600" height="50"/>
+                                        <rect key="frame" x="0.0" y="60" width="600" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Blocking" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xaa-Wz-mtc">
                                                 <rect key="frame" x="8" y="15" width="500" height="20"/>
@@ -1820,48 +1789,6 @@
                                         </variation>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="Woj-Uw-2gm" appends="YES" id="jMC-pB-OwZ"/>
-                                        </connections>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVU-cb-4gW" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="180" width="600" height="50"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="View Tutorial" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1s1-hI-jSr">
-                                                <rect key="frame" x="8" y="15" width="500" height="20"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="nextButton" translatesAutoresizingMaskIntoConstraints="NO" id="ELc-zj-qlH">
-                                                <rect key="frame" x="547" y="5" width="40" height="40"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="35" id="1bG-nq-m24"/>
-                                                    <constraint firstAttribute="width" constant="35" id="UCN-9H-5R1"/>
-                                                </constraints>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.1225560897" green="0.1225560897" blue="0.1225560897" alpha="1" colorSpace="calibratedRGB"/>
-                                        <gestureRecognizers/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="80" id="5n8-oI-07r"/>
-                                            <constraint firstAttribute="trailing" secondItem="ELc-zj-qlH" secondAttribute="trailing" constant="8" id="BUf-WQ-I27"/>
-                                            <constraint firstAttribute="height" constant="65" id="BfC-aG-Mbg"/>
-                                            <constraint firstItem="ELc-zj-qlH" firstAttribute="centerY" secondItem="OVU-cb-4gW" secondAttribute="centerY" id="GQd-mm-NCE"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="55" id="XcH-Sq-3MH"/>
-                                            <constraint firstAttribute="height" constant="50" id="cqr-Dq-cmV"/>
-                                            <constraint firstItem="1s1-hI-jSr" firstAttribute="centerY" secondItem="OVU-cb-4gW" secondAttribute="centerY" id="e1K-om-aH5"/>
-                                            <constraint firstItem="1s1-hI-jSr" firstAttribute="leading" secondItem="OVU-cb-4gW" secondAttribute="leading" constant="8" id="mms-ya-TQC"/>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="55" id="mpe-QI-aNN"/>
-                                        </constraints>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="5n8-oI-07r"/>
-                                                <exclude reference="BfC-aG-Mbg"/>
-                                                <exclude reference="XcH-Sq-3MH"/>
-                                                <exclude reference="mpe-QI-aNN"/>
-                                            </mask>
-                                        </variation>
-                                        <connections>
-                                            <outletCollection property="gestureRecognizers" destination="b5e-2i-cT6" appends="YES" id="eY0-O8-FEy"/>
                                         </connections>
                                     </view>
                                 </subviews>
@@ -2430,7 +2357,7 @@
         <image name="trash" width="14" height="17"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="QMB-5h-5Qh"/>
+        <segue reference="Ros-63-68e"/>
         <segue reference="3hv-uT-Y7D"/>
     </inferredMetricsTieBreakers>
 </document>

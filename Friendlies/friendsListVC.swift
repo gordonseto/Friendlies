@@ -68,7 +68,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         noFriendsLabel = UILabel(frame: CGRectMake(0, 0, 220, 120))
         
         firebase = FIRDatabase.database().reference()
-      
+        
         getCurrentUsersFriends()
     }
     
@@ -124,7 +124,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         }
         for (friendKey, _) in friendsKeys {
             let user = User(uid: friendKey)
-            user.downloadUserInfo(){
+            user.downloadUserInfo(){ _ in
                 self.friends.append(user)
                 if self.friends.count == self.friendsKeys.count {
                     self.friends.sortInPlace {(friend1: User, friend2: User) -> Bool in
@@ -158,7 +158,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
         }
         for wantsToBeAddedByKey in wantsToBeAddedByKeys {
             let user = User(uid: wantsToBeAddedByKey)
-            user.downloadUserInfo() {
+            user.downloadUserInfo() { _ in
                 self.wantsToBeAddedBy.append(user)
                 if self.wantsToBeAddedBy.count == self.wantsToBeAddedByKeys.count {
                     self.doneGettingProfiles()
@@ -237,7 +237,7 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
                 uidsBeingDownloaded.append(user.uid)
                 pendingDownloads[indexPath.row] = user.uid
                 user.getUserProfilePhoto() {
-                    user.downloadUserInfo(){
+                    user.downloadUserInfo(){_ in 
                         self.currentUser.checkIfShouldBeAbleToSeeUserDetails(user){ (should) in
                             user.shouldSeeLastAvailable = should
                             self.downloadedImages[user.uid] = user.profilePhoto

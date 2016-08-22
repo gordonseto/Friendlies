@@ -212,7 +212,7 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     func downloadUserAndInitializeView() {
         
-        user.downloadUserInfo() {
+        user.downloadUserInfo() {_ in 
             self.initializeView()
         }
     }

@@ -95,7 +95,7 @@ class User {
         _uid = uid
     }
     
-    func downloadUserInfo(completion: () -> ()) {
+    func downloadUserInfo(completion: (User) -> ()) {
         guard let uid = _uid else { return }
         firebase = FIRDatabase.database().reference()
         firebase.child("users").child(uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
@@ -109,10 +109,10 @@ class User {
             self._onlyFriends = snapshot.value!["onlyFriends"] as? Bool ?? false
             self.lastBroadcast = snapshot.value!["lastBroadcast"] as? String ?? "123"
             print("downloaded \(self.displayName)")
-            completion()
+            completion(self)
         }) { (error) in
             print("error retreiving user")
-            completion()
+            completion(self)
         }
     }
     
@@ -239,7 +239,7 @@ class User {
                     self.firebase.child("friendsInfo").child(uid).child("wantsToBeAddedBy").child(self._uid).setValue("unseen")
                     self.sendFriendNotification("\(self.displayName) has sent you a friend request.", uid: uid)
                     addToNotifications(uid, notificationType: "friends", param1: self._uid)
-                    self.downloadUserInfo(){
+                    self.downloadUserInfo(){ _ in
                         self.getFriendsInfo(){
                             completion()
                         }
@@ -252,7 +252,7 @@ class User {
         firebase = FIRDatabase.database().reference()
         firebase.child("friendsInfo").child(_uid).child("wantsToAdd").child(uid).setValue(nil)
         firebase.child("friendsInfo").child(uid).child("wantsToBeAddedBy").child(_uid).setValue(nil)
-        self.downloadUserInfo(){
+        self.downloadUserInfo(){ _ in
             self.getFriendsInfo(){
                 completion()
             }
@@ -268,7 +268,7 @@ class User {
         self.sendFriendNotification("\(self.displayName) has accepted your friend request.", uid: uid)
         addToNotifications(uid, notificationType: "friends", param1: self._uid)
         removeFromNotifications(self._uid, notificationType: "friends", param1: uid)
-        self.downloadUserInfo(){
+        self.downloadUserInfo(){ _ in
             self.getFriendsInfo(){
                 completion()
             }
@@ -279,7 +279,7 @@ class User {
         firebase = FIRDatabase.database().reference()
         firebase.child("friendsInfo").child(_uid).child("friends").child(uid).setValue(nil)
         firebase.child("friendsInfo").child(uid).child("friends").child(_uid).setValue(nil)
-        self.downloadUserInfo(){
+        self.downloadUserInfo(){ _ in
             self.getFriendsInfo(){
                 completion()
             }
@@ -335,9 +335,9 @@ class User {
     }
     
     func getConversationWith(uid: String, completion: (conversationId: String) -> ()){
-        downloadUserInfo(){
+        downloadUserInfo(){ _ in
             let otherUser = User(uid: uid)
-            otherUser.downloadUserInfo(){
+            otherUser.downloadUserInfo(){ _ in
                 if let currentUserConversations = self._conversations {
                     if let otherUserConversations = otherUser.conversations {
                         for (conversationId, _) in currentUserConversations {

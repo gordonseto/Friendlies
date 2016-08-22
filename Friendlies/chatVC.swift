@@ -81,7 +81,7 @@ class chatVC: JSQMessagesViewController {
         if let user = CurrentUser.sharedInstance.user {
             currentUser = user
             if otherUser.displayName == nil {
-                otherUser.downloadUserInfo(){
+                otherUser.downloadUserInfo(){_ in 
                     self.beginSetup()
                 }
             } else {
@@ -92,7 +92,7 @@ class chatVC: JSQMessagesViewController {
             CurrentUser.sharedInstance.getCurrentUser(){
                 self.currentUser = CurrentUser.sharedInstance.user
                 if self.otherUser.displayName == nil {
-                    self.otherUser.downloadUserInfo(){
+                    self.otherUser.downloadUserInfo(){_ in 
                         self.beginSetup()
                     }
                 } else {
@@ -284,7 +284,7 @@ class chatVC: JSQMessagesViewController {
         //isTyping = false
         
         if noConversationId {
-            CurrentUser.sharedInstance.user.downloadUserInfo(){
+            CurrentUser.sharedInstance.user.downloadUserInfo(){_ in
                 if let user = CurrentUser.sharedInstance.user {
                     self.currentUser = user
                     self.setupConversation()

@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import SloppySwiper
+import Crashlytics
 
 enum FriendsStatus: Int, CustomStringConvertible {
     case Friends, NotFriends, WantsToAdd, WantsToBeAddedBy
@@ -376,6 +377,8 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     }
 
     @IBAction func onYellowPressed(sender: AnyObject) {
+        guard let _ = user else { return }
+        guard let _ = currentUser else { return }
         performSegueWithIdentifier("chatVCFromProfile", sender: nil)
     }
     
@@ -429,13 +432,15 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "editProfileVC" {
-            var destinationVC = segue.destinationViewController as! editProfileVC
-            destinationVC.user = user
+            if let destinationVC = segue.destinationViewController as? editProfileVC {
+                destinationVC.user = user
+            }
         } else if segue.identifier == "chatVCFromProfile" {
-            var destinationVC = segue.destinationViewController as! chatVC
-            destinationVC.otherUser = user
-            destinationVC.senderId = currentUser.uid
-            destinationVC.senderDisplayName = currentUser.displayName
+            if let destinationVC = segue.destinationViewController as? chatVC {
+                destinationVC.otherUser = user
+                destinationVC.senderId = currentUser.uid
+                destinationVC.senderDisplayName = currentUser.displayName
+            }
         }
     }
     

@@ -820,7 +820,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="z15-4t-DMk">
-                                <rect key="frame" x="0.0" y="80" width="600" height="520"/>
+                                <rect key="frame" x="0.0" y="80" width="600" height="471"/>
                                 <color key="backgroundColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="FriendsListCell" rowHeight="80" id="YaC-us-Y7A" customClass="FriendsListCell" customModule="Friendlies" customModuleProvider="target">
@@ -936,6 +936,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.068008814099999995" green="0.068008814099999995" blue="0.068008814099999995" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="GmY-0v-gwV" firstAttribute="top" secondItem="z15-4t-DMk" secondAttribute="bottom" id="G5g-77-2Tg"/>
                             <constraint firstItem="PBo-Hw-n2i" firstAttribute="leading" secondItem="x4b-oX-TEA" secondAttribute="leading" id="Kyi-6v-V6R"/>
                             <constraint firstItem="z15-4t-DMk" firstAttribute="leading" secondItem="x4b-oX-TEA" secondAttribute="leading" id="L6a-U1-ZMM"/>
                             <constraint firstItem="z15-4t-DMk" firstAttribute="top" secondItem="PBo-Hw-n2i" secondAttribute="bottom" constant="15" id="ZwC-JH-phj"/>
@@ -944,6 +945,11 @@
                             <constraint firstItem="PBo-Hw-n2i" firstAttribute="top" secondItem="x4b-oX-TEA" secondAttribute="top" id="whN-CI-uZR"/>
                             <constraint firstAttribute="trailing" secondItem="PBo-Hw-n2i" secondAttribute="trailing" id="yDl-8j-enr"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="jDx-Vh-mNb"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="znO-mG-Ei7"/>
                     <connections>
@@ -1027,7 +1033,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DcM-Hi-uo4">
-                                <rect key="frame" x="0.0" y="85" width="600" height="515"/>
+                                <rect key="frame" x="0.0" y="85" width="600" height="466"/>
                                 <color key="backgroundColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="MessagesListCell" rowHeight="90" id="Q6i-ml-nUa" customClass="MessagesListCell" customModule="Friendlies" customModuleProvider="target">
@@ -1125,10 +1131,12 @@
                             <constraint firstItem="DcM-Hi-uo4" firstAttribute="top" secondItem="r5o-e4-xBf" secondAttribute="bottom" id="qMd-bR-Rcz"/>
                             <constraint firstItem="r5o-e4-xBf" firstAttribute="leading" secondItem="gxJ-dS-41u" secondAttribute="leading" id="qXn-zV-pgT"/>
                             <constraint firstItem="DcM-Hi-uo4" firstAttribute="leading" secondItem="gxJ-dS-41u" secondAttribute="leading" id="qdh-mH-dgL"/>
+                            <constraint firstItem="vci-Wa-DzX" firstAttribute="top" secondItem="DcM-Hi-uo4" secondAttribute="bottom" id="rNT-jU-QrT"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="IXP-uX-JPX"/>
+                                <exclude reference="mTg-To-AXc"/>
                                 <exclude reference="qMd-bR-Rcz"/>
                             </mask>
                         </variation>
@@ -1704,7 +1712,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hz8-7q-dll">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Hz8-7q-dll">
                                 <rect key="frame" x="0.0" y="106" width="600" height="110"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cq-UA-8Hh" customClass="friendliesView" customModule="Friendlies" customModuleProvider="target">
@@ -2357,7 +2365,7 @@
         <image name="trash" width="14" height="17"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Ros-63-68e"/>
-        <segue reference="3hv-uT-Y7D"/>
+        <segue reference="hk0-Rl-1gi"/>
+        <segue reference="Wf7-u6-TVg"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -11,6 +11,7 @@ import FBSDKLoginKit
 import FirebaseAuth
 import FirebaseDatabase
 import Batch
+import Crashlytics
 
 protocol loginVCDelegate: class {
     func loginVCWillDismiss()
@@ -61,6 +62,8 @@ class loginVC: UIViewController {
                             editor.setIdentifier(user.uid)
                             editor.save()
                             
+                            logUser(user.uid, username: user.displayName!)
+                            
                             self.dismissViewControllerAnimated(true, completion: nil)
                             self.delegate?.loginVCWillDismiss()
                         } else {
@@ -71,5 +74,10 @@ class loginVC: UIViewController {
             }
         }
     }
+}
+
+func logUser(uid: String, username: String){
+    Crashlytics.sharedInstance().setUserIdentifier(uid)
+    Crashlytics.sharedInstance().setUserName(username)
 }
 

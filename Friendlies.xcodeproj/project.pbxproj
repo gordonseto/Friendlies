@@ -218,6 +218,7 @@
 				8E629CD41D394FCB001E8EC3 /* Resources */,
 				79774A0EF88EAE0805D28812 /* [CP] Embed Pods Frameworks */,
 				F3E4191A6C40079D466B309F /* [CP] Copy Pods Resources */,
+				8E7762141D70A3F3004DA65D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -240,6 +241,7 @@
 				TargetAttributes = {
 					8E629CD51D394FCB001E8EC3 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 732LS35PLA;
 					};
 				};
 			};
@@ -305,6 +307,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Friendlies/Pods-Friendlies-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		8E7762141D70A3F3004DA65D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 42de7bae24c1334a1172f15ec6cb1e34a2bc126a 1eed12544efece3b75aaaa88b54951218e41bfeb17b599bf4347ddd98d42329e\n";
 		};
 		F3E4191A6C40079D466B309F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -469,13 +484,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Friendlies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.friendliesapp.Friendlies;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Friendlies/Friendlies-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Debug;
 		};
@@ -485,13 +501,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Gordon Seto (732LS35PLA)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Gordon Seto (732LS35PLA)";
 				INFOPLIST_FILE = Friendlies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.friendliesapp.Friendlies;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Friendlies/Friendlies-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};

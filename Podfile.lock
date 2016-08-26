@@ -6,7 +6,10 @@ PODS:
   - Bolts/AppLinks (1.7.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.7.0)
+  - Crashlytics (3.7.1):
+    - Fabric (~> 1.6.3)
   - DLRadioButton (1.4.8)
+  - Fabric (1.6.7)
   - FBSDKCoreKit (4.13.1):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.13.1):
@@ -54,7 +57,9 @@ PODS:
 
 DEPENDENCIES:
   - Batch
+  - Crashlytics
   - DLRadioButton
+  - Fabric
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
@@ -78,7 +83,9 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Batch: 13083f81837fe1da9ea84b0533a2965c73ff74c6
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
+  Crashlytics: 3cdd4c9655be68032a0cf0379e0fb5ef6af22cad
   DLRadioButton: 8fe4865b3ea8a5236e1d114dd283dd0884d3dc46
+  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   FBSDKCoreKit: 2807fe0da2ddb49a1469da6d6ff597f99912980f
   FBSDKLoginKit: 6d350cb6a22d6956e9d078885de6ee8a0ebc51b4
   FBSDKShareKit: c9438df7573b33780ac8c3451201c5ebb260ffca
@@ -97,6 +104,6 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   SloppySwiper: 7fdffc91062af8fb80574dee80082cb9e0cee507
 
-PODFILE CHECKSUM: e6057c9dedf9f4cec8b71ac7d244900fc5e3291b
+PODFILE CHECKSUM: cc69c40fce83442233d560b6646073e8d6185f06
 
 COCOAPODS: 1.0.1

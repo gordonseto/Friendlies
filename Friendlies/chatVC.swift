@@ -282,15 +282,13 @@ class chatVC: JSQMessagesViewController {
         finishSendingMessage()
         
         //isTyping = false
-        
+
         if noConversationId {
-            CurrentUser.sharedInstance.user.downloadUserInfo(){_ in
-                if let user = CurrentUser.sharedInstance.user {
-                    self.currentUser = user
-                    self.setupConversation()
-                }
-            }
+            CurrentUser.sharedInstance.user.conversations[conversationId] = true
+            self.otherUser.conversations[conversationId] = true
+            self.setupConversation()
         }
+    
     }
     
     func setupNewConversation() -> String {

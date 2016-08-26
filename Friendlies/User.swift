@@ -59,7 +59,12 @@ class User {
     }
     
     var conversations: [String: Bool]! {
-        return _conversations
+        get {
+            return _conversations
+        }
+        set {
+            _conversations = newValue
+        }
     }
     
     var followers: [String: Bool]! {

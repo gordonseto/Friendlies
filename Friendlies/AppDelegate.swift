@@ -11,6 +11,8 @@ import Firebase
 import FBSDKCoreKit
 import Batch
 import IQKeyboardManagerSwift
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,11 +29,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRApp.configure()
         
-        Batch.startWithAPIKey(BATCH_DEV_API_KEY)
+        Batch.startWithAPIKey(BATCH_API_KEY)
         BatchPush.registerForRemoteNotifications()
         
         IQKeyboardManager.sharedManager().enable = true
         IQKeyboardManager.sharedManager().enableAutoToolbar = false
+        
+        Fabric.with([Crashlytics.self])
     
         return true
     }

@@ -18,4 +18,6 @@ target 'Friendlies' do
   pod 'SloppySwiper'
   pod 'DLRadioButton'
   pod 'IQKeyboardManagerSwift'
+  pod 'Fabric'
+  pod 'Crashlytics'
 end

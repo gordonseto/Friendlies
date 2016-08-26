@@ -89,7 +89,8 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         
         firebase = FIRDatabase.database().reference()
 
-        if let _ = FIRAuth.auth()?.currentUser?.displayName {
+        if let displayName = FIRAuth.auth()?.currentUser?.displayName {
+            logUser((FIRAuth.auth()?.currentUser?.uid)!, username: displayName)
             beginFeedVC()
         } else {
             presentLoginVC()

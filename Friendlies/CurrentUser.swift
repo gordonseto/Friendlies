@@ -42,7 +42,7 @@ class CurrentUser {
 }
 
 func sendNotification(toUserUid: String, hasSound: Bool, groupId: String, message: String, deeplink: String){
-    if let pushClient = BatchClientPush(apiKey: BATCH_DEV_API_KEY, restKey: BATCH_REST_KEY) {
+    if let pushClient = BatchClientPush(apiKey: BATCH_API_KEY, restKey: BATCH_REST_KEY) {
         
         getNumberOfNotifications(toUserUid){ (sum) in
             pushClient.sandbox = false

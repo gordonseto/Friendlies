@@ -166,6 +166,9 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
 }
 
 func getBroadcastTime(time: NSTimeInterval) -> (value: String, unit: String) {
+    if time == 0 {
+        return ("", "")
+    }
     let currentTime = NSDate().timeIntervalSince1970
     var timeDifference = currentTime - time
     if timeDifference < 60 { // seconds

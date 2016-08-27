@@ -83,6 +83,9 @@ class FriendsListCell: UITableViewCell {
     }
 
     func initializeTimeLabel(lastavailable: NSTimeInterval) -> String {
+        if lastavailable == 0 {
+            return ""
+        }
         var timeDifference = getBroadcastTime(lastavailable)
         var suffix: String = ""
         if timeDifference.1 == "s" {

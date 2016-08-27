@@ -109,7 +109,7 @@ class User {
             self._gamerTag = snapshot.value!["gamerTag"] as? String ?? ""
             self._characters = snapshot.value!["characters"] as? [String] ?? []
             self.facebookId = snapshot.value!["facebookId"] as? String ?? ""
-            self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? nil
+            self._lastAvailable = snapshot.value!["lastAvailable"] as? NSTimeInterval ?? 0
             self._conversations = snapshot.value!["conversations"] as? [String: Bool] ?? [:]
             self._onlyFriends = snapshot.value!["onlyFriends"] as? Bool ?? false
             self.lastBroadcast = snapshot.value!["lastBroadcast"] as? String ?? "123"

@@ -243,7 +243,7 @@ class User {
                     self.firebase.child("friendsInfo").child(self._uid).child("wantsToAdd").child(uid).setValue(true)
                     self.firebase.child("friendsInfo").child(uid).child("wantsToBeAddedBy").child(self._uid).setValue("unseen")
                     self.sendFriendNotification("\(self.displayName) has sent you a friend request.", uid: uid)
-                    addToNotifications(uid, notificationType: "friends", param1: self._uid)
+                    NotificationsManager.sharedInstance.addToNotifications(uid, notificationType: "friends", param1: self._uid)
                     self.downloadUserInfo(){ _ in
                         self.getFriendsInfo(){
                             completion()
@@ -257,6 +257,7 @@ class User {
         firebase = FIRDatabase.database().reference()
         firebase.child("friendsInfo").child(_uid).child("wantsToAdd").child(uid).setValue(nil)
         firebase.child("friendsInfo").child(uid).child("wantsToBeAddedBy").child(_uid).setValue(nil)
+        NotificationsManager.sharedInstance.removeFromNotifications(uid, notificationType: "friends", param1: self._uid)
         self.downloadUserInfo(){ _ in
             self.getFriendsInfo(){
                 completion()
@@ -271,8 +272,8 @@ class User {
         firebase.child("friendsInfo").child(uid).child("wantsToAdd").child(_uid).setValue(nil)
         firebase.child("friendsInfo").child(_uid).child("wantsToBeAddedBy").child(uid).setValue(nil)
         self.sendFriendNotification("\(self.displayName) has accepted your friend request.", uid: uid)
-        addToNotifications(uid, notificationType: "friends", param1: self._uid)
-        removeFromNotifications(self._uid, notificationType: "friends", param1: uid)
+        NotificationsManager.sharedInstance.addToNotifications(uid, notificationType: "friends", param1: self._uid)
+        NotificationsManager.sharedInstance.removeFromNotifications(self._uid, notificationType: "friends", param1: uid)
         self.downloadUserInfo(){ _ in
             self.getFriendsInfo(){
                 completion()
@@ -312,7 +313,7 @@ class User {
     }
     
     func sendFriendNotification(message: String, uid: String){
-        sendNotification(uid, hasSound: false, groupId: "friendNotifications", message: message, deeplink: "friendlies://friends/\(self._uid)")
+        NotificationsManager.sharedInstance.sendNotification(uid, hasSound: false, groupId: "friendNotifications", message: message, deeplink: "friendlies://friends/\(self._uid)")
     }
     
     func blockUser(uid: String, completion: ()->()) {
@@ -332,11 +333,11 @@ class User {
     
     func removeUsersNotificationsWith(uid: String){
         getConversationWith(uid){ (conversationId) in
-            removeFromNotifications(self._uid, notificationType: "messages", param1: conversationId)
-            removeFromNotifications(uid, notificationType: "messages", param1: conversationId)
+            NotificationsManager.sharedInstance.removeFromNotifications(self._uid, notificationType: "messages", param1: conversationId)
+            NotificationsManager.sharedInstance.removeFromNotifications(uid, notificationType: "messages", param1: conversationId)
         }
-        removeFromNotifications(self._uid, notificationType: "friends", param1: uid)
-        removeFromNotifications(uid, notificationType: "friends", param1: self._uid)
+        NotificationsManager.sharedInstance.removeFromNotifications(self._uid, notificationType: "friends", param1: uid)
+        NotificationsManager.sharedInstance.removeFromNotifications(uid, notificationType: "friends", param1: self._uid)
     }
     
     func getConversationWith(uid: String, completion: (conversationId: String) -> ()){
@@ -355,19 +356,4 @@ class User {
             }
         }
     }
-}
-
-func addToNotifications(uid: String, notificationType: String, param1: String){
-    let firebase = FIRDatabase.database().reference()
-    firebase.child("notifications").child(uid).child(notificationType).child(param1).setValue(true)
-}
-
-func removeFromNotifications(uid: String, notificationType: String, param1: String){
-    let firebase = FIRDatabase.database().reference()
-    firebase.child("notifications").child(uid).child(notificationType).child(param1).setValue(nil)
-}
-
-func removeAllNotificationsOfType(uid: String, notificationType: String){
-    let firebase = FIRDatabase.database().reference()
-    firebase.child("notifications").child(uid).child(notificationType).setValue(nil)
 }

@@ -80,8 +80,6 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         CurrentUser.sharedInstance.getCurrentUser(){
             if let user = CurrentUser.sharedInstance.user {
-                self.updateTabBarBadge("messages")
-                updateIconBadge()
                 user.getBlockedInfo(){
                     self.currentUser = user
                     self.conversationsDownloaded = 0
@@ -152,6 +150,9 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                 displayBackgroundMessage("You have no messages!", label: noMessagesLabel, viewToAdd: tableView)
         } else {
             removeBackgroundMessage(noMessagesLabel)
+        }
+        if let tbc = self.tabBarController {
+            NotificationsManager.sharedInstance.clearTabBarBadgeAtIndex(MESSAGES_INDEX, tabBarController: tbc)
         }
     }
     

@@ -96,13 +96,6 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             CurrentUser.sharedInstance.user.getFriendsInfo(){
                 if let user = CurrentUser.sharedInstance.user {
                     self.currentUser = CurrentUser.sharedInstance.user
-                
-               // if self.updateNotifications {
-                    removeAllNotificationsOfType(self.currentUser.uid, notificationType: "friends")
-                    self.updateTabBarBadge("friends")
-                    updateIconBadge()
-                //}
-                    self.updateNotifications = true
                     
                     CurrentUser.sharedInstance.user.getBlockedInfo(){
                         if let friendskeys = self.currentUser.friends {
@@ -190,20 +183,13 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
     func AcceptButtonPressed(uid: String) {
         CurrentUser.sharedInstance.user.acceptAddRequest(uid){
             self.getCurrentUsersFriends()
-            self.friendsListAction()
         }
     }
     
     func DeclineButtonPressed(uid: String) {
         CurrentUser.sharedInstance.user.hideAddRequest(uid){
             self.getCurrentUsersFriends()
-            self.friendsListAction()
         }
-    }
-    
-    func friendsListAction(){
-        updateTabBarBadge("friends")
-        updateIconBadge()
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -297,6 +283,9 @@ class friendsListVC: UIViewController, UISearchBarDelegate, UITableViewDelegate,
             }
         } else {
             removeBackgroundMessage(noFriendsLabel)
+        }
+        if let tbc = self.tabBarController {
+            NotificationsManager.sharedInstance.clearTabBarBadgeAtIndex(FRIENDS_INDEX, tabBarController: tbc)
         }
     }
     

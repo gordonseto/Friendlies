@@ -58,6 +58,8 @@ class loginVC: UIViewController {
                             firebase.child("displayNames").child(user.displayName!).child("uid").setValue(user.uid)
                             firebase.child("displayNames").child(user.displayName!).child("facebookId").setValue(result.token.userID)
                             
+                            BatchPush.registerForRemoteNotifications()
+                            
                             let editor = BatchUser.editor()
                             editor.setIdentifier(user.uid)
                             editor.save()

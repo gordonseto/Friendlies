@@ -109,11 +109,6 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         editor.setIdentifier(FIRAuth.auth()?.currentUser?.uid)
         editor.save()
         
-        updateTabBarBadge("messages")
-        updateTabBarBadge("friends")
-        
-        updateIconBadge()
-        
         hexagonButton.userInteractionEnabled = false
         getCurrentUser(){
             self.hexagonButton.userInteractionEnabled = true
@@ -196,7 +191,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         self.currentUser.getFollowers(){
             if let followers = self.currentUser.followers {
                 for (key, _) in followers {
-                    sendNotification(key, hasSound: false, groupId: "followNotifications", message: "\(self.currentUser.displayName) is available to play", deeplink: "friendlies://follows/\(self.currentUser.uid)")
+                    NotificationsManager.sharedInstance.sendNotification(key, hasSound: false, groupId: "followNotifications", message: "\(self.currentUser.displayName) is available to play", deeplink: "friendlies://follows/\(self.currentUser.uid)")
                     addToNotifications(key, notificationType: "follows", param1: self.currentUser.uid)
                 }
             }
@@ -292,7 +287,9 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         } else {
             self.removeBackgroundMessage(self.noBroadcastsLabel)
         }
-        self.removeFeedNotifications()
+        if let tbc = self.tabBarController {
+            NotificationsManager.sharedInstance.clearTabBarBadgeAtIndex(FEED_INDEX, tabBarController: tbc)
+        }
     }
     
     func filterBlockedBroadcasts(completion: ()->()){
@@ -319,19 +316,6 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             }
         } else {
             completion()
-        }
-    }
-    
-    func removeFeedNotifications(){
-        if let uid = self.uid {
-            removeAllNotificationsOfType(uid, notificationType: "follows")
-            self.updateTabBarBadge("follows")
-            updateIconBadge()
-        } else if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String {
-            self.uid = uid
-            removeAllNotificationsOfType(uid, notificationType: "follows")
-            self.updateTabBarBadge("follows")
-            updateIconBadge()
         }
     }
 
@@ -520,66 +504,4 @@ extension UIViewController {
         }
     }
     
-    
-    func updateTabBarBadge(queryType: String){
-        if let user = FIRAuth.auth()?.currentUser {
-            let firebase = FIRDatabase.database().reference()
-            firebase.child("notifications").child(user.uid).child(queryType).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
-                print(snapshot.childrenCount)
-                
-                var index: Int!
-                if queryType == "messages" {
-                    index = MESSAGES_INDEX
-                } else if queryType == "friends" {
-                    index = FRIENDS_INDEX
-                } else if queryType == "follows" {
-                    index = FEED_INDEX
-                }
-                
-                if snapshot.childrenCount == 0 && index != nil {
-                    self.tabBarController?.tabBar.items?[index].badgeValue = nil
-                } else {
-                    self.tabBarController?.tabBar.items?[index].badgeValue = "\(snapshot.childrenCount)"
-                }
-                
-            }) { (error) in
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func dismissNotifications(){
-        //let firebase = FIRDatabase.database().reference()
-        //if let uid = NSUserDefaults.standardUserDefaults().objectForKey("USER_UID") as? String  {
-            //firebase.child("users").child(uid).child("notifications").setValue(0)
-        UIApplication.sharedApplication().cancelAllLocalNotifications()
-        BatchPush.dismissNotifications()
-            //BatchPush.dismissNotifications()
-            //NSUserDefaults.standardUserDefaults().setObject(0, forKey: "NOTIFICATIONS")
-        //}
-    }
-}
-
-func updateIconBadge(){
-    if let user = FIRAuth.auth()?.currentUser {
-        getNumberOfNotifications(user.uid){(sum) in
-            UIApplication.sharedApplication().applicationIconBadgeNumber = sum
-        }
-    }
-}
-
-func getNumberOfNotifications(uid: String, completion: (Int)->()) {
-    let firebase = FIRDatabase.database().reference()
-    firebase.child("notifications").child(uid).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
-        var sum: Int = 0
-        
-        for child in snapshot.children {
-            sum += Int(child.childrenCount!)
-        }
-        
-        completion(sum)
-        
-    }) { (error) in
-        print(error.localizedDescription)
-    }
 }

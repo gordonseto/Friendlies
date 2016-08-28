@@ -155,8 +155,6 @@ class chatVC: JSQMessagesViewController {
                 if self.isLookingAtMessage {
                     self.conversationInfoRef.child("uids").child(self.currentUser.uid).setValue("seen")
                     removeFromNotifications(self.currentUser.uid, notificationType: "messages", param1: self.conversationId)
-                    self.updateTabBarBadge("messages")
-                    updateIconBadge()
                 }
                 
                 self.finishReceivingMessage()
@@ -462,7 +460,7 @@ class chatVC: JSQMessagesViewController {
     }
     
     func sendMessageNotification(displayName: String, message: String){
-        sendNotification(otherUser.uid, hasSound: true, groupId: "messageNotifications", message: "\(displayName): \(message)", deeplink: "friendlies://messages/\(self.conversationId)/\(self.currentUser.uid)")
+        NotificationsManager.sharedInstance.sendNotification(otherUser.uid, hasSound: true, groupId: "messageNotifications", message: "\(displayName): \(message)", deeplink: "friendlies://messages/\(self.conversationId)/\(self.currentUser.uid)")
     }
     
     private func setupBubbles() {

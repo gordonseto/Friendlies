@@ -27,16 +27,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UITabBar.appearance().backgroundColor = UIColor.blackColor()
         
-        FIRApp.configure()
-        
         Batch.startWithAPIKey(BATCH_API_KEY)
-        BatchPush.registerForRemoteNotifications()
+        
+        FIRApp.configure()
         
         IQKeyboardManager.sharedManager().enable = true
         IQKeyboardManager.sharedManager().enableAutoToolbar = false
         
         Fabric.with([Crashlytics.self])
     
+        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+            if let notification = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? [String: AnyObject] {
+                if let deepLink = notification["com.batch"]?["l"] as? String {
+                    NotificationsManager.sharedInstance.goToCertainView(deepLink, tabBarController: tabBarController)
+                }
+            } else {
+                NotificationsManager.sharedInstance.updateTabBar(tabBarController)
+            }
+        }
+        
+        print("did finish launching with options")
+        
         return true
     }
 
@@ -56,7 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        
+        BatchPush.dismissNotifications()
+        print("did become active")
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -64,92 +76,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        print(userInfo)
-        print(userInfo["com.batch"])
-        print(userInfo["com.batch"]!["l"])
-        if let deepLink = userInfo["com.batch"]?["l"] as? String {
-            let queryArray = deepLink.componentsSeparatedByString("/")
-            let queryType = queryArray[2]
-            /*
-            if queryType == "friends" {
-                refreshFriendsList()
+        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+            if application.applicationState == UIApplicationState.Active {
+                //print("application state active")
+                NotificationsManager.sharedInstance.updateTabBar(tabBarController)
+            } else if application.applicationState == UIApplicationState.Background {
+                //print("application state background")
+                NotificationsManager.sharedInstance.updateTabBar(tabBarController)
+            } else if application.applicationState == UIApplicationState.Inactive {
+                //print("application state inactive")
+                print(userInfo)
+                if let deepLink = userInfo["com.batch"]?["l"] as? String {
+                    NotificationsManager.sharedInstance.goToCertainView(deepLink, tabBarController: tabBarController)
+                }
             }
-            */
-            updateTabBarBadge(queryType)
-            updateIconBadge()
         }
-        completionHandler(UIBackgroundFetchResult.NewData)
+        completionHandler(.NewData)
     }
     
-    func updateTabBarBadge(queryType: String){
-        if let user = FIRAuth.auth()?.currentUser {
-            let firebase = FIRDatabase.database().reference()
-            firebase.child("notifications").child(user.uid).child(queryType).observeSingleEventOfType(.Value, withBlock: {(snapshot) in
-                print(snapshot.childrenCount)
-                
-                var index: Int!
-                if queryType == "messages" {
-                    index = MESSAGES_INDEX
-                } else if queryType == "friends" {
-                    index = FRIENDS_INDEX
-                } else if queryType == "follows" {
-                    index = FEED_INDEX
-                }
-                if index != nil {
-                    if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
-                        if snapshot.childrenCount == 0 {
-                            tabBarController.tabBar.items?[index].badgeValue = nil
-                        } else {
-                            tabBarController.tabBar.items?[index].badgeValue = "\(snapshot.childrenCount)"
-                        }
-                    }
-                }
-                
-            }) { (error) in
-                print(error.localizedDescription)
-            }
-        }
-    }
-    /*
-    func refreshFriendsList(){
-        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
-            if let friendsNVC = tabBarController.viewControllers![FRIENDS_INDEX] as? UINavigationController {
-                if let friendsVC = friendsNVC.viewControllers[0] as? friendsListVC {
-                    friendsVC.updateNotifications = false
-                    friendsVC.getCurrentUsersFriends()
-                }
-            }
-        }
-    }*/
-
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        
-        if url.host == nil {
-            return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
-        }
-        
-        let urlString = url.absoluteString
-        let queryArray = urlString.componentsSeparatedByString("/")
-        let queryType = queryArray[2]
-        let query = queryArray[3]
-        var queryParameter: String!
-        if queryArray.count > 4 {
-            queryParameter = queryArray[4]
-        }
-        print(query as String!)
-        
-        if queryType == "messages" {
-            if let queryParameter = queryParameter {
-                goToConversation(query, otherUserUid: queryParameter)
-            }
-        } else if queryType == "friends" {
-            goToFriendsList()
-        } else if queryType == "follows" {
-            goToFeed()
-        }
-        
-        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
-    }
     
     func goToFeed(){
         if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {

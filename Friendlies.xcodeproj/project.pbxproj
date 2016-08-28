@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E064AB51D72568A000FB47E /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E064AB41D72568A000FB47E /* NotificationsManager.swift */; };
 		8E629CDA1D394FCB001E8EC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E629CD91D394FCB001E8EC3 /* AppDelegate.swift */; };
 		8E629CDC1D394FCB001E8EC3 /* loginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E629CDB1D394FCB001E8EC3 /* loginVC.swift */; };
 		8E629CDF1D394FCB001E8EC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E629CDD1D394FCB001E8EC3 /* Main.storyboard */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		20265E1343A75CB40FBB6724 /* Pods-Friendlies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friendlies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Friendlies/Pods-Friendlies.debug.xcconfig"; sourceTree = "<group>"; };
 		307C8391AA7CC6D1A9825A66 /* Pods-Friendlies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friendlies.release.xcconfig"; path = "Pods/Target Support Files/Pods-Friendlies/Pods-Friendlies.release.xcconfig"; sourceTree = "<group>"; };
+		8E064AB41D72568A000FB47E /* NotificationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsManager.swift; sourceTree = "<group>"; };
 		8E629CD61D394FCB001E8EC3 /* Friendlies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Friendlies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E629CD91D394FCB001E8EC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E629CDB1D394FCB001E8EC3 /* loginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginVC.swift; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 			children = (
 				8EA99A471D3D6727001DB679 /* CurrentUser.swift */,
 				8EA99A5F1D415C2C001DB679 /* BatchClientPush.swift */,
+				8E064AB41D72568A000FB47E /* NotificationsManager.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -242,6 +245,11 @@
 					8E629CD51D394FCB001E8EC3 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 732LS35PLA;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -348,6 +356,7 @@
 				8E629CF41D39677F001E8EC3 /* feedVC.swift in Sources */,
 				8E765D501D5A3883004F47F6 /* BroadcastSettingsVC.swift in Sources */,
 				8E756A511D39C22E00B8A0EB /* friendliesTextField.swift in Sources */,
+				8E064AB51D72568A000FB47E /* NotificationsManager.swift in Sources */,
 				8E629CDC1D394FCB001E8EC3 /* loginVC.swift in Sources */,
 				8EA99A5B1D3FE705001DB679 /* conversationPreview.swift in Sources */,
 				8E765D4A1D593315004F47F6 /* BlockingSettingsVC.swift in Sources */,

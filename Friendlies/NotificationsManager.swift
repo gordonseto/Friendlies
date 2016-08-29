@@ -114,6 +114,50 @@ class NotificationsManager {
     
     func goToCertainView(deepLink: String, tabBarController: UITabBarController){
         print("go to certain view")
+        let queryArray = deepLink.componentsSeparatedByString("/")
+        let queryType = queryArray[2]
+        if queryType == "follows" {
+            goToFeed(tabBarController)
+        } else if queryType == "friends" {
+            let otherUserUid = queryArray[3]
+            goToFriendsList(tabBarController)
+        } else if queryType == "messages" {
+            let conversationId = queryArray[3]
+            let otherUserUid = queryArray[4]
+            goToConversation(conversationId, otherUserUid: otherUserUid, tabBarController: tabBarController)
+        }
+    }
+    
+    func goToFeed(tabBarController: UITabBarController){
+        tabBarController.selectedIndex = FEED_INDEX
+    }
+    
+    func goToFriendsList(tabBarController: UITabBarController){
+        tabBarController.selectedIndex = FRIENDS_INDEX
+    }
+    
+    
+    func goToConversation(conversationId: String, otherUserUid: String, tabBarController: UITabBarController) {
+        tabBarController.selectedIndex = MESSAGES_INDEX
+        if let messagesNVC = tabBarController.viewControllers![MESSAGES_INDEX] as? UINavigationController {
+            if let messagesVC = messagesNVC.viewControllers[0] as? messagesListVC {
+                if let user = FIRAuth.auth()?.currentUser {
+                    let item: NSDictionary = [
+                        "conversationId": conversationId,
+                        "otherUserUid": otherUserUid,
+                        "senderId": user.uid,
+                        "senderDisplayName": user.displayName!
+                    ]
+                    if let topVC = messagesNVC.topViewController as? chatVC {
+                        if !(topVC.conversationId == conversationId) {
+                            messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
+                        }
+                    } else {
+                        messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
+                    }
+                }
+            }
+        }
     }
     
 }

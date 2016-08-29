@@ -37,6 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Fabric.with([Crashlytics.self])
     
         if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
+            tabBarController.tabBar.barStyle = UIBarStyle.Black
+            tabBarController.tabBar.selectedImageTintColor = UIColor.whiteColor()
             if let notification = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? [String: AnyObject] {
                 if let deepLink = notification["com.batch"]?["l"] as? String {
                     NotificationsManager.sharedInstance.goToCertainView(deepLink, tabBarController: tabBarController)
@@ -92,56 +94,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         completionHandler(.NewData)
-    }
-    
-    
-    func goToFeed(){
-        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
-            tabBarController.selectedIndex = FEED_INDEX
-            if let feedNVC = tabBarController.viewControllers![FEED_INDEX] as? UINavigationController {
-                if let feedVC = feedNVC.viewControllers[0] as? feedVC {
-                    feedVC.queryBroadcasts()
-                }
-            }
-        }
-    }
-    
-    func goToFriendsList(){
-        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
-            tabBarController.selectedIndex = FRIENDS_INDEX
-            if let friendsNVC = tabBarController.viewControllers![FRIENDS_INDEX] as? UINavigationController {
-                if let friendsVC = friendsNVC.viewControllers[0] as? friendsListVC {
-                    friendsVC.getCurrentUsersFriends()
-                }
-            }
-        }
-    }
-
-    
-    func goToConversation(conversationId: String, otherUserUid: String) {
-        if let tabBarController: UITabBarController = self.window?.rootViewController as? UITabBarController {
-            tabBarController.selectedIndex = MESSAGES_INDEX
-            if let messagesNVC = tabBarController.viewControllers![MESSAGES_INDEX] as? UINavigationController {
-                if let messagesVC = messagesNVC.viewControllers[0] as? messagesListVC {
-                    if let user = FIRAuth.auth()?.currentUser {
-                        let item: NSDictionary = [
-                            "conversationId": conversationId,
-                            "otherUserUid": otherUserUid,
-                            "senderId": user.uid,
-                            "senderDisplayName": user.displayName!
-                        ]
-                        if let topVC = messagesNVC.topViewController as? chatVC {
-                            if !(topVC.conversationId == conversationId) {
-                                messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
-                            }
-                        } else {
-                            messagesVC.performSegueWithIdentifier("chatVCFromDeepLink", sender: item)
-                        }
-                    }
-                }
-            }
-        }
-        //messages.performSegueWithIdentifier("chatVC", sender: item)
     }
 
 }

@@ -192,7 +192,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
             if let followers = self.currentUser.followers {
                 for (key, _) in followers {
                     NotificationsManager.sharedInstance.sendNotification(key, hasSound: false, groupId: "followNotifications", message: "\(self.currentUser.displayName) is available to play", deeplink: "friendlies://follows/\(self.currentUser.uid)")
-                    addToNotifications(key, notificationType: "follows", param1: self.currentUser.uid)
+                    NotificationsManager.sharedInstance.addToNotifications(key, notificationType: "follows", param1: self.currentUser.uid)
                 }
             }
         }

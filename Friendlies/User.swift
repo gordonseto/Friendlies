@@ -43,7 +43,12 @@ class User {
     }
     
     var lastAvailable: NSTimeInterval! {
-        return _lastAvailable
+        get {
+            return _lastAvailable
+        }
+        set {
+            _lastAvailable = newValue
+        }
     }
     
     var friends: [String: Bool]! {

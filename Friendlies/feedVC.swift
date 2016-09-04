@@ -13,6 +13,7 @@ import FirebaseDatabase
 import GeoFire
 import Batch
 import SloppySwiper
+import SwiftOverlays
 
 class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource, BroadcastCellDelegate, loginVCDelegate {
 
@@ -290,6 +291,7 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
         if let tbc = self.tabBarController {
             NotificationsManager.sharedInstance.clearTabBarBadgeAtIndex(FEED_INDEX, tabBarController: tbc)
         }
+        removeAllOverlays()
     }
     
     func filterBlockedBroadcasts(completion: ()->()){
@@ -417,12 +419,14 @@ class feedVC: UIViewController, CLLocationManagerDelegate, UITableViewDelegate, 
     }
     
     func deleteBroadcast(broadcast: Broadcast) {
-        self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
+//        self.startLoadingAnimation(self.activityIndicator, loadingLabel: self.loadingLabel, viewToAdd: self.tableView)
         firebase = FIRDatabase.database().reference()
         firebase.child("broadcasts").child(broadcast.key).setValue(nil)
         firebase.child("geolocations").child(broadcast.key).setValue(nil)
         firebase.child("users").child(broadcast.authorUid).child("lastAvailable").setValue(nil)
         firebase.child("users").child(broadcast.authorUid).child("lastBroadcast").setValue(nil)
+        CurrentUser.sharedInstance.user.lastAvailable = nil
+        showWaitOverlay()
         queryBroadcasts()
     }
     

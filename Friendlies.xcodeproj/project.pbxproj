@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8E064AB51D72568A000FB47E /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E064AB41D72568A000FB47E /* NotificationsManager.swift */; };
+		8E476CA51D7C92A1000EE97A /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E476CA41D7C92A1000EE97A /* General.swift */; };
 		8E629CDA1D394FCB001E8EC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E629CD91D394FCB001E8EC3 /* AppDelegate.swift */; };
 		8E629CDC1D394FCB001E8EC3 /* loginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E629CDB1D394FCB001E8EC3 /* loginVC.swift */; };
 		8E629CDF1D394FCB001E8EC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E629CDD1D394FCB001E8EC3 /* Main.storyboard */; };
@@ -45,6 +46,7 @@
 		20265E1343A75CB40FBB6724 /* Pods-Friendlies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friendlies.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Friendlies/Pods-Friendlies.debug.xcconfig"; sourceTree = "<group>"; };
 		307C8391AA7CC6D1A9825A66 /* Pods-Friendlies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friendlies.release.xcconfig"; path = "Pods/Target Support Files/Pods-Friendlies/Pods-Friendlies.release.xcconfig"; sourceTree = "<group>"; };
 		8E064AB41D72568A000FB47E /* NotificationsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsManager.swift; sourceTree = "<group>"; };
+		8E476CA41D7C92A1000EE97A /* General.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		8E629CD61D394FCB001E8EC3 /* Friendlies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Friendlies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E629CD91D394FCB001E8EC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E629CDB1D394FCB001E8EC3 /* loginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginVC.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				8E756A531D39CB4B00B8A0EB /* Constants.swift */,
+				8E476CA41D7C92A1000EE97A /* General.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 				8E765D4C1D59340E004F47F6 /* BlockingSettingsCell.swift in Sources */,
 				8E9648FC1D3AC9CF0048B3B3 /* BroadcastCell.swift in Sources */,
 				8E629CF61D3969F2001E8EC3 /* profilePhoto.swift in Sources */,
+				8E476CA51D7C92A1000EE97A /* General.swift in Sources */,
 				8E629CFB1D397ED7001E8EC3 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

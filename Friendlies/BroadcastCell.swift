@@ -164,36 +164,3 @@ class BroadcastCell: UITableViewCell, UITextViewDelegate {
     }
 
 }
-
-func getBroadcastTime(time: NSTimeInterval) -> (value: String, unit: String) {
-    if time == 0 {
-        return ("", "")
-    }
-    let currentTime = NSDate().timeIntervalSince1970
-    var timeDifference = currentTime - time
-    if timeDifference < 60 { // seconds
-        return ("\(Int(timeDifference))", "s")
-    } else {
-        timeDifference /= 60.0
-        if timeDifference < 60 { //minutes
-            return ("\(Int(timeDifference))", "m")
-        } else {
-            timeDifference /= 60.0
-            if timeDifference < 24 { //hours
-                return ("\(Int(timeDifference))", "h")
-            } else {
-                timeDifference /= 24.0
-                if timeDifference < 7 { //days
-                    return ("\(Int(timeDifference))", "d")
-                } else {
-                    timeDifference /= 7.0
-                    if timeDifference < 52.0 { //weeks
-                        return ("\(Int(timeDifference))", "w")
-                    } else {
-                        return ("\(Int(timeDifference))", "y") //years
-                    }
-                }
-            }
-        }
-    }
-}

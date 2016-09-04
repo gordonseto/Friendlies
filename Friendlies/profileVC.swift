@@ -547,20 +547,3 @@ class profileVC: UIViewController, UIViewControllerTransitioningDelegate {
         return "AVAILABLE \(timeDifference.0) \(suffix)\(plural) AGO"
     }
 }
-
-
-func arrangeStackViewCharacters(user: User, characterStackView: UIStackView, height: CGFloat){
-    for stackView in characterStackView.subviews {
-        stackView.removeFromSuperview()
-    }
-    
-    if let characters = user.characters {
-        for character in characters {
-            let imageView = UIImageView()
-            imageView.image = UIImage(named: character)
-            imageView.heightAnchor.constraintEqualToConstant(height).active = true
-            imageView.widthAnchor.constraintEqualToConstant(height).active = true
-            characterStackView.addArrangedSubview(imageView)
-        }
-    }
-}

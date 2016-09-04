@@ -20,4 +20,5 @@ target 'Friendlies' do
   pod 'IQKeyboardManagerSwift'
   pod 'Fabric'
   pod 'Crashlytics'
+  pod 'SwiftOverlays', '~> 2.0'
 end

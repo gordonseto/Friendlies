@@ -38,8 +38,6 @@ class messagesListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.navigationController?.navigationBarHidden = true
         //self.navigationController?.interactivePopGestureRecognizer!.delegate = nil;
         
-        self.hideKeyboardWhenTappedAround()
-        
         tableView.delegate = self
         tableView.dataSource = self
         

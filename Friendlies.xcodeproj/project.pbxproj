@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8E064AB51D72568A000FB47E /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E064AB41D72568A000FB47E /* NotificationsManager.swift */; };
 		8E476CA51D7C92A1000EE97A /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E476CA41D7C92A1000EE97A /* General.swift */; };
+		8E476CA81D7E8233000EE97A /* MessagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A5C1D40270E001DB679 /* MessagesListCell.swift */; };
 		8E629CDA1D394FCB001E8EC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E629CD91D394FCB001E8EC3 /* AppDelegate.swift */; };
 		8E629CDC1D394FCB001E8EC3 /* loginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E629CDB1D394FCB001E8EC3 /* loginVC.swift */; };
 		8E629CDF1D394FCB001E8EC3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E629CDD1D394FCB001E8EC3 /* Main.storyboard */; };
@@ -37,7 +38,6 @@
 		8EA99A571D3EA066001DB679 /* chatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A561D3EA066001DB679 /* chatVC.swift */; };
 		8EA99A591D3FDE8B001DB679 /* messagesListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A581D3FDE8B001DB679 /* messagesListVC.swift */; };
 		8EA99A5B1D3FE705001DB679 /* conversationPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A5A1D3FE705001DB679 /* conversationPreview.swift */; };
-		8EA99A5D1D40270E001DB679 /* MessagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A5C1D40270E001DB679 /* MessagesListCell.swift */; };
 		8EA99A601D415C2C001DB679 /* BatchClientPush.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EA99A5F1D415C2C001DB679 /* BatchClientPush.swift */; };
 		FD25912E391B32A2D21012B7 /* Pods_Friendlies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B0887ED05FC3B0473672E8 /* Pods_Friendlies.framework */; };
 /* End PBXBuildFile section */
@@ -367,10 +367,10 @@
 				8E765D441D55120F004F47F6 /* ReportVC.swift in Sources */,
 				8E629CDA1D394FCB001E8EC3 /* AppDelegate.swift in Sources */,
 				8E9648F91D3ABDE90048B3B3 /* Broadcast.swift in Sources */,
+				8E476CA81D7E8233000EE97A /* MessagesListCell.swift in Sources */,
 				8E629CED1D3953B9001E8EC3 /* friendliesButton.swift in Sources */,
 				8E765D461D5925D1004F47F6 /* SettingsVC.swift in Sources */,
 				8E765D481D592842004F47F6 /* friendliesView.swift in Sources */,
-				8EA99A5D1D40270E001DB679 /* MessagesListCell.swift in Sources */,
 				8E756A541D39CB4B00B8A0EB /* Constants.swift in Sources */,
 				8EA99A4C1D3D94EE001DB679 /* FriendsListCell.swift in Sources */,
 				8EA99A601D415C2C001DB679 /* BatchClientPush.swift in Sources */,
